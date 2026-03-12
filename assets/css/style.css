@@ -487,11 +487,11 @@ img { max-width: 100%; height: auto; }
 
 /* ===== POPULAR CRUISES BANNER (Royal Caribbean 스타일) ===== */
 .popular-section {
-  background: linear-gradient(135deg, #1a3fa8 0%, #2563eb 40%, #7c3aed 100%);
+  background: #f1f3f6;
   padding: 60px 0 64px;
 }
 .popular-title {
-  color: #fff;
+  color: #161c2d;
   font-size: clamp(1.6rem, 3.5vw, 2.4rem);
   font-weight: 900;
   text-transform: uppercase;
