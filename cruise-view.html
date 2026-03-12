@@ -11,16 +11,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" id="canonicalTag" href="https://www.cruiselink.co.kr/cruise-view.html">
-  <meta property="og:site_name" content="크루즈링크">
+  <meta property="og:site_name" content="크루즈나라">
   <meta property="og:type" content="product">
-  <meta id="ogTitle" property="og:title" content="크루즈링크 - 크루즈 상품 상세">
-  <meta id="ogDesc" property="og:description" content="크루즈링크에서 최적의 크루즈 여행을 찾아보세요.">
+  <meta id="ogTitle" property="og:title" content="크루즈나라 - 크루즈 상품 상세">
+  <meta id="ogDesc" property="og:description" content="크루즈나라에서 최적의 크루즈 여행을 찾아보세요.">
   <meta id="ogImage" property="og:image" content="https://www.cruiselink.co.kr/assets/images/og-image.jpg">
   <meta id="ogUrl" property="og:url" content="https://www.cruiselink.co.kr/cruise-view.html">
-  <title>크루즈 상세 - 크루즈링크</title>
+  <title>크루즈 상세 - 크루즈나라</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
-  <link rel="shortcut icon" href="favicon.ico">
+  
+  
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -252,10 +252,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const priceStr = fromPrice ? API.formatPrice(fromPrice, c.currency) : '문의';
       const countries = (c.countriesKo || []).join(', ') || (c.countries || []).join(', ');
 
-      document.title = `${c.title} - 크루즈링크`;
+      document.title = `${c.title} - 크루즈나라`;
       // Dynamic OG tags for SEO
       const ref = new URLSearchParams(location.search).get('ref') || '';
-      document.getElementById('ogTitle')?.setAttribute('content', `${c.title} - 크루즈링크`);
+      document.getElementById('ogTitle')?.setAttribute('content', `${c.title} - 크루즈나라`);
       document.getElementById('ogDesc')?.setAttribute('content', `${c.portRoute || ''} · ${c.nights || ''}박 · ${c.operator || ''} · $${c.priceInside || ''}~`);
       document.getElementById('ogImage')?.setAttribute('content', c.image || '');
       document.getElementById('ogUrl')?.setAttribute('content', `https://www.cruiselink.co.kr/cruise-view.html?ref=${ref}`);
@@ -370,7 +370,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <section class="cta-section">
         <div class="container">
           <h2>이 크루즈가 마음에 드셨나요?</h2>
-          <p>크루즈링크 전문 상담원이 최적의 객실과 가격을 안내해드립니다.</p>
+          <p>크루즈나라 전문 상담원이 최적의 객실과 가격을 안내해드립니다.</p>
           <div class="cta-buttons cta-two">
             <a href="https://pf.kakao.com/_xgYbJG" target="_blank" class="btn btn-orange">💬 카카오톡 상담</a>
             <button class="btn btn-white-solid" onclick="openInquiry()">📋 온라인 문의</button>
@@ -763,7 +763,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ref
       };
 
-      document.title = `${cruiseTitle} - 크루즈링크`;
+      document.title = `${cruiseTitle} - 크루즈나라`;
 
       let html = `
       <section class="detail-hero">
@@ -863,7 +863,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <section class="cta-section">
         <div class="container">
           <h2>이 크루즈가 마음에 드셨나요?</h2>
-          <p>크루즈링크 전문 상담원이 최적의 객실과 가격을 안내해드립니다.</p>
+          <p>크루즈나라 전문 상담원이 최적의 객실과 가격을 안내해드립니다.</p>
           <div class="cta-buttons cta-two">
             <a href="https://pf.kakao.com/_xgYbJG" target="_blank" class="btn btn-orange">💬 카카오톡 상담</a>
             <button class="btn btn-white-solid" onclick="openInquiry()">📋 온라인 문의</button>
@@ -974,7 +974,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       form.action = 'https://formsubmit.co/ajax/info@cruiselink.co.kr';
 
       const fd = {
-        _subject: `[크루즈링크] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
+        _subject: `[크루즈나라] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
         '크루즈 상품': document.getElementById('f_product').value,
         '선사': document.getElementById('f_cruiseline').value,
         '선박': document.getElementById('f_ship').value,

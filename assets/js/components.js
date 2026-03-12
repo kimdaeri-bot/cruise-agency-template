@@ -5,7 +5,7 @@ const Components = {
     return `
     <header class="header">
       <div class="container">
-        <a href="${base}index.html" class="logo"><img src="${base}assets/images/logo.png" alt="크루즈링크" style="height:36px"></a>
+        <a href="${base}index.html" class="logo"><img src="${base}assets/images/logo.svg" alt="크루즈나라" style="height:36px"></a>
         <nav class="nav" id="mainNav">
           <a href="${base}index.html" class="${active === 'home' ? 'active' : ''}">홈</a>
           <a href="${base}destinations.html" class="${active === 'dest' ? 'active' : ''}">목적지</a>
@@ -29,7 +29,7 @@ const Components = {
       <div class="container">
         <div class="footer-content">
           <div class="footer-col">
-            <h4>크루즈링크는?</h4>
+            <h4>크루즈나라는?</h4>
             <p><a href="${base}about.html">회사소개</a></p>
             <p><a href="${base}newsletter.html">📬 뉴스레터 구독</a></p>
             <p><a href="${base}privacy.html">개인정보 처리방침</a></p>
@@ -61,8 +61,8 @@ const Components = {
         </div>
         <div class="footer-bottom" style="font-size:0.8rem;line-height:1.6;color:var(--gray-500)">
           <p>서울특별시 강서구 마곡서로 152, 두산 더 랜드타워 5층</p>
-          <p>아남항공 주식회사(크루즈링크) | 대표: 김영성 | 사업자 등록번호: 104-81-84918</p>
-          <p style="margin-top:8px">© ${new Date().getFullYear()} 크루즈링크. All rights reserved.</p>
+          <p>크루즈나라 | 대표: 김영성 | 사업자 등록번호: 104-81-84918</p>
+          <p style="margin-top:8px">© ${new Date().getFullYear()} 크루즈나라. All rights reserved.</p>
         </div>
       </div>
     </footer>`;
@@ -265,7 +265,7 @@ const Components = {
             objectType: 'feed',
             content: {
               title: title,
-              description: '크루즈링크에서 확인하세요',
+              description: '크루즈나라에서 확인하세요',
               imageUrl: 'https://www.cruiselink.co.kr/assets/images/og-default.jpg',
               link: { mobileWebUrl: url, webUrl: url }
             },
