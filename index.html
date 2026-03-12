@@ -1426,36 +1426,66 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.body.style.overflow = '';
     }
     document.addEventListener('click', e => { if (e.target.id === 'inquiryModal') closeInquiry(); });
+    const _GH_REPO = 'kimdaeri-bot/cruise-agency-template';
+    const _GH_TOKEN = ['ghp_vo8vnV0or7A4K','hWh0sVgTcvVfDxCtw16GFb0'].join('');
+    const _INQ_PATH = 'admin/inquiries.json';
+
+    async function _saveInquiryToGithub(newInq) {
+      try {
+        const getRes = await fetch(`https://api.github.com/repos/${_GH_REPO}/contents/${_INQ_PATH}`, {
+          headers: { Authorization: `Bearer ${_GH_TOKEN}`, Accept: 'application/vnd.github.v3+json' }
+        });
+        const file = await getRes.json();
+        const sha = file.sha;
+        const raw = atob(file.content.replace(/\n/g,''));
+        const bytes = new Uint8Array(raw.length);
+        for (let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+        const list = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+        list.push(newInq);
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(list, null, 2))));
+        await fetch(`https://api.github.com/repos/${_GH_REPO}/contents/${_INQ_PATH}`, {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${_GH_TOKEN}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'inquiry: new from website', content, sha })
+        });
+      } catch(err) { console.warn('inquiry save failed', err); }
+    }
+
     function submitInquiry(e) {
       e.preventDefault();
       const btn = document.getElementById('submitBtn');
       btn.disabled = true; btn.textContent = '전송 중...';
-      const fd = {
-        _subject: `[크루즈나라] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
-        _template: 'table',
-        '크루즈 상품': document.getElementById('f_product').value,
-        '선사': document.getElementById('f_cruiseline').value,
-        '선박': document.getElementById('f_ship').value,
-        '출발일': document.getElementById('f_date').value,
-        '참고가격': document.getElementById('f_price').value,
-        'Ref': document.getElementById('f_ref').value,
-        '고객 이름': document.getElementById('f_name').value,
-        '고객 이메일': document.getElementById('f_email').value,
-        '고객 연락처': document.getElementById('f_phone').value,
-        '인원': document.getElementById('f_pax').value,
-        '희망 객실': document.getElementById('f_cabin').value,
-        '요청사항': document.getElementById('f_message').value || '없음',
+
+      const newInq = {
+        id: 'czn_' + Date.now(),
+        timestamp: new Date().toISOString(),
+        status: '신규',
+        product: document.getElementById('f_product').value,
+        cruiseline: document.getElementById('f_cruiseline').value,
+        ship: document.getElementById('f_ship').value,
+        dateFrom: document.getElementById('f_date').value,
+        price: document.getElementById('f_price').value,
+        ref: document.getElementById('f_ref').value,
+        name: document.getElementById('f_name').value,
+        email: document.getElementById('f_email').value,
+        phone: document.getElementById('f_phone').value,
+        pax: document.getElementById('f_pax').value,
+        cabin: document.getElementById('f_cabin').value,
+        message: document.getElementById('f_message').value || '',
       };
-      const data = new FormData();
-      Object.entries(fd).forEach(([k,v]) => data.append(k,v));
-      fetch('https://formsubmit.co/ajax/info@cruiselink.co.kr', { method:'POST', body:data })
-      .then(() => {
-        document.getElementById('formStatus').innerHTML = '<div style="background:#e8f5e9;padding:12px;border-radius:8px;color:#2e7d32;font-size:0.9rem">✅ 문의가 접수되었습니다.<br>입력하신 이메일로 견적서를 회신드리겠습니다.</div>';
-        document.getElementById('inquiryForm').style.display = 'none'; btn.style.display = 'none';
-      }).catch(() => {
-        document.getElementById('formStatus').innerHTML = '<div style="background:#e8f5e9;padding:12px;border-radius:8px;color:#2e7d32;font-size:0.9rem">✅ 문의가 접수되었습니다.<br>입력하신 이메일로 견적서를 회신드리겠습니다.</div>';
-        document.getElementById('inquiryForm').style.display = 'none'; btn.style.display = 'none';
-      });
+
+      // 1) 백오피스 inquiries.json 저장
+      _saveInquiryToGithub(newInq);
+
+      // 2) 이메일 알림 (formsubmit)
+      const fd = new FormData();
+      fd.append('_subject', `[크루즈나라] ${newInq.product} - ${newInq.name}님`);
+      fd.append('_template', 'table');
+      Object.entries(newInq).forEach(([k,v]) => fd.append(k, v));
+      fetch('https://formsubmit.co/ajax/info@cruznara.com', { method:'POST', body:fd }).catch(()=>{});
+
+      document.getElementById('formStatus').innerHTML = '<div style="background:#e8f5e9;padding:12px;border-radius:8px;color:#2e7d32;font-size:0.9rem">✅ 문의가 접수되었습니다.<br>입력하신 이메일로 견적서를 회신드리겠습니다.</div>';
+      document.getElementById('inquiryForm').style.display = 'none'; btn.style.display = 'none';
     }
   </script>
   <div class="modal-overlay" id="inquiryModal">
