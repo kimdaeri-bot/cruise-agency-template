@@ -430,12 +430,42 @@
   .btn-edit-p { background: #e3f2fd; color: #1565c0; }
   .btn-del-p { background: #ffebee; color: #c62828; }
   .partner-empty {
-    grid-column: 1/-1;
     text-align: center;
     padding: 40px;
     color: #aaa;
     font-size: 14px;
   }
+  .cat-section {
+    margin-bottom: 32px;
+  }
+  .cat-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e8eaf6;
+  }
+  .cat-section-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; color: #fff; flex-shrink: 0;
+  }
+  .cat-section-title {
+    font-size: 15px; font-weight: 800; color: #1a237e;
+  }
+  .cat-section-count {
+    font-size: 12px; color: #aaa; font-weight: 600;
+    margin-left: auto;
+  }
+  .cat-section .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media(max-width:900px){.cat-section .partner-grid{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.cat-section .partner-grid{grid-template-columns:1fr;}}
 
   /* ===== PANEL 3: CHAT ===== */
   .chat-wrap {
@@ -679,7 +709,7 @@
       </div>
       <button class="btn-add-partner" onclick="addPartner()">➕ 추가</button>
     </div>
-    <div class="partner-grid" id="partnerGrid">
+    <div id="partnerGrid">
       <div class="partner-empty">로딩 중...</div>
     </div>
   </div>
@@ -1222,28 +1252,60 @@ ${remarksHtml}
     renderPartners();
   }
 
+  const CAT_META = {
+    '지중해':    { icon:'🌊', color:'#1e6fd4' },
+    '알래스카':  { icon:'🏔️', color:'#0891b2' },
+    '카리브해':  { icon:'🏝️', color:'#0d9488' },
+    '한국일본':  { icon:'⛩️', color:'#7c3aed' },
+    '북유럽':    { icon:'🌌', color:'#1d4ed8' },
+    '아시아중동':{ icon:'🕌', color:'#b45309' },
+    '기타':      { icon:'📌', color:'#374151' },
+  };
+  const CAT_ORDER = ['지중해','알래스카','카리브해','한국일본','북유럽','아시아중동','기타'];
+
   function renderPartners() {
-    const grid = document.getElementById('partnerGrid');
+    const wrap = document.getElementById('partnerGrid');
     if (!currentPartners || currentPartners.length === 0) {
-      grid.innerHTML = '<div class="partner-empty">등록된 파트너가 없습니다</div>';
+      wrap.innerHTML = '<div class="partner-empty">등록된 상품이 없습니다.<br>위 폼에서 카드를 추가하세요.</div>';
       return;
     }
-    grid.innerHTML = currentPartners.map((p, i) => `
-      <div class="partner-card">
-        <img src="${esc(p.image||'')}" alt="${esc(p.title||'')}" onerror="this.style.background='#e0e0e0';this.src=''">
-        <div class="partner-card-body">
-          <h4>${esc(p.title||'')}</h4>
-          <p>${esc(p.desc||'')}</p>
-        </div>
-        <div class="partner-card-footer">
-          <span class="cat-badge">${esc(p.category||'기타')}</span>
-          <div class="partner-card-actions">
-            <button class="btn-sm btn-edit-p" onclick="editPartner(${i})">수정</button>
-            <button class="btn-sm btn-del-p" onclick="deletePartner(${i})">삭제</button>
+    // 카테고리별 그룹
+    const groups = {};
+    currentPartners.forEach((p, i) => {
+      const cat = p.category || '기타';
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push({ ...p, _idx: i });
+    });
+    // 카테고리 순서대로 렌더링
+    const cats = [...CAT_ORDER.filter(c => groups[c]), ...Object.keys(groups).filter(c => !CAT_ORDER.includes(c))];
+    wrap.innerHTML = cats.map(cat => {
+      const items = groups[cat];
+      const meta = CAT_META[cat] || { icon:'📌', color:'#374151' };
+      const cards = items.map(p => `
+        <div class="partner-card">
+          <img src="${esc(p.image||'')}" alt="${esc(p.title||'')}" onerror="this.style.background='#e0e0e0';this.removeAttribute('src')" style="${p.image?'':'background:#e8eaf6'}">
+          <div class="partner-card-body">
+            <h4>${esc(p.title||'')}</h4>
+            <p>${esc(p.desc||'')}</p>
+            ${p.link ? `<p style="font-size:11px;color:#1a237e;margin-top:2px;word-break:break-all">🔗 ${esc(p.link.length>40?p.link.substring(0,40)+'…':p.link)}</p>` : ''}
           </div>
+          <div class="partner-card-footer">
+            <span class="cat-badge" style="background:${meta.color}18;color:${meta.color}">${esc(cat)}</span>
+            <div class="partner-card-actions">
+              <button class="btn-sm btn-edit-p" onclick="editPartner(${p._idx})">수정</button>
+              <button class="btn-sm btn-del-p" onclick="deletePartner(${p._idx})">삭제</button>
+            </div>
+          </div>
+        </div>`).join('');
+      return `<div class="cat-section">
+        <div class="cat-section-header">
+          <div class="cat-section-icon" style="background:${meta.color}">${meta.icon}</div>
+          <span class="cat-section-title">${cat}</span>
+          <span class="cat-section-count">${items.length}개 상품</span>
         </div>
-      </div>
-    `).join('');
+        <div class="partner-grid">${cards}</div>
+      </div>`;
+    }).join('');
   }
 
   async function addPartner() {
