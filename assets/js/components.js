@@ -95,22 +95,29 @@ const Components = {
   // Local JSON cruise card (for index/destination/ships pages)
   localCruiseCard(c) {
     const fromPrice = c.priceBalcony || c.priceOutside || c.priceInside;
-    const region = c.regions?.[0] || '';
+    const priceLabel = fromPrice ? API.formatPrice(fromPrice, c.currency) : '문의';
+    const shipKo = c.shipTitleKo || Translations.shipName(c.shipTitle) || c.shipTitle;
+    const portStart = (c.portRouteKo || c.portRoute || '').split(/[→>·]/)[0].trim();
     return `
     <div class="cruise-card" onclick="location.href='cruise-view.html?ref=${c.ref}'">
       <div class="cruise-card-img">
-        <img src="${c.image}" alt="${c.shipTitle}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 200%22><rect fill=%22%23e0e0e0%22 width=%22400%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 fill=%22%239e9e9e%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2220%22>🚢</text></svg>'">
-        ${region ? `<span class="cruise-card-tag">${Translations.regionName(region)}</span>` : ''}
+        <img src="${c.image}" alt="${c.shipTitle}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 220%22><rect fill=%22%23cfe8fc%22 width=%22400%22 height=%22220%22/><text x=%2250%%22 y=%2250%%22 fill=%22%231a73e8%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>🚢</text></svg>'">
+        <div class="cruise-card-dots"><span></span><span class="active"></span><span></span></div>
       </div>
       <div class="cruise-card-body">
-        <div class="cruise-card-operator">${Translations.operatorName(c.operator)} · ${c.shipTitleKo || Translations.shipName(c.shipTitle)}</div>
+        <div class="cruise-card-nights">${c.nights}박 크루즈</div>
         <div class="cruise-card-title">${c.title}</div>
-        <div class="cruise-card-route">${c.portRouteKo || c.portRoute}</div>
-        <div class="cruise-card-meta">
-          <span class="cruise-card-date">📅 ${API.formatDate(c.dateFrom)} · ${c.nights}박</span>
-          <span class="cruise-card-price">${API.formatPrice(fromPrice, c.currency)}</span>
+        <div class="cruise-card-info">
+          <span class="ci-ship">🔒 ${shipKo}</span>
+          <span class="ci-port">📍 ${portStart || Translations.operatorName(c.operator)}</span>
         </div>
-        <a href="cruise-view.html?ref=${c.ref}" class="cruise-card-btn">자세히 보기</a>
+        <div class="cruise-card-price-row">
+          <div>
+            <div class="cc-from">최저가</div>
+            <div class="cc-price">${priceLabel} <span class="cc-per">/인</span></div>
+          </div>
+          <a href="cruise-view.html?ref=${c.ref}" class="cc-dates-link" onclick="event.stopPropagation()">날짜 보기 →</a>
+        </div>
       </div>
     </div>`;
   },

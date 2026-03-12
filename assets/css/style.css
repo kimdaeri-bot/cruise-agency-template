@@ -155,26 +155,75 @@ img { max-width: 100%; height: auto; }
 .dest-card .count { font-size: 0.75rem; color: var(--gray-500); }
 
 /* ===== CRUISE CARDS ===== */
+/* ===== CRUISE CARD — Royal Caribbean 스타일 ===== */
 .cruise-card {
-  background: var(--white); border-radius: var(--radius-lg); overflow: hidden;
-  box-shadow: var(--card-shadow); transition: transform 0.25s, box-shadow 0.25s;
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
   display: flex; flex-direction: column;
+  cursor: pointer;
 }
-.cruise-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
-.cruise-card-img { width: 100%; height: 190px; overflow: hidden; position: relative; background: var(--gray-100); }
-.cruise-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
-.cruise-card:hover .cruise-card-img img { transform: scale(1.05); }
-.cruise-card-tag { position: absolute; top: 10px; left: 10px; background: rgba(26,115,232,0.9); color: white; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-.cruise-card-body { padding: 18px 20px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.cruise-card-operator { font-size: 0.75rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-.cruise-card-title { font-size: 1rem; font-weight: 800; color: var(--navy); line-height: 1.4; }
-.cruise-card-route { font-size: 0.8rem; color: var(--gray-500); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cruise-card-meta { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--gray-100); }
-.cruise-card-price { font-size: 1.1rem; font-weight: 900; color: var(--primary); }
-.cruise-card-price span { font-size: 0.78rem; font-weight: 400; color: var(--gray-500); }
-.cruise-card-nights { font-size: 0.8rem; color: var(--gray-500); background: var(--gray-100); padding: 3px 10px; border-radius: 20px; }
-.cruise-card-btn { background: var(--primary); color: white; border: none; padding: 10px 0; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; text-align: center; transition: background 0.2s; display: block; margin: 0 20px 20px; }
-.cruise-card-btn:hover { background: var(--primary-dark); }
+.cruise-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.14); }
+
+/* 이미지 영역 */
+.cruise-card-img {
+  width: 100%; height: 210px; overflow: hidden;
+  position: relative; background: #cfe8fc;
+  border-radius: 12px 12px 0 0;
+}
+.cruise-card-img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.35s;
+}
+.cruise-card:hover .cruise-card-img img { transform: scale(1.04); }
+
+/* 이미지 하단 도트 인디케이터 */
+.cruise-card-dots {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 4px; align-items: center;
+}
+.cruise-card-dots span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.55); display: block;
+}
+.cruise-card-dots span.active {
+  background: #fff; width: 8px; height: 8px;
+}
+
+/* 카드 바디 */
+.cruise-card-body { padding: 14px 16px 18px; flex: 1; display: flex; flex-direction: column; }
+.cruise-card-nights {
+  font-size: 0.88rem; font-weight: 400; color: #333; margin-bottom: 2px;
+}
+.cruise-card-title {
+  font-size: 1rem; font-weight: 800; color: #161c2d; line-height: 1.35;
+  margin-bottom: 10px;
+}
+
+/* 선박 / 출발지 */
+.cruise-card-info { display: flex; flex-direction: column; gap: 3px; margin-bottom: 14px; }
+.ci-ship, .ci-port {
+  font-size: 0.8rem; color: #555; display: flex; align-items: center; gap: 4px;
+}
+
+/* 가격 행 */
+.cruise-card-price-row {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-top: auto; padding-top: 12px; border-top: 1px solid #f0f0f0;
+}
+.cc-from { font-size: 0.72rem; color: #777; margin-bottom: 1px; }
+.cc-price { font-size: 1.35rem; font-weight: 900; color: #161c2d; line-height: 1; }
+.cc-per { font-size: 0.75rem; font-weight: 400; color: #777; }
+.cc-dates-link {
+  font-size: 0.82rem; font-weight: 700; color: var(--primary);
+  text-decoration: underline; white-space: nowrap;
+  padding-bottom: 2px;
+}
+.cc-dates-link:hover { color: var(--primary-dark); }
+
+/* 구식 버튼 숨김 */
+.cruise-card-btn { display: none; }
 
 /* ===== FEATURED SLIDER ===== */
 .featured-slider-wrap { position: relative; }
@@ -194,9 +243,16 @@ img { max-width: 100%; height: auto; }
 
 /* ===== TAB SLIDER ===== */
 .tabs-row { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
-.tab-btn { padding: 9px 20px; border-radius: 24px; border: 1.5px solid var(--gray-200); background: var(--white); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--gray-700); }
-.tab-btn:hover { border-color: var(--primary); color: var(--primary); }
-.tab-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+/* 탭 — 언더라인 스타일 (Royal Caribbean) */
+.tab-btn {
+  padding: 12px 4px; border: none; background: none;
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  color: #555; border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--primary); }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 .tab-slider-wrap { position: relative; margin: 0 28px; }
 .tab-slider-viewport { overflow: hidden; }
 .tab-slider-track { display: flex; gap: 20px; transition: transform 0.4s cubic-bezier(.4,0,.2,1); }
@@ -334,5 +390,4 @@ img { max-width: 100%; height: auto; }
 .req { color: #e53e3e; }
 .btn-submit { width:100%; background:var(--primary); color:white; border:none; padding:13px; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; }
 .btn-submit:hover { background:var(--primary-dark); }
-.cruise-card-btn { background:var(--primary); color:white; border:none; padding:10px 0; border-radius:10px; font-weight:700; font-size:0.88rem; cursor:pointer; text-align:center; transition:background 0.2s; display:block; margin:0 20px 18px; text-decoration:none; }
-.cruise-card-btn:hover { background:var(--primary-dark); }
+/* cruise-card-btn — new design uses cc-dates-link */
