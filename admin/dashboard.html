@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>크루즈링크 관리자 대시보드</title>
+<title>크루즈나라 관리자 대시보드</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -587,8 +587,8 @@
 <aside class="sidebar">
   <div class="sidebar-header">
     <div class="logo-icon">🚢</div>
-    <h2>크루즈링크<br>관리자</h2>
-    <p>CruiseLink Admin</p>
+    <h2>크루즈나라<br>관리자</h2>
+    <p>CruzNara Admin</p>
   </div>
   <nav class="sidebar-menu">
     <div class="menu-item active" id="menuInquiry" onclick="showPanel('inquiry')">
@@ -722,12 +722,12 @@
 
 <script>
   // ===== AUTH GUARD =====
-  if (!localStorage.getItem('cl_admin')) {
+  if (!localStorage.getItem('czn_admin')) {
     location.href = 'index.html';
   }
 
   const GH_TOKEN = ["ghp_vo8vnV0or7A4K", "hWh0sVgTcvVfDxCtw16GFb0"].join("");
-  const GH_REPO = "kimdaeri-bot/cruiselink-v2";
+  const GH_REPO = "kimdaeri-bot/cruise-agency-template";
 
   let currentInquiries = [];
   let currentPartners = [];
@@ -751,7 +751,7 @@
   }
 
   function doLogout() {
-    localStorage.removeItem('cl_admin');
+    localStorage.removeItem('czn_admin');
     location.href = 'index.html';
   }
 
@@ -852,9 +852,9 @@
     if (!inq.ports && inq.ref) {
       try {
         const srcs = [
-          'https://www.cruiselink.co.kr/assets/data/featured.json',
-          'https://www.cruiselink.co.kr/assets/data/cruises-mini.json',
-          'https://www.cruiselink.co.kr/assets/data/cruises.json',
+          'https://kimdaeri-bot.github.io/cruise-agency-template/assets/data/featured.json',
+          'https://kimdaeri-bot.github.io/cruise-agency-template/assets/data/cruises-mini.json',
+          'https://kimdaeri-bot.github.io/cruise-agency-template/assets/data/cruises.json',
         ];
         for (const src of srcs) {
           const r = await fetch(src);
@@ -890,7 +890,7 @@
           <div class="detail-field"><label>일정</label><span>${esc(inq.ports||'-')}</span></div>
           <div class="detail-field"><label>참고가격</label><span>${esc(inq.price||'-')}</span></div>
           <div class="detail-field"><label>Ref</label><span>${esc(inq.ref||'-')}</span></div>
-          ${inq.ref ? `<div class="detail-field"><label>상품 링크</label><span><a href="https://www.cruiselink.co.kr/cruise-view.html?ref=${encodeURIComponent(inq.ref)}" target="_blank" style="color:#1a237e;text-decoration:none;font-weight:600;">🔗 링크보기</a></span></div>` : ''}
+          ${inq.ref ? `<div class="detail-field"><label>상품 링크</label><span><a href="https://kimdaeri-bot.github.io/cruise-agency-template/cruise-view.html?ref=${encodeURIComponent(inq.ref)}" target="_blank" style="color:#1a237e;text-decoration:none;font-weight:600;">🔗 링크보기</a></span></div>` : ''}
         </div>
       </div>
       <div class="detail-section">
@@ -1040,9 +1040,9 @@
     if (!inq.ports && inq.ref) {
       try {
         const srcs = [
-          'https://www.cruiselink.co.kr/assets/data/featured.json',
-          'https://www.cruiselink.co.kr/assets/data/cruises-mini.json',
-          'https://www.cruiselink.co.kr/assets/data/cruises.json',
+          'https://kimdaeri-bot.github.io/cruise-agency-template/assets/data/featured.json',
+          'https://kimdaeri-bot.github.io/cruise-agency-template/assets/data/cruises-mini.json',
+          'https://kimdaeri-bot.github.io/cruise-agency-template/assets/data/cruises.json',
         ];
         for (const src of srcs) {
           const r = await fetch(src);
@@ -1123,7 +1123,7 @@ tr:nth-child(even) td { background: #f5f7ff; }
 </head>
 <body>
 <div class="header">
-  <div class="company"><strong>🚢 크루즈링크</strong>아남항공 주식회사 | info@cruiselink.co.kr</div>
+  <div class="company"><strong>🚢 크루즈나라</strong>아남항공 주식회사 | info@cruznara.com</div>
   <div style="text-align:right;font-size:13px;color:#666">견적 작성일: ${today}<br>문의번호: ${esc(inq.id||'-')}</div>
 </div>
 <h2 style="color:#1a237e;margin-bottom:16px">크루즈 요금 안내</h2>

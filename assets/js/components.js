@@ -62,6 +62,7 @@ const Components = {
               <li><a href="${base}newsletter.html">뉴스레터 구독</a></li>
               <li><a href="${base}privacy.html">개인정보처리방침</a></li>
               <li><a href="${base}terms.html">이용약관</a></li>
+              <li><a href="${base}admin/" style="color:#aaa;font-size:0.8rem">🔒 관리자</a></li>
             </ul>
           </div>
         </div>
