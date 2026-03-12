@@ -204,6 +204,21 @@ img { max-width: 100%; height: auto; }
 .promo-text { position: relative; z-index: 1; }
 
 /* ===== DESTINATION CIRCLES ===== */
+/* ===== 섹션 헤더 (제목 + 화살표 버튼) ===== */
+.sec-header-row {
+  display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px;
+}
+.sec-header-arrows { display: flex; gap: 8px; }
+.sec-arrow-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1.5px solid #d0d5dd;
+  background: #fff; font-size: 1.25rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #555; transition: all 0.18s; line-height: 1;
+}
+.sec-arrow-btn:hover, .sec-arrow-btn.active { background: #1a73e8; border-color: #1a73e8; color: #fff; }
+
+/* ===== 목적지 원형 (다크 오버레이 Official Leagues 스타일) ===== */
 .dest-section { background: var(--white); }
 .dest-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
 .dest-grid::-webkit-scrollbar { display: none; }
@@ -211,10 +226,26 @@ img { max-width: 100%; height: auto; }
   display: flex; flex-direction: column; align-items: center; gap: 10px;
   flex-shrink: 0; text-decoration: none; cursor: pointer;
 }
-.dest-card img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-.dest-card:hover img { transform: scale(1.07); box-shadow: 0 8px 24px rgba(26,115,232,0.25); }
-.dest-card .name { font-size: 0.88rem; font-weight: 700; color: var(--gray-900); text-align: center; }
-.dest-card .count { font-size: 0.75rem; color: var(--gray-500); }
+/* 목적지 원형 — 다크 오버레이 스타일 */
+.dest-card {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  text-decoration: none; flex-shrink: 0;
+}
+.dest-card img {
+  width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
+  transition: transform 0.25s;
+  filter: brightness(0.65);
+}
+.dest-card:hover img { transform: scale(1.07); filter: brightness(0.5); }
+.dest-card .name {
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 0.8rem; font-weight: 900; color: #fff;
+  text-align: center; text-transform: uppercase; letter-spacing: 0.8px;
+  width: 90px; line-height: 1.2; pointer-events: none;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+}
+.dest-card .count { font-size: 0.72rem; color: var(--gray-500); margin-top: 6px; }
 
 /* ===== CRUISE CARDS ===== */
 /* ===== CRUISE CARD — Royal Caribbean 스타일 ===== */
@@ -565,4 +596,66 @@ img { max-width: 100%; height: auto; }
 @media (max-width: 480px) {
   .hsb-field { flex: 1 1 100%; border-bottom: 1px solid #f0f0f0; }
   .hsb-field:last-of-type { border-bottom: none; }
+}
+
+/* ===== CV2 CARD — Official Leagues 카드 스타일 ===== */
+.cv2-card {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  display: flex; flex-direction: column;
+  flex: 0 0 calc(33.333% - 16px);
+  min-width: 0;
+}
+.cv2-card:hover { box-shadow: 0 10px 32px rgba(0,0,0,0.14); transform: translateY(-4px); }
+
+.cv2-img {
+  position: relative; height: 200px; overflow: hidden; background: #cfe8fc;
+}
+.cv2-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s; }
+.cv2-card:hover .cv2-img img { transform: scale(1.05); }
+
+/* 배지 */
+.cv2-badge {
+  position: absolute; top: 12px; left: 12px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.8px;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+  color: #fff;
+}
+.badge-urgent { background: #e53935; }
+.badge-sale   { background: #f57c00; }
+.badge-luxury { background: #00897b; }
+
+/* 카드 바디 */
+.cv2-body {
+  padding: 14px 16px 16px;
+  display: flex; flex-direction: column; gap: 4px; flex: 1;
+}
+.cv2-date { font-size: 0.75rem; color: #888; }
+.cv2-operator { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+.cv2-title { font-size: 0.95rem; font-weight: 700; color: #161c2d; line-height: 1.35; flex: 1; }
+.cv2-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0;
+}
+.cv2-price { font-size: 1.05rem; font-weight: 800; color: #161c2d; }
+.cv2-arrow-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #1a73e8; color: #fff; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; flex-shrink: 0; transition: background 0.18s;
+}
+.cv2-arrow-btn:hover { background: #1557b0; }
+
+/* 슬라이더에서 cv2-card 크기 */
+.featured-track .cv2-card { flex: 0 0 calc(33.333% - 16px); }
+@media (max-width: 900px) {
+  .featured-track .cv2-card { flex: 0 0 calc(50% - 12px); }
+}
+@media (max-width: 600px) {
+  .featured-track .cv2-card { flex: 0 0 calc(85%); }
+  .dest-card img { width: 90px; height: 90px; }
+  .dest-card .name { font-size: 0.7rem; width: 76px; }
 }

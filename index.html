@@ -115,7 +115,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   }
   </script>
 
-  <link rel="stylesheet" href="assets/css/style.css?v=20260312c">
+  <link rel="stylesheet" href="assets/css/style.css?v=20260312d">
   
   
 </head>
@@ -543,16 +543,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- RECOMMENDED CRUISES -->
   <section class="section" style="background:var(--white)">
     <div class="container">
-      <h2 class="section-title">출발 임박 특가 크루즈</h2>
-      <p class="section-subtitle">놓치면 후회하는 한정 특가 상품</p>
-      <div class="featured-slider-wrap">
-        <button class="featured-arrow featured-arrow-left" onclick="slideFeatured(-1)" aria-label="이전">&#8249;</button>
-        <div class="featured-slider" id="featuredSlider">
-          <div class="featured-track" id="featuredTrack">
-            <div class="loading"><div class="loading-spinner"></div><p>크루즈 정보를 불러오는 중...</p></div>
-          </div>
+      <div class="sec-header-row">
+        <div>
+          <h2 class="section-title" style="margin-bottom:4px">출발 임박 특가 크루즈 🔥</h2>
+          <p class="section-subtitle" style="margin:0">지금 예약하면 더 좋은 가격, 더 좋은 객실</p>
         </div>
-        <button class="featured-arrow featured-arrow-right" onclick="slideFeatured(1)" aria-label="다음">&#8250;</button>
+        <div class="sec-header-arrows">
+          <button class="sec-arrow-btn" onclick="slideFeatured(-1)" aria-label="이전">&#8249;</button>
+          <button class="sec-arrow-btn" onclick="slideFeatured(1)" aria-label="다음">&#8250;</button>
+        </div>
+      </div>
+      <div class="featured-slider" id="featuredSlider">
+        <div class="featured-track" id="featuredTrack">
+          <div class="loading"><div class="loading-spinner"></div><p>크루즈 정보를 불러오는 중...</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -560,18 +564,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- LUXURY CRUISES -->
   <section class="section" style="background:var(--bg)">
     <div class="container">
-      <a href="search.html?operators=Explora" style="text-decoration:none;color:inherit;display:block;cursor:pointer;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
-        <h2 class="section-title">크루즈나라 추천 럭셔리 크루즈</h2>
-        <p class="section-subtitle">익스플로라 저니 — 전 객실 오션뷰 올인클루시브</p>
-      </a>
-      <div class="featured-slider-wrap">
-        <button class="featured-arrow featured-arrow-left" onclick="slideFeatured2(-1)" aria-label="이전">&#8249;</button>
-        <div class="featured-slider" id="featuredSlider2">
-          <div class="featured-track" id="featuredTrack2">
-            <div class="loading"><div class="loading-spinner"></div><p>크루즈 정보를 불러오는 중...</p></div>
-          </div>
+      <div class="sec-header-row">
+        <div>
+          <h2 class="section-title" style="margin-bottom:4px">크루즈나라 추천 럭셔리 크루즈 ✨</h2>
+          <p class="section-subtitle" style="margin:0">익스플로라 저니 — 전 객실 오션뷰 올인클루시브</p>
         </div>
-        <button class="featured-arrow featured-arrow-right" onclick="slideFeatured2(1)" aria-label="다음">&#8250;</button>
+        <div class="sec-header-arrows">
+          <button class="sec-arrow-btn" onclick="slideFeatured2(-1)" aria-label="이전">&#8249;</button>
+          <button class="sec-arrow-btn active" onclick="slideFeatured2(1)" aria-label="다음">&#8250;</button>
+        </div>
+      </div>
+      <div class="featured-slider" id="featuredSlider2">
+        <div class="featured-track" id="featuredTrack2">
+          <div class="loading"><div class="loading-spinner"></div><p>크루즈 정보를 불러오는 중...</p></div>
+        </div>
       </div>
     </div>
   </section>

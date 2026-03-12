@@ -96,27 +96,28 @@ const Components = {
   localCruiseCard(c) {
     const fromPrice = c.priceBalcony || c.priceOutside || c.priceInside;
     const priceLabel = fromPrice ? API.formatPrice(fromPrice, c.currency) : '문의';
-    const shipKo = c.shipTitleKo || Translations.shipName(c.shipTitle) || c.shipTitle;
-    const portStart = (c.portRouteKo || c.portRoute || '').split(/[→>·]/)[0].trim();
+    const opName = Translations.operatorName(c.operator) || c.operator;
+    const dateStr = c.dateFrom ? c.dateFrom.substring(0, 10).replace(/-/g, '.') : '';
+    const today = new Date().toISOString().slice(0, 10);
+    const daysLeft = c.dateFrom ? Math.round((new Date(c.dateFrom) - new Date(today)) / 86400000) : 999;
+    let badge = '', badgeClass = '';
+    if (c.operator === 'Explora') { badge = '럭셔리'; badgeClass = 'badge-luxury'; }
+    else if (daysLeft <= 45) { badge = '출발 임박'; badgeClass = 'badge-urgent'; }
+    else if (fromPrice && fromPrice < 500) { badge = '특 가'; badgeClass = 'badge-sale'; }
+    const opColor = { MSC:'#0066cc', Norwegian:'#d32f2f', 'Royal Caribbean':'#00829b', Carnival:'#e65100', Celebrity:'#37474f', Oceania:'#6a1b9a', Regent:'#880e4f', Explora:'#5d4037' }[c.operator] || '#1a73e8';
     return `
-    <div class="cruise-card" onclick="location.href='cruise-view.html?ref=${c.ref}'">
-      <div class="cruise-card-img">
-        <img src="${c.image}" alt="${c.shipTitle}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 220%22><rect fill=%22%23cfe8fc%22 width=%22400%22 height=%22220%22/><text x=%2250%%22 y=%2250%%22 fill=%22%231a73e8%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>🚢</text></svg>'">
-        <div class="cruise-card-dots"><span></span><span class="active"></span><span></span></div>
+    <div class="cv2-card" onclick="location.href='cruise-view.html?ref=${c.ref}'">
+      <div class="cv2-img">
+        <img src="${c.image}" alt="${c.title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 220%22><rect fill=%22%23cfe8fc%22 width=%22400%22 height=%22220%22/><text x=%2250%%22 y=%2250%%22 fill=%22%231a73e8%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>🚢</text></svg>'">
+        ${badge ? `<span class="cv2-badge ${badgeClass}">${badge}</span>` : ''}
       </div>
-      <div class="cruise-card-body">
-        <div class="cruise-card-nights">${c.nights}박 크루즈</div>
-        <div class="cruise-card-title">${c.title}</div>
-        <div class="cruise-card-info">
-          <span class="ci-ship">🔒 ${shipKo}</span>
-          <span class="ci-port">📍 ${portStart || Translations.operatorName(c.operator)}</span>
-        </div>
-        <div class="cruise-card-price-row">
-          <div>
-            <div class="cc-from">최저가</div>
-            <div class="cc-price">${priceLabel} <span class="cc-per">/인</span></div>
-          </div>
-          <a href="cruise-view.html?ref=${c.ref}" class="cc-dates-link" onclick="event.stopPropagation()">날짜 보기 →</a>
+      <div class="cv2-body">
+        ${dateStr ? `<div class="cv2-date">📅 ${dateStr}</div>` : ''}
+        <div class="cv2-operator" style="color:${opColor}">${opName}</div>
+        <div class="cv2-title">${c.title}</div>
+        <div class="cv2-footer">
+          <span class="cv2-price">From ${priceLabel}</span>
+          <a href="cruise-view.html?ref=${c.ref}" class="cv2-arrow-btn" onclick="event.stopPropagation()">→</a>
         </div>
       </div>
     </div>`;
