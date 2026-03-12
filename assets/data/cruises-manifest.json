@@ -1,0 +1,60 @@
+{
+  "destinations": [
+    {
+      "dest": "caribbean",
+      "count": 7815,
+      "sizeKB": 6938
+    },
+    {
+      "dest": "mediterranean",
+      "count": 5388,
+      "sizeKB": 4592
+    },
+    {
+      "dest": "other",
+      "count": 1521,
+      "sizeKB": 1402
+    },
+    {
+      "dest": "northern-europe",
+      "count": 869,
+      "sizeKB": 756
+    },
+    {
+      "dest": "oceania",
+      "count": 685,
+      "sizeKB": 638
+    },
+    {
+      "dest": "alaska",
+      "count": 671,
+      "sizeKB": 638
+    },
+    {
+      "dest": "south-america",
+      "count": 522,
+      "sizeKB": 459
+    },
+    {
+      "dest": "asia",
+      "count": 422,
+      "sizeKB": 362
+    },
+    {
+      "dest": "korea",
+      "count": 175,
+      "sizeKB": 155
+    },
+    {
+      "dest": "japan",
+      "count": 65,
+      "sizeKB": 52
+    },
+    {
+      "dest": "hawaii",
+      "count": 23,
+      "sizeKB": 21
+    }
+  ],
+  "total": 18156
+}

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K4PPLZNG');</script>
+<!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>호텔 검색 - 크루즈링크</title>
+  <meta name="description" content="전 세계 230만+ 호텔 최저가 검색. 크루즈 전후 숙박부터 비즈니스 출장까지 크루즈링크에서.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    :root {
+      --h-blue: #1a237e;
+      --h-blue2: #3949ab;
+      --h-orange: #ff6f00;
+      --h-bg: #f4f6fb;
+    }
+
+    /* ===== 히어로 ===== */
+    .hotel-hero {
+      background: linear-gradient(155deg, #0d1b6e 0%, #1a237e 45%, #283593 75%, #1565c0 100%);
+      padding: 56px 0 0; text-align:center; color:#fff; position:relative; overflow:hidden;
+    }
+    .hotel-hero::before {
+      content:''; position:absolute; inset:0;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+    }
+    .hero-inner { position:relative; z-index:1; }
+    .hero-badge {
+      display:inline-block; background:rgba(255,255,255,.12); backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.2); border-radius:20px;
+      padding:5px 15px; font-size:.84rem; margin-bottom:14px;
+    }
+    .hotel-hero h1 { font-size:2.2rem; font-weight:900; margin-bottom:8px; line-height:1.3; }
+    .hotel-hero p { font-size:1rem; opacity:.85; margin-bottom:0; }
+    .hero-stats {
+      display:flex; justify-content:center; gap:28px; flex-wrap:wrap;
+      margin:24px 0 0; padding:18px 0;
+      border-top:1px solid rgba(255,255,255,.12);
+    }
+    .hero-stat .num { font-size:1.4rem; font-weight:900; }
+    .hero-stat .lbl { font-size:.75rem; opacity:.7; margin-top:2px; }
+
+    /* ===== 검색 폼 ===== */
+    .search-section { background:var(--h-bg); padding:28px 0 32px; }
+    .search-box {
+      background:#fff; border-radius:18px;
+      padding:24px 24px 20px;
+      box-shadow:0 4px 28px rgba(26,35,126,.1);
+      max-width:880px; margin:0 auto;
+    }
+    .search-label {
+      font-size:.75rem; font-weight:700; color:#999;
+      text-transform:uppercase; letter-spacing:.06em; margin-bottom:14px;
+    }
+    .search-row {
+      display:grid;
+      grid-template-columns: 2.1fr 1fr 1fr 1fr auto;
+      gap:8px; align-items:end;
+    }
+    .sf label {
+      display:block; font-size:.72rem; font-weight:700; color:#888;
+      text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px;
+    }
+    .sf input, .sf select {
+      width:100%; height:44px; padding:0 12px;
+      border:1.5px solid #e8eaf0; border-radius:9px;
+      font-size:.93rem; font-family:inherit; color:#1a237e;
+      background:#fafbff; box-sizing:border-box;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .sf input:focus, .sf select:focus {
+      outline:none; border-color:var(--h-blue);
+      box-shadow:0 0 0 3px rgba(26,35,126,.07); background:#fff;
+    }
+    .sf input::placeholder { color:#bbb; }
+
+    /* 자동완성 */
+    .ac-wrap { position:relative; }
+    .ac-drop {
+      position:absolute; top:calc(100% + 3px); left:0; right:0;
+      background:#fff; border:1px solid #e0e4f0; border-radius:11px;
+      box-shadow:0 8px 28px rgba(26,35,126,.1);
+      z-index:300; display:none; max-height:260px; overflow-y:auto;
+    }
+    .ac-drop.open { display:block; }
+    .ac-item {
+      display:flex; align-items:center; gap:9px;
+      padding:9px 12px; cursor:pointer;
+      border-bottom:1px solid #f5f6fa; transition:background .15s;
+    }
+    .ac-item:last-child { border-bottom:none; }
+    .ac-item:hover { background:#f0f3ff; }
+    .ac-icon { font-size:1.1rem; flex-shrink:0; }
+    .ac-name { font-weight:600; font-size:.88rem; color:#1a237e; }
+    .ac-sub { font-size:.74rem; color:#aaa; }
+
+    /* 게스트 */
+    .guests-wrap { position:relative; }
+    .guests-btn {
+      width:100%; height:44px; padding:0 12px;
+      border:1.5px solid #e8eaf0; border-radius:9px;
+      font-size:.93rem; font-family:inherit; color:#1a237e;
+      background:#fafbff; cursor:pointer; text-align:left;
+      display:flex; align-items:center; transition:border-color .2s;
+      white-space:nowrap;
+    }
+    .guests-btn:hover { border-color:var(--h-blue); }
+    .guests-panel {
+      position:absolute; top:calc(100%+3px); left:0;
+      background:#fff; border:1px solid #e0e4f0; border-radius:11px;
+      box-shadow:0 8px 28px rgba(26,35,126,.1);
+      padding:14px; z-index:300; min-width:190px; display:none;
+    }
+    .guests-panel.open { display:block; }
+    .gp-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .gp-row:last-child { margin-bottom:0; }
+    .gp-label { font-size:.86rem; font-weight:600; }
+    .gp-sub { font-size:.72rem; color:#aaa; }
+    .gp-ctrl { display:flex; align-items:center; gap:7px; }
+    .gp-btn {
+      width:28px; height:28px; border-radius:50%;
+      border:1.5px solid #dde0f0; background:#fff;
+      cursor:pointer; font-size:1rem;
+      display:flex; align-items:center; justify-content:center;
+      color:#1a237e; transition:all .15s;
+    }
+    .gp-btn:hover { border-color:#1a237e; background:#f0f3ff; }
+    .gp-num { font-weight:700; min-width:18px; text-align:center; font-size:.92rem; }
+
+    /* 검색 버튼 */
+    .search-btn {
+      height:44px; background:var(--h-orange); color:#fff;
+      border:none; border-radius:9px; padding:0 20px;
+      font-size:.95rem; font-weight:700; cursor:pointer;
+      white-space:nowrap; display:flex; align-items:center; gap:5px;
+      transition:background .2s, transform .15s;
+    }
+    .search-btn:hover { background:#e65100; transform:translateY(-1px); }
+    .search-btn:disabled { background:#ccc; cursor:not-allowed; transform:none; }
+
+    /* 빠른 도시 */
+    .quick-cities {
+      margin-top:14px; display:flex; flex-wrap:wrap; gap:6px; align-items:center;
+    }
+    .qc-label { font-size:.75rem; color:#bbb; font-weight:600; }
+    .city-chip {
+      padding:4px 11px; border:1.5px solid #eaecf4; border-radius:18px;
+      background:#fff; font-size:.8rem; color:#444; cursor:pointer;
+      transition:all .15s;
+    }
+    .city-chip:hover { border-color:#1a237e; color:#1a237e; background:#f0f3ff; }
+
+    /* ===== 결과 영역 ===== */
+    .results-section { padding:32px 0 48px; background:var(--h-bg); min-height:200px; }
+    .results-header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:20px; flex-wrap:wrap; gap:10px;
+    }
+    .results-title { font-size:1.1rem; font-weight:700; color:#1a237e; }
+    .results-meta { font-size:.82rem; color:#999; }
+
+    /* 로딩 */
+    .loading-wrap {
+      text-align:center; padding:60px 20px;
+      display:none;
+    }
+    .loading-wrap.show { display:block; }
+    .spinner {
+      width:44px; height:44px; border-radius:50%;
+      border:3px solid #e8eaf0;
+      border-top-color:#1a237e;
+      animation:spin .8s linear infinite;
+      margin:0 auto 16px;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .loading-text { color:#888; font-size:.9rem; }
+
+    /* 빈 상태 */
+    .empty-state {
+      text-align:center; padding:60px 20px;
+      display:none;
+    }
+    .empty-state.show { display:block; }
+    .empty-icon { font-size:3rem; margin-bottom:12px; }
+    .empty-title { font-size:1rem; font-weight:700; color:#333; margin-bottom:6px; }
+    .empty-sub { font-size:.85rem; color:#999; }
+
+    /* 호텔 카드 그리드 */
+    .hotels-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap:18px;
+    }
+    .hotel-card {
+      background:#fff; border-radius:14px; overflow:hidden;
+      box-shadow:0 2px 12px rgba(26,35,126,.07);
+      transition:transform .2s, box-shadow .2s;
+      cursor:pointer;
+    }
+    .hotel-card:hover {
+      transform:translateY(-3px);
+      box-shadow:0 8px 28px rgba(26,35,126,.14);
+    }
+    .card-img {
+      height:160px; background:linear-gradient(135deg, #e8eaf0 0%, #c5cae9 100%);
+      position:relative; overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .card-img img { width:100%; height:100%; object-fit:cover; }
+    .card-img .no-img { font-size:3rem; opacity:.35; }
+    .card-stars { position:absolute; top:10px; left:10px; }
+    .star-badge {
+      background:rgba(0,0,0,.55); color:#ffd700;
+      padding:2px 7px; border-radius:6px; font-size:.78rem; font-weight:700;
+    }
+    .mock-badge {
+      position:absolute; top:10px; right:10px;
+      background:rgba(255,152,0,.9); color:#fff;
+      padding:2px 7px; border-radius:6px; font-size:.72rem; font-weight:700;
+    }
+    .card-body { padding:14px; }
+    .card-name {
+      font-size:.96rem; font-weight:700; color:#1a237e;
+      margin-bottom:4px; line-height:1.3;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    }
+    .card-addr { font-size:.77rem; color:#999; margin-bottom:8px; }
+    .card-amenities {
+      display:flex; flex-wrap:wrap; gap:4px; margin-bottom:10px;
+    }
+    .amenity-tag {
+      background:#f0f3ff; color:#3949ab;
+      padding:2px 7px; border-radius:5px; font-size:.72rem;
+    }
+    .card-footer {
+      display:flex; justify-content:space-between; align-items:center;
+      padding-top:10px; border-top:1px solid #f0f2f8;
+    }
+    .card-price .price-val {
+      font-size:1.1rem; font-weight:900; color:#1a237e;
+    }
+    .card-price .price-label { font-size:.72rem; color:#aaa; }
+    .card-price .no-price { font-size:.82rem; color:#bbb; }
+    .card-book {
+      background:#ff6f00; color:#fff;
+      border:none; border-radius:8px;
+      padding:7px 14px; font-size:.83rem; font-weight:700;
+      cursor:pointer; transition:background .2s;
+    }
+    .card-book:hover { background:#e65100; }
+
+    /* 페이지네이션 */
+    .pagination {
+      display:flex; justify-content:center; gap:8px;
+      margin-top:28px; flex-wrap:wrap;
+    }
+    .page-btn {
+      width:36px; height:36px; border-radius:8px;
+      border:1.5px solid #e8eaf0; background:#fff;
+      cursor:pointer; font-size:.88rem; font-weight:600;
+      color:#444; transition:all .15s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .page-btn.active { background:#1a237e; color:#fff; border-color:#1a237e; }
+    .page-btn:hover:not(.active) { border-color:#1a237e; color:#1a237e; }
+
+    /* 크루즈+호텔 배너 */
+    .combo-section {
+      background:linear-gradient(135deg,#1a237e,#0d47a1);
+      color:#fff; padding:40px 0;
+    }
+    .combo-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+    .combo-text h2 { font-size:1.4rem; margin-bottom:6px; }
+    .combo-text p { opacity:.85; font-size:.9rem; max-width:460px; }
+    .combo-btns { display:flex; gap:10px; flex-wrap:wrap; }
+
+    /* API 미설정 배너 */
+    .api-notice {
+      background:#fff8e1; border:1px solid #ffe082; border-radius:10px;
+      padding:12px 16px; margin-bottom:20px;
+      font-size:.83rem; color:#795548; display:none;
+    }
+    .api-notice.show { display:flex; gap:8px; align-items:flex-start; }
+
+    /* 반응형 */
+    @media (max-width:768px) {
+      .hotel-hero h1 { font-size:1.6rem; }
+      .search-row { grid-template-columns:1fr 1fr; }
+      .search-row .sf:first-child { grid-column:1/-1; }
+      .search-row .search-btn { grid-column:1/-1; width:100%; justify-content:center; }
+    }
+    @media (max-width:480px) {
+      .search-row { grid-template-columns:1fr; }
+      .search-row .sf { grid-column:1; }
+    }
+  </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4PPLZNG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager -->
+
+<div id="header"></div>
+
+<!-- 히어로 -->
+<section class="hotel-hero">
+  <div class="container hero-inner">
+    <span class="hero-badge">🤝 Amadeus 파트너 · 전 세계 호텔</span>
+    <h1>원하는 호텔을<br>지금 바로 검색하세요</h1>
+    <p>도시를 선택하고 날짜를 고르면 — 크루즈링크가 최저가를 찾아드립니다</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">2.9M+</div><div class="lbl">전 세계 숙소</div></div>
+      <div class="hero-stat"><div class="num">220+</div><div class="lbl">국가/지역</div></div>
+      <div class="hero-stat"><div class="num">즉시</div><div class="lbl">예약 확정</div></div>
+      <div class="hero-stat"><div class="num">24/7</div><div class="lbl">고객 지원</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 검색 폼 -->
+<section class="search-section">
+  <div class="container">
+    <div class="search-box">
+      <div class="search-label">🔍 호텔 검색</div>
+      <div class="search-row">
+        <!-- 목적지 -->
+        <div class="sf">
+          <label>목적지</label>
+          <div class="ac-wrap" id="acWrap">
+            <input type="text" id="destInput" placeholder="도시명 입력 (예: 파리, 도쿄...)"
+                   autocomplete="off" oninput="onDestInput(this.value)" onfocus="onDestFocus()">
+            <div class="ac-drop" id="acDrop"></div>
+          </div>
+        </div>
+        <!-- 체크인 -->
+        <div class="sf">
+          <label>체크인</label>
+          <input type="date" id="checkin">
+        </div>
+        <!-- 체크아웃 -->
+        <div class="sf">
+          <label>체크아웃</label>
+          <input type="date" id="checkout">
+        </div>
+        <!-- 인원 -->
+        <div class="sf">
+          <label>인원</label>
+          <div class="guests-wrap" id="guestsWrap">
+            <button class="guests-btn" type="button" onclick="toggleGuests()" id="guestsBtnEl">성인 2명</button>
+            <div class="guests-panel" id="guestsPanel">
+              <div class="gp-row">
+                <div><div class="gp-label">성인</div><div class="gp-sub">만 12세+</div></div>
+                <div class="gp-ctrl">
+                  <button class="gp-btn" type="button" onclick="adj('a',-1)">−</button>
+                  <span class="gp-num" id="gn_a">2</span>
+                  <button class="gp-btn" type="button" onclick="adj('a',1)">+</button>
+                </div>
+              </div>
+              <div class="gp-row">
+                <div><div class="gp-label">아동</div><div class="gp-sub">만 2~11세</div></div>
+                <div class="gp-ctrl">
+                  <button class="gp-btn" type="button" onclick="adj('c',-1)">−</button>
+                  <span class="gp-num" id="gn_c">0</span>
+                  <button class="gp-btn" type="button" onclick="adj('c',1)">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 검색 버튼 -->
+        <button class="search-btn" id="searchBtn" onclick="doSearch()">
+          <span>🔍</span> 검색
+        </button>
+      </div>
+      <!-- 빠른 도시 -->
+      <div class="quick-cities">
+        <span class="qc-label">인기:</span>
+        <button class="city-chip" onclick="qCity('파리','PAR','🗼')">🗼 파리</button>
+        <button class="city-chip" onclick="qCity('도쿄','TYO','🗾')">🗾 도쿄</button>
+        <button class="city-chip" onclick="qCity('바르셀로나','BCN','🏖')">🏖 바르셀로나</button>
+        <button class="city-chip" onclick="qCity('로마','ROM','🏛')">🏛 로마</button>
+        <button class="city-chip" onclick="qCity('두바이','DXB','🏗')">🏗 두바이</button>
+        <button class="city-chip" onclick="qCity('방콕','BKK','🛕')">🛕 방콕</button>
+        <button class="city-chip" onclick="qCity('싱가포르','SIN','🦁')">🦁 싱가포르</button>
+        <button class="city-chip" onclick="qCity('뉴욕','NYC','🗽')">🗽 뉴욕</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 결과 -->
+<section class="results-section" id="resultsSection" style="display:none">
+  <div class="container">
+    <!-- API 미설정 안내 -->
+    <div class="api-notice" id="apiNotice">
+      <span>⚠️</span>
+      <span><strong>데모 모드:</strong> Amadeus API 키 미설정 상태입니다. 아래는 샘플 데이터입니다. 실제 요금은 Amadeus API 연동 후 확인 가능합니다.</span>
+    </div>
+
+    <div class="results-header">
+      <div class="results-title" id="resultsTitleEl">검색 결과</div>
+      <div class="results-meta" id="resultsMetaEl"></div>
+    </div>
+
+    <!-- 로딩 -->
+    <div class="loading-wrap" id="loadingEl">
+      <div class="spinner"></div>
+      <div class="loading-text">전 세계 호텔 가격 비교 중...</div>
+    </div>
+
+    <!-- 빈 상태 -->
+    <div class="empty-state" id="emptyEl">
+      <div class="empty-icon">😔</div>
+      <div class="empty-title">검색 결과가 없습니다</div>
+      <div class="empty-sub">날짜나 목적지를 변경해 보세요</div>
+    </div>
+
+    <!-- 호텔 그리드 -->
+    <div class="hotels-grid" id="hotelsGrid"></div>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination" id="paginationEl"></div>
+  </div>
+</section>
+
+<!-- 크루즈+호텔 -->
+<section class="combo-section">
+  <div class="container">
+    <div class="combo-inner">
+      <div class="combo-text">
+        <h2>🚢 크루즈 + 호텔 패키지</h2>
+        <p>크루즈 승선 전날 로마에서 1박, 하선 후 바르셀로나에서 2박 — 항공·크루즈·호텔을 한 번에 구성해 드립니다.</p>
+      </div>
+      <div class="combo-btns">
+        <a href="https://pf.kakao.com/_xgYbJG" target="_blank" class="btn btn-orange">💬 패키지 상담</a>
+        <a href="tel:02-3788-9119" class="btn btn-white">📞 전화 문의</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer"></div>
+<script src="assets/js/components.js"></script>
+<script src="assets/js/api.js"></script>
+<script>
+document.getElementById('header').innerHTML = Components.header('hotels');
+document.getElementById('footer').innerHTML = Components.footer();
+
+const PROXY = 'https://hotel-proxy-nine.vercel.app/api';
+
+// 날짜 초기값
+const d1 = new Date(); d1.setDate(d1.getDate()+1);
+const d2 = new Date(); d2.setDate(d2.getDate()+3);
+const fmt = d => d.toISOString().split('T')[0];
+document.getElementById('checkin').value  = fmt(d1);
+document.getElementById('checkout').value = fmt(d2);
+document.getElementById('checkin').min  = fmt(d1);
+document.getElementById('checkout').min = fmt(d2);
+document.getElementById('checkin').addEventListener('change', function(){
+  const co = new Date(this.value); co.setDate(co.getDate()+1);
+  document.getElementById('checkout').min = fmt(co);
+  if(document.getElementById('checkout').value <= this.value)
+    document.getElementById('checkout').value = fmt(co);
+});
+
+// ===== 게스트 =====
+const G = {a:2, c:0};
+function adj(k,d) {
+  if(k==='a') G.a = Math.max(1, Math.min(8, G.a+d));
+  else         G.c = Math.max(0, Math.min(4, G.c+d));
+  document.getElementById('gn_'+k).textContent = G[k];
+  let t = `성인 ${G.a}명`;
+  if(G.c>0) t += ` · 아동 ${G.c}명`;
+  document.getElementById('guestsBtnEl').textContent = t;
+}
+function toggleGuests() {
+  document.getElementById('guestsPanel').classList.toggle('open');
+}
+
+// ===== 자동완성 =====
+let acTimer, selCity = null;
+function onDestInput(v) {
+  clearTimeout(acTimer);
+  selCity = null;
+  if(!v) { closeDrop(); return; }
+  acTimer = setTimeout(() => fetchAC(v), 250);
+}
+function onDestFocus() {
+  const v = document.getElementById('destInput').value;
+  fetchAC(v || '');
+}
+async function fetchAC(q) {
+  try {
+    const r = await fetch(`${PROXY}/suggest?q=${encodeURIComponent(q)}`);
+    const d = await r.json();
+    renderDrop(d.cities || []);
+  } catch(_) {}
+}
+function renderDrop(cities) {
+  const dd = document.getElementById('acDrop');
+  if(!cities.length) { closeDrop(); return; }
+  dd.innerHTML = cities.map(c => `
+    <div class="ac-item" onclick='pickCity(${JSON.stringify(c).replace(/"/g,"&quot;")})'>
+      <span class="ac-icon">${c.icon||'📍'}</span>
+      <div>
+        <div class="ac-name">${c.name} <span style="font-weight:400;color:#bbb;font-size:.78rem">${c.en}</span></div>
+        <div class="ac-sub">${c.country} · ${c.code||''}</div>
+      </div>
+    </div>`).join('');
+  dd.classList.add('open');
+}
+function pickCity(c) {
+  selCity = c;
+  document.getElementById('destInput').value = c.name;
+  closeDrop();
+}
+function closeDrop() {
+  document.getElementById('acDrop').classList.remove('open');
+}
+function qCity(name, code, icon) {
+  selCity = {name, code, icon, en:name};
+  document.getElementById('destInput').value = name;
+  closeDrop();
+  // 날짜 설정돼 있으면 바로 검색
+  const ci = document.getElementById('checkin').value;
+  const co = document.getElementById('checkout').value;
+  if(ci && co && ci < co) doSearch();
+  else document.querySelector('.search-section').scrollIntoView({behavior:'smooth'});
+}
+document.addEventListener('click', e => {
+  if(!document.getElementById('acWrap').contains(e.target)) closeDrop();
+  if(!document.getElementById('guestsWrap').contains(e.target))
+    document.getElementById('guestsPanel').classList.remove('open');
+});
+
+// ===== 검색 =====
+let allHotels = [], curPage = 1;
+const PAGE_SIZE = 9;
+
+async function doSearch() {
+  const dest = document.getElementById('destInput').value.trim();
+  const ci   = document.getElementById('checkin').value;
+  const co   = document.getElementById('checkout').value;
+  if(!dest) { alert('목적지를 입력해 주세요.'); document.getElementById('destInput').focus(); return; }
+  if(!ci||!co) { alert('날짜를 선택해 주세요.'); return; }
+  if(ci>=co)   { alert('체크아웃은 체크인보다 늦어야 합니다.'); return; }
+
+  const city = selCity || {name:dest, code:'PAR', en:dest};
+  const nights = Math.round((new Date(co)-new Date(ci))/86400000);
+
+  // 결과 영역 보이기
+  document.getElementById('resultsSection').style.display = '';
+  document.querySelector('.results-section').scrollIntoView({behavior:'smooth', block:'start'});
+
+  showLoading(true);
+  document.getElementById('hotelsGrid').innerHTML = '';
+  document.getElementById('paginationEl').innerHTML = '';
+  document.getElementById('emptyEl').classList.remove('show');
+
+  const params = new URLSearchParams({
+    cityCode: city.code,
+    cityName: city.name,
+    checkin: ci,
+    checkout: co,
+    adults: G.a,
+    currency: 'KRW',
+  });
+
+  try {
+    const r = await fetch(`${PROXY}/search?${params}`);
+    const d = await r.json();
+
+    showLoading(false);
+
+    allHotels = d.hotels || [];
+    curPage = 1;
+
+    // 메타
+    document.getElementById('resultsTitleEl').textContent =
+      `${city.name} 호텔 ${allHotels.length}개 검색됨`;
+    document.getElementById('resultsMetaEl').textContent =
+      `📅 ${ci} ~ ${co} · ${nights}박 · 성인 ${G.a}명`;
+
+    // API 미설정 배너
+    document.getElementById('apiNotice').classList.toggle('show', !!d.isMock);
+
+    if(!allHotels.length) {
+      document.getElementById('emptyEl').classList.add('show');
+      return;
+    }
+    renderPage();
+  } catch(e) {
+    showLoading(false);
+    document.getElementById('emptyEl').classList.add('show');
+    console.error(e);
+  }
+}
+
+function showLoading(v) {
+  document.getElementById('loadingEl').classList.toggle('show', v);
+  document.getElementById('searchBtn').disabled = v;
+}
+
+function renderPage() {
+  const start = (curPage-1)*PAGE_SIZE;
+  const slice = allHotels.slice(start, start+PAGE_SIZE);
+  document.getElementById('hotelsGrid').innerHTML = slice.map(renderCard).join('');
+  renderPagination();
+  document.querySelector('.hotels-grid').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function renderCard(h) {
+  const stars = h.stars ? '⭐'.repeat(Math.min(h.stars,5)) : '';
+  const price = h.minPrice
+    ? `<div class="price-val">${h.minPrice.toLocaleString('ko-KR')}${h.currency==='KRW'?'원':'$'}<span style="font-weight:400;font-size:.7rem"> /박</span></div>`
+    : `<div class="no-price">요금 문의</div>`;
+  const imgs = h.images?.length
+    ? `<img src="${h.images[0]}" alt="${h.name}" onerror="this.style.display='none'">`
+    : `<div class="no-img">🏨</div>`;
+  const tags = (h.amenities||[]).slice(0,4).map(a=>`<span class="amenity-tag">${a}</span>`).join('');
+  const mock = h.isMock ? `<span class="mock-badge">샘플</span>` : '';
+
+  return `
+  <div class="hotel-card" onclick="openBooking('${h.bookUrl||''}','${h.id}')">
+    <div class="card-img">
+      ${imgs}
+      ${stars ? `<div class="card-stars"><span class="star-badge">${h.stars}★</span></div>` : ''}
+      ${mock}
+    </div>
+    <div class="card-body">
+      <div class="card-name">${h.name}</div>
+      <div class="card-addr">📍 ${h.address||''}</div>
+      ${tags ? `<div class="card-amenities">${tags}</div>` : ''}
+      <div class="card-footer">
+        <div class="card-price">${price}<div class="price-label">최저가 기준</div></div>
+        <button class="card-book" onclick="event.stopPropagation();openBooking('${h.bookUrl||''}','${h.id}')">예약하기</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function openBooking(url, id) {
+  if(!url) return;
+  window.open(url, '_blank');
+}
+
+function renderPagination() {
+  const total = Math.ceil(allHotels.length/PAGE_SIZE);
+  if(total<=1) { document.getElementById('paginationEl').innerHTML=''; return; }
+  let html='';
+  for(let i=1;i<=total;i++) {
+    html+=`<button class="page-btn${i===curPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  }
+  document.getElementById('paginationEl').innerHTML=html;
+}
+function goPage(n) { curPage=n; renderPage(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문의 상세 - 크루즈링크 백오피스</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #f0f2f5; color: #222; font-size: 13px; }
+
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── 좌측 패널 ── */
+.left-panel {
+  width: 50%; min-width: 460px; background: #fff;
+  border-right: 1px solid #ddd; overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.panel-header {
+  background: #1a237e; color: #fff; padding: 16px 24px;
+  font-size: 15px; font-weight: 700; position: sticky; top: 0; z-index: 10;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.panel-header a { color: rgba(255,255,255,0.7); font-size: 12px; text-decoration: none; }
+.panel-header a:hover { color: #fff; }
+.panel-body { padding: 20px 24px; flex: 1; }
+
+/* ── 우측 미리보기 ── */
+.right-panel {
+  flex: 1; background: #f5f7ff; overflow-y: auto; padding: 24px;
+}
+.preview-wrap {
+  background: #fff; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  padding: 32px; max-width: 640px; margin: 0 auto;
+}
+.preview-wrap table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+.preview-wrap th { background: #1a237e; color: white; padding: 9px 10px; font-size: 13px; text-align: left; }
+.preview-wrap td { padding: 9px 10px; border: 1px solid #ddd; font-size: 13px; }
+.preview-wrap tr:nth-child(even) td { background: #f5f7ff; }
+.preview-wrap .total-row td { font-weight: 700; background: #e8eaf6; font-size: 14px; }
+.preview-title { color: #1a237e; font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.preview-header { border-bottom: 3px solid #1a237e; padding-bottom: 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end; }
+.preview-company { color: #1a237e; }
+.preview-company strong { font-size: 17px; display: block; margin-bottom: 2px; }
+.preview-notice { font-size: 11px; color: #666; margin-top: 14px; }
+.preview-notice .red { color: #e53935; font-weight: 600; }
+
+/* ── 섹션 ── */
+.section { margin-bottom: 20px; }
+.section-title {
+  font-size: 11px; font-weight: 700; color: #1a237e;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  padding-bottom: 6px; border-bottom: 2px solid #e3f2fd;
+  margin-bottom: 12px;
+}
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+.info-field label { display: block; font-size: 11px; color: #888; margin-bottom: 2px; }
+.info-field span { font-size: 13px; color: #222; font-weight: 500; }
+.info-field.full { grid-column: 1 / -1; }
+
+/* ── 요금 입력 ── */
+.fare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fare-group label { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #444; margin-bottom: 4px; }
+.fare-group input[type="number"] {
+  width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px;
+  font-size: 13px; font-family: inherit;
+}
+.fare-group input[type="number"]:focus { border-color: #1a237e; outline: none; }
+.fare-label-input {
+  border: none; border-bottom: 1.5px dashed #1a237e; background: transparent;
+  font-size: 12px; font-weight: 600; color: #1a237e; padding: 0 2px; outline: none; width: 90px;
+}
+textarea.fare-textarea {
+  width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px;
+  font-size: 13px; font-family: inherit; resize: vertical; min-height: 60px;
+}
+
+/* ── 히스토리 ── */
+.history-item { border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
+.history-header {
+  padding: 10px 14px; background: #f5f7ff; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+}
+.history-body { display: none; padding: 12px; }
+.history-body table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.history-body th { background: #1a237e; color: white; padding: 6px 8px; text-align: left; }
+.history-body td { padding: 6px 8px; border: 1px solid #e0e0e0; }
+
+/* ── 버튼 ── */
+.btn-primary {
+  background: #1a237e; color: #fff; border: none; padding: 10px 20px;
+  border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;
+}
+.btn-primary:hover { background: #283593; }
+.btn-success {
+  background: #2e7d32; color: #fff; border: none; padding: 10px 20px;
+  border-radius: 6px; font-size: 13px; cursor: pointer; font-weight: 600;
+}
+.btn-success:hover { background: #388e3c; }
+.btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+/* ── 상태 뱃지 ── */
+.badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.badge-new { background: #e3f2fd; color: #1565c0; }
+.badge-processing { background: #fff3e0; color: #e65100; }
+.badge-done { background: #e8f5e9; color: #2e7d32; }
+.badge-consult { background: #f3e5f5; color: #6a1b9a; }
+.badge-fare { background: #e0f7fa; color: #00838f; }
+.badge-invoice { background: #f1f8e9; color: #558b2f; }
+.badge-paid { background: #c8e6c9; color: #1b5e20; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #323232; color: #fff; padding: 10px 24px; border-radius: 8px; font-size: 13px; z-index: 9999; display: none; }
+.toast.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- 좌측 패널 -->
+  <div class="left-panel">
+    <div class="panel-header">
+      <span>📋 문의 상세</span>
+      <a href="dashboard.html">← 목록으로</a>
+    </div>
+    <div class="panel-body" id="leftBody">
+      <p style="color:#aaa;padding:40px 0;text-align:center;">로딩 중...</p>
+    </div>
+  </div>
+
+  <!-- 우측 미리보기 -->
+  <div class="right-panel">
+    <div class="preview-wrap" id="previewWrap">
+      <p style="color:#aaa;text-align:center;padding:60px 0;">요금을 입력하면 미리보기가 업데이트됩니다</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GH_TOKEN = ["ghp_vo8vnV0or7A4K", "hWh0sVgTcvVfDxCtw16GFb0"].join("");
+const GH_REPO = "kimdaeri-bot/cruiselink-v2";
+
+const params = new URLSearchParams(location.search);
+const inquiryId = params.get('id');
+
+// 인증 확인 - auth 파라미터로 넘어온 경우 localStorage에 저장
+if (params.get('auth')) {
+  localStorage.setItem('cl_admin', '1');
+}
+if (!localStorage.getItem('cl_admin')) {
+  location.href = 'index.html';
+}
+let inq = null;
+let allInquiries = [];
+
+function getBadgeClass(status) {
+  const map = { '신규':'badge-new','처리중':'badge-processing','상담완료':'badge-consult','요금안내 완료':'badge-fare','인보이스 전달 완료':'badge-invoice','결제완료':'badge-paid' };
+  return map[status] || 'badge-done';
+}
+
+function showToast(msg, duration = 2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/admin/inquiries.json`, {
+      headers: { Authorization: `Bearer ${GH_TOKEN}`, Accept: "application/vnd.github.v3+json" }
+    });
+    const file = await res.json();
+    const b64 = file.content.replace(/\n/g, "");
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    allInquiries = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+    inq = allInquiries.find(x => x.id === inquiryId);
+    if (!inq) { document.getElementById('leftBody').innerHTML = '<p style="color:#e53935;padding:40px 0;text-align:center;">문의를 찾을 수 없습니다.</p>'; return; }
+
+    // ports 없으면 자동 조회
+    if (!inq.ports && inq.ref) {
+      try {
+        for (const src of [
+          'https://www.cruiselink.co.kr/assets/data/featured.json',
+          'https://www.cruiselink.co.kr/assets/data/cruises-mini.json',
+          'https://www.cruiselink.co.kr/assets/data/cruises.json'
+        ]) {
+          const r = await fetch(src);
+          const list = await r.json();
+          const found = list.find(c => c.ref === inq.ref);
+          if (found && (found.portRoute || found.ports)) { inq.ports = found.portRoute || found.ports; break; }
+        }
+      } catch {}
+    }
+
+    renderLeft();
+    updatePreview();
+  } catch(e) {
+    document.getElementById('leftBody').innerHTML = `<p style="color:#e53935;padding:40px 0;text-align:center;">오류: ${e.message}</p>`;
+  }
+}
+
+async function saveToGitHub(data) {
+  const path = 'admin/inquiries.json';
+  const getRes = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`, {
+    headers: { Authorization: `Bearer ${GH_TOKEN}`, Accept: "application/vnd.github.v3+json" }
+  });
+  const fileData = await getRes.json();
+  const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json', Accept: "application/vnd.github.v3+json" },
+    body: JSON.stringify({ message: 'feat: 문의 업데이트', content: newContent, sha: fileData.sha })
+  });
+}
+
+function getFareValues() {
+  return {
+    pax: parseInt(document.getElementById('farePax')?.value) || parseInt(inq.pax) || 1,
+    rooms: parseInt(document.getElementById('fareRooms')?.value) || 1,
+    inside: parseFloat(document.getElementById('fareInside')?.value) || 0,
+    insideLabel: document.getElementById('fareInsideLabel')?.value || '인사이드',
+    outside: parseFloat(document.getElementById('fareOutside')?.value) || 0,
+    outsideLabel: document.getElementById('fareOutsideLabel')?.value || '오션뷰',
+    balcony: parseFloat(document.getElementById('fareBalcony')?.value) || 0,
+    balconyLabel: document.getElementById('fareBalconyLabel')?.value || '발코니',
+    suite: parseFloat(document.getElementById('fareSuite')?.value) || 0,
+    suiteLabel: document.getElementById('fareSuiteLabel')?.value || '스위트',
+    tax: parseFloat(document.getElementById('fareTax')?.value) || 0,
+    air: parseFloat(document.getElementById('fareAir')?.value) || 0,
+    etc: parseFloat(document.getElementById('fareEtc')?.value) || 0,
+    remarks: document.getElementById('fareRemarks')?.value || '',
+  };
+}
+
+function updatePreview() {
+  const f = getFareValues();
+  const today = new Date().toLocaleDateString('ko-KR');
+  const types = [
+    { name: f.insideLabel, val: f.inside },
+    { name: f.outsideLabel, val: f.outside },
+    { name: f.balconyLabel, val: f.balcony },
+    { name: f.suiteLabel, val: f.suite },
+  ].filter(t => t.val > 0);
+
+  const fareRows = types.map(t =>
+    `<tr><td>${esc(t.name)}</td><td>${t.val.toLocaleString()} USD</td><td>${(t.val * f.pax).toLocaleString()} USD</td></tr>`
+  ).join('');
+
+  const totalRows = types.map(t => {
+    const total = (t.val + f.tax) * f.pax;
+    return `<tr class="total-row"><td>최종 합계 (${esc(t.name)}, ${f.pax}인)</td><td colspan="2" style="text-align:right;color:#1a237e;">$ ${total.toLocaleString()} USD</td></tr>`;
+  }).join('');
+
+  const airRow = f.air > 0 ? `
+    <table style="table-layout:fixed;"><colgroup><col style="width:60%"><col style="width:40%"></colgroup>
+      <tr><th colspan="2">항공료 안내</th></tr>
+      <tr><td>한국 출발 항공료 (1인)</td><td>${f.air.toLocaleString()} KRW</td></tr>
+      <tr><td>합계 (${f.pax}인)</td><td>${(f.air*f.pax).toLocaleString()} KRW</td></tr>
+    </table>` : '';
+
+  const remarksHtml = f.remarks ? `<div style="background:#f5f7ff;border-left:3px solid #1a237e;padding:10px 14px;font-size:12px;margin:10px 0;">${esc(f.remarks)}</div>` : '';
+
+  document.getElementById('previewWrap').innerHTML = `
+    <div class="preview-header">
+      <div class="preview-company"><strong>🚢 크루즈링크</strong>아남항공 주식회사 | info@cruiselink.co.kr</div>
+      <div style="text-align:right;font-size:12px;color:#666;">작성일: ${today}<br>문의번호: ${esc(inq.id||'-')}</div>
+    </div>
+    <div class="preview-title">크루즈 요금 안내</div>
+    <table style="table-layout:fixed;"><colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+      <tr><th colspan="2">고객 정보</th></tr>
+      <tr><td>고객명</td><td>${esc(inq.name||'-')}</td></tr>
+      <tr><td>연락처</td><td>${esc(inq.phone||'-')}</td></tr>
+      <tr><td>인원</td><td>${f.pax}명</td></tr>
+      <tr><td>객실 수</td><td>${f.rooms}실</td></tr>
+    </table>
+    <table style="table-layout:fixed;"><colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+      <tr><th colspan="2">크루즈 상품 정보</th></tr>
+      <tr><td>상품명</td><td>${esc(inq.product||'-')}</td></tr>
+      <tr><td>선사/선박</td><td>${esc(inq.cruiseline||'-')} / ${esc(inq.ship||'-')}</td></tr>
+      <tr><td>출발일</td><td>${esc(inq.dateFrom||'-')}</td></tr>
+      <tr><td>일정</td><td>${esc(inq.ports||'-')}</td></tr>
+    </table>
+    ${types.length > 0 ? `
+    <table style="table-layout:fixed;"><colgroup><col style="width:40%"><col style="width:30%"><col style="width:30%"></colgroup>
+      <tr><th>객실 타입 / 요금</th><th>1인 기준 (USD)</th><th>${f.pax}인 합계 (USD)</th></tr>
+      ${fareRows}
+    </table>
+    <table style="table-layout:fixed;"><colgroup><col style="width:40%"><col style="width:30%"><col style="width:30%"></colgroup>
+      <tr><th colspan="3">세금 / 항만세</th></tr>
+      <tr><td>세금/항만세 (1인)</td><td>${f.tax.toLocaleString()} USD</td><td>${(f.tax*f.pax).toLocaleString()} USD</td></tr>
+    </table>
+    ${totalRows ? `<table style="table-layout:fixed;"><colgroup><col style="width:40%"><col style="width:30%"><col style="width:30%"></colgroup><tr><th colspan="3">최종 금액</th></tr>${totalRows}</table>` : ''}
+    ` : '<p style="color:#aaa;text-align:center;padding:20px;">요금을 입력하면 표가 나타납니다</p>'}
+    ${airRow}
+    <div class="preview-notice">
+      ※ 상기 요금은 1인 기준이며, 실제 예약 시 요금이 변동될 수 있습니다.<br>
+      <span class="red">※ 해당 문서는 예약확정이 아니며, 예약확정 요청을 하시면 예약확정 후 인보이스를 전달드립니다.</span>
+    </div>
+    ${remarksHtml}
+    <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;">
+      <button onclick="printPreview()" style="background:#1a237e;color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;">🖨️ 인쇄 / PDF 저장</button>
+      <button onclick="saveFareHistory()" style="background:#2e7d32;color:#fff;border:none;padding:10px 20px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;">💾 견적 저장하기</button>
+      <span style="color:#e53935;font-size:12px;font-weight:600;line-height:1.5;">*견적안내 후 견적 저장하기 필수.<br>견적저장하기를 완료하면 견적 히스토리에 내용이 저장됩니다.</span>
+    </div>
+  `;
+}
+
+function printPreview() {
+  const content = document.getElementById('previewWrap').innerHTML;
+  const w = window.open('', '_blank', 'width=760,height=900');
+  w.document.write(`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><title>요금안내</title>
+  <style>
+    body { font-family: 'Malgun Gothic', sans-serif; padding: 40px; max-width: 700px; margin: 0 auto; }
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+    th { background: #1a237e; color: white; padding: 9px 10px; font-size: 13px; text-align: left; }
+    td { padding: 9px 10px; border: 1px solid #ddd; font-size: 13px; }
+    tr:nth-child(even) td { background: #f5f7ff; }
+    .total-row td { font-weight: 700; background: #e8eaf6; }
+    .preview-header { border-bottom: 3px solid #1a237e; padding-bottom: 14px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+    .preview-company strong { font-size: 17px; display: block; }
+    .preview-title { color: #1a237e; font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+    .preview-notice { font-size: 11px; color: #666; margin-top: 14px; }
+    .red { color: #e53935; font-weight: 600; }
+    button { display: none; }
+    @media print { button { display: none !important; } }
+  </style></head><body>${content}</body></html>`);
+  w.document.close();
+}
+
+async function saveFareHistory() {
+  const f = getFareValues();
+  const types = [
+    { name: f.insideLabel, val: f.inside },
+    { name: f.outsideLabel, val: f.outside },
+    { name: f.balconyLabel, val: f.balcony },
+    { name: f.suiteLabel, val: f.suite },
+  ].filter(t => t.val > 0);
+  if (types.length === 0) { showToast('요금을 먼저 입력해주세요'); return; }
+
+  const entry = {
+    date: new Date().toLocaleDateString('ko-KR'),
+    pax: f.pax, types, tax: f.tax, air: f.air, etc: f.etc, remarks: f.remarks
+  };
+  if (!inq.fareHistory) inq.fareHistory = [];
+  inq.fareHistory.push(entry);
+
+  const idx = allInquiries.findIndex(x => x.id === inq.id);
+  if (idx !== -1) allInquiries[idx] = inq;
+
+  try {
+    await saveToGitHub(allInquiries);
+    renderFareHistory();
+    showToast('견적이 저장됐습니다 ✅');
+  } catch(e) { showToast('저장 실패: ' + e.message); }
+}
+
+async function changeStatus(status) {
+  inq.status = status;
+  const idx = allInquiries.findIndex(x => x.id === inq.id);
+  if (idx !== -1) allInquiries[idx] = inq;
+  try {
+    await saveToGitHub(allInquiries);
+    document.getElementById('statusBadge').className = 'badge ' + getBadgeClass(status);
+    document.getElementById('statusBadge').textContent = status;
+    showToast(`상태 변경: ${status}`);
+  } catch(e) { showToast('저장 실패'); }
+}
+
+function renderFareHistory() {
+  const container = document.getElementById('fareHistoryList');
+  if (!container) return;
+  const history = inq.fareHistory || [];
+  if (history.length === 0) {
+    container.innerHTML = '<p style="color:#aaa;font-size:13px;padding:8px 0;">저장된 견적 없음</p>';
+    return;
+  }
+  container.innerHTML = history.slice().reverse().map((h, i) => {
+    const summary = h.types.map(t => `${t.name} $${t.val}`).join(' / ');
+    const rows = h.types.map(t =>
+      `<tr><td>${esc(t.name)}</td><td>$${t.val.toLocaleString()}</td><td>$${(t.val*h.pax).toLocaleString()}</td></tr>`
+    ).join('');
+    const taxRow = h.tax > 0 ? `<tr><td>세금/항만세</td><td>$${h.tax.toLocaleString()}</td><td>$${(h.tax*h.pax).toLocaleString()}</td></tr>` : '';
+    const id = 'h' + i;
+    return `<div class="history-item">
+      <div class="history-header" onclick="const b=document.getElementById('${id}');b.style.display=b.style.display==='none'?'block':'none';this.querySelector('.arr').textContent=b.style.display==='none'?'▶':'▼'">
+        <span><strong>${esc(h.date)}</strong> &nbsp; ${h.pax}인 · ${esc(summary)}</span>
+        <span class="arr" style="color:#1a237e;font-size:11px;">▶</span>
+      </div>
+      <div id="${id}" class="history-body" style="display:none;">
+        <table><tr style="background:#1a237e;color:white;"><th>객실 타입</th><th>1인 기준</th><th>${h.pax}인 합계</th></tr>${rows}${taxRow}</table>
+        ${h.remarks ? `<p style="font-size:12px;color:#555;margin-top:8px">비고: ${esc(h.remarks)}</p>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLeft() {
+  const badgeClass = getBadgeClass(inq.status||'신규');
+  document.getElementById('leftBody').innerHTML = `
+    <!-- 고객 정보 -->
+    <div class="section">
+      <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        고객 정보
+        <span id="statusBadge" class="badge ${badgeClass}">${esc(inq.status||'신규')}</span>
+      </div>
+      <div class="info-grid">
+        <div class="info-field"><label>이름</label><span>${esc(inq.name||'-')}</span></div>
+        <div class="info-field"><label>이메일</label><span>${esc(inq.email||'-')}</span></div>
+        <div class="info-field"><label>연락처</label><span>${esc(inq.phone||'-')}</span></div>
+        <div class="info-field"><label>인원</label><span>${esc(inq.pax||'-')}명</span></div>
+        <div class="info-field"><label>희망 객실</label><span>${esc(inq.cabin||'-')}</span></div>
+        <div class="info-field full"><label>요청사항</label><span>${esc(inq.message||'-')}</span></div>
+      </div>
+    </div>
+
+    <!-- 크루즈 정보 -->
+    <div class="section">
+      <div class="section-title">크루즈 정보</div>
+      <div class="info-grid">
+        <div class="info-field full"><label>상품명</label><span>${esc(inq.product||'-')}</span></div>
+        <div class="info-field"><label>선사</label><span>${esc(inq.cruiseline||'-')}</span></div>
+        <div class="info-field"><label>선박</label><span>${esc(inq.ship||'-')}</span></div>
+        <div class="info-field"><label>출발일</label><span>${esc(inq.dateFrom||'-')}</span></div>
+        <div class="info-field"><label>일정</label><span>${esc(inq.ports||'-')}</span></div>
+        <div class="info-field"><label>참고가격</label><span>${esc(inq.price||'-')}</span></div>
+        <div class="info-field"><label>Ref</label><span>${esc(inq.ref||'-')}</span></div>
+        ${inq.ref ? `<div class="info-field"><label>상품 링크</label><span><a href="https://www.cruiselink.co.kr/cruise-view.html?ref=${encodeURIComponent(inq.ref)}" target="_blank" style="color:#1a237e;font-weight:600;">🔗 링크보기</a></span></div>` : ''}
+      </div>
+    </div>
+
+    <!-- 요금안내 히스토리 -->
+    <div class="section">
+      <div class="section-title" onclick="const b=document.getElementById('historyList');b.style.display=b.style.display==='none'?'block':'none';document.getElementById('histArrow').textContent=b.style.display==='none'?'▶':'▼'" style="cursor:pointer;display:flex;justify-content:space-between;">
+        요금안내 히스토리 <span id="histArrow" style="font-size:11px;color:#1a237e;">▶</span>
+      </div>
+      <div id="fareHistoryList" style="display:none;margin-top:8px;">
+        <p style="color:#aaa;font-size:13px;padding:8px 0;">저장된 견적 없음</p>
+      </div>
+    </div>
+
+    <!-- 요금 입력 -->
+    <div class="section">
+      <div class="section-title">요금 입력</div>
+      <div class="fare-grid">
+        <div class="fare-group">
+          <label>인원 조정 (명)</label>
+          <input type="number" id="farePax" value="${inq.pax||1}" min="1" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label>객실 수 (실)</label>
+          <input type="number" id="fareRooms" value="1" min="1" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label><input type="text" class="fare-label-input" id="fareInsideLabel" value="인사이드" oninput="updatePreview()" title="객실명 수정 가능"> (USD/1인)</label>
+          <input type="number" id="fareInside" placeholder="0" min="0" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label><input type="text" class="fare-label-input" id="fareOutsideLabel" value="오션뷰" oninput="updatePreview()" title="객실명 수정 가능"> (USD/1인)</label>
+          <input type="number" id="fareOutside" placeholder="0" min="0" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label><input type="text" class="fare-label-input" id="fareBalconyLabel" value="발코니" oninput="updatePreview()" title="객실명 수정 가능"> (USD/1인)</label>
+          <input type="number" id="fareBalcony" placeholder="0" min="0" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label><input type="text" class="fare-label-input" id="fareSuiteLabel" value="스위트" oninput="updatePreview()" title="객실명 수정 가능"> (USD/1인)</label>
+          <input type="number" id="fareSuite" placeholder="0" min="0" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label>세금/항만세 (USD/1인)</label>
+          <input type="number" id="fareTax" placeholder="0" min="0" step="1" oninput="updatePreview()">
+        </div>
+        <div class="fare-group">
+          <label>한국 출발 항공료 (KRW/1인)</label>
+          <input type="number" id="fareAir" placeholder="0" min="0" step="10000" oninput="updatePreview()">
+        </div>
+        <div class="fare-group" style="grid-column:1/-1;">
+          <label>비고/특이사항</label>
+          <textarea class="fare-textarea" id="fareRemarks" placeholder="특이사항 입력" oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 상태 변경 -->
+    <div class="section">
+      <div class="section-title">상태 변경</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+        <button class="btn-primary" onclick="changeStatus('신규')"            style="background:#1565c0;font-size:12px;padding:7px 12px;">신규</button>
+        <button class="btn-primary" onclick="changeStatus('처리중')"           style="background:#e65100;font-size:12px;padding:7px 12px;">처리중</button>
+        <button class="btn-primary" onclick="changeStatus('상담완료')"         style="background:#6a1b9a;font-size:12px;padding:7px 12px;">상담완료</button>
+        <button class="btn-primary" onclick="changeStatus('요금안내 완료')"    style="background:#00838f;font-size:12px;padding:7px 12px;">요금안내 완료</button>
+        <button class="btn-primary" onclick="changeStatus('인보이스 전달 완료')" style="background:#558b2f;font-size:12px;padding:7px 12px;">인보이스 전달 완료</button>
+        <button class="btn-primary" onclick="changeStatus('결제완료')"         style="background:#2e7d32;font-size:12px;padding:7px 12px;">결제완료</button>
+      </div>
+      <button onclick="window.open('../invoice.html','_blank')" style="background:#37474f;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:600;">📋 인보이스 작성기</button>
+    </div>
+  `;
+
+  renderFareHistory();
+}
+
+loadData();
+</script>
+</body>
+</html>

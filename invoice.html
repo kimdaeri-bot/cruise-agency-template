@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K4PPLZNG');</script>
+<!-- End Google Tag Manager -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INVOICE</title>
+<style>
+/* =========== 전체 레이아웃 =========== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; background: #f0f2f5; color: #222; font-size: 13px; }
+
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* =========== 왼쪽 폼 패널 =========== */
+.form-panel {
+  width: 52%; min-width: 480px; background: #fff;
+  border-right: 1px solid #ddd; overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.form-header {
+  background: #1a237e; color: #fff; padding: 16px 20px;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.3px;
+  position: sticky; top: 0; z-index: 10;
+}
+.form-header span { font-size: 11px; font-weight: 400; opacity: 0.8; display: block; margin-top: 2px; }
+.form-body { padding: 20px 28px; flex: 1; }
+
+.form-section { margin-bottom: 24px; }
+.form-section-title {
+  font-size: 11.5px; font-weight: 700; color: #1a237e;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding-bottom: 7px; border-bottom: 2px solid #e3f2fd;
+  margin-bottom: 12px;
+}
+.form-row { margin-bottom: 10px; }
+.form-row label { display: block; font-size: 12px; color: #444; margin-bottom: 4px; font-weight: 600; }
+.form-row input, .form-row select {
+  width: 100%; padding: 9px 12px; border: 1px solid #ddd;
+  border-radius: 6px; font-size: 13px; font-family: inherit;
+  transition: border-color 0.2s;
+}
+.form-row input:focus, .form-row select:focus {
+  border-color: #1a237e; outline: none; box-shadow: 0 0 0 2px rgba(26,35,126,0.1);
+}
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.form-row-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+/* 승객 테이블 */
+.pax-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 10px; }
+.pax-table th { background: #e8eaf6; padding: 7px 6px; text-align: center; font-weight: 700; border: 1px solid #c5cae9; font-size: 11.5px; }
+.pax-table td { padding: 4px 4px; border: 1px solid #e0e0e0; vertical-align: middle; }
+.pax-table td input, .pax-table td select {
+  width: 100%; padding: 6px 7px; border: 1px solid #ddd;
+  border-radius: 4px; font-size: 12px; font-family: inherit;
+}
+.pax-table td input:focus, .pax-table td select:focus {
+  border-color: #1a237e; outline: none;
+}
+.btn-add-pax {
+  background: #e8eaf6; border: 1px solid #c5cae9; color: #1a237e;
+  padding: 5px 12px; border-radius: 4px; font-size: 11px; cursor: pointer;
+  font-weight: 600;
+}
+.btn-add-pax:hover { background: #c5cae9; }
+.btn-del-pax {
+  background: #ffebee; border: none; color: #c62828; padding: 3px 6px;
+  border-radius: 3px; cursor: pointer; font-size: 11px;
+}
+
+/* ── 이미지 업로드 슬롯 ── */
+.img-slots { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+.img-slot {
+  border: 2px dashed #c5cae9; border-radius: 8px;
+  min-height: 140px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s; position: relative;
+  background: #f8f9ff; overflow: hidden;
+}
+.img-slot:hover { border-color: #1a237e; background: #e8eaf6; }
+.img-slot.has-img { border-style: solid; border-color: #9fa8da; background: #fff; }
+.img-slot.drag-over { border-color: #ff6f00; background: #fff8e1; }
+.img-slot-icon { font-size: 28px; margin-bottom: 6px; }
+.img-slot-label { font-size: 11px; color: #888; text-align: center; line-height: 1.5; }
+.img-slot-label strong { color: #1a237e; display: block; font-size: 12px; margin-bottom: 2px; }
+.img-slot img { width: 100%; height: 100%; object-fit: contain; position: absolute; inset: 0; }
+.img-slot-del {
+  position: absolute; top: 6px; right: 6px;
+  background: rgba(198,40,40,0.85); color: #fff;
+  border: none; border-radius: 50%; width: 22px; height: 22px;
+  font-size: 12px; cursor: pointer; display: none;
+  align-items: center; justify-content: center; z-index: 10;
+}
+.img-slot.has-img .img-slot-del { display: flex; }
+.img-slot input[type=file] { display: none; }
+
+/* ── 인보이스 내 이미지 영역 ── */
+.inv-img-section { margin-bottom: 16px; }
+.inv-img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.inv-img-row.single { grid-template-columns: 1fr; }
+.inv-img-box img { width: 100%; border: 1px solid #ddd; border-radius: 4px; display: block; }
+.inv-img-label { font-size: 10px; color: #888; text-align: center; margin-top: 4px; }
+
+/* 하단 버튼 */
+.form-footer {
+  padding: 14px 28px 16px; border-top: 1px solid #eee;
+  background: #fafafa; position: sticky; bottom: 0;
+  display: flex; flex-direction: column; gap: 0;
+}
+.btn-print {
+  flex: 3; background: #ff6f00; color: #fff; border: none;
+  padding: 13px; border-radius: 6px; font-size: 14px; font-weight: 700;
+  cursor: pointer; letter-spacing: 0.3px;
+}
+.btn-print:hover { background: #e65100; }
+.btn-reset {
+  flex: 1; background: #f5f5f5; color: #555; border: 1px solid #ddd;
+  padding: 11px; border-radius: 6px; font-size: 13px; font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========== 오른쪽 프리뷰 =========== */
+.preview-panel {
+  flex: 1; overflow-y: auto; background: #90a4ae;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px;
+}
+.preview-label {
+  color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+}
+
+/* =========== 인보이스 문서 스타일 =========== */
+.invoice-doc {
+  width: 794px; /* A4 기준 */
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  padding: 36px 40px 40px;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-size: 12px;
+  color: #222;
+}
+
+.inv-header { text-align: center; margin-bottom: 24px; }
+.inv-brand { font-size: 11px; color: #888; letter-spacing: 1px; margin-bottom: 4px; }
+.inv-title-main { font-size: 22px; font-weight: 900; color: #1a237e; letter-spacing: 3px; margin-bottom: 8px; }
+.inv-subtitle { font-size: 14px; font-weight: 700; color: #222; }
+
+.inv-meta { display: grid; grid-template-columns: 80px 1fr 80px 1fr; gap: 0; border: 1px solid #999; margin-bottom: 16px; }
+.inv-meta-cell {
+  padding: 7px 10px; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;
+}
+.inv-meta-cell:nth-child(even) { border-right: none; }
+.inv-meta-cell.label { background: #e8eaf6; font-weight: 700; font-size: 11px; color: #1a237e; }
+.inv-meta-cell.value { font-size: 12px; }
+
+/* 크루즈 정보 테이블 */
+.inv-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 11.5px; }
+.inv-table th {
+  background: #1a237e; color: #fff; padding: 7px 8px;
+  border: 1px solid #1a237e; text-align: center; font-weight: 700;
+}
+.inv-table td {
+  padding: 7px 8px; border: 1px solid #ccc; text-align: center;
+}
+.inv-table td.left { text-align: left; }
+.inv-table tr.subtotal td { background: #e8eaf6; font-weight: 700; }
+.inv-table tr.total-row td { background: #1a237e; color: #fff; font-weight: 700; }
+.inv-table tr.total-row td.label-col { text-align: right; }
+
+/* 환율 섹션 */
+.inv-exchange { background: #fff8e1; border: 1px solid #ffe082; border-radius: 4px; padding: 10px 14px; margin-bottom: 16px; font-size: 11.5px; }
+.inv-exchange strong { color: #e65100; }
+
+/* 결제 섹션 */
+.inv-payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.inv-payment-box { border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+.inv-payment-box .ph { background: #1a237e; color: #fff; padding: 7px 12px; font-weight: 700; font-size: 12px; }
+.inv-payment-box .pb { padding: 10px 12px; }
+.inv-payment-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px dashed #eee; font-size: 11.5px; }
+.inv-payment-row:last-child { border-bottom: none; }
+.inv-payment-row .amt { font-weight: 700; color: #1a237e; }
+.inv-payment-row .deadline { color: #c62828; font-weight: 600; }
+
+/* 계좌 섹션 */
+.inv-account { border: 1px solid #ccc; border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
+.inv-account .ah { background: #37474f; color: #fff; padding: 7px 12px; font-weight: 700; font-size: 12px; }
+.inv-account .ab { padding: 10px 12px; }
+.inv-account-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.inv-account-item { background: #f5f5f5; padding: 8px 12px; border-radius: 4px; }
+.inv-account-item .bank { font-size: 10px; color: #888; }
+.inv-account-item .num { font-size: 13px; font-weight: 700; color: #1a237e; }
+.inv-account-item .owner { font-size: 11px; color: #444; }
+.inv-account-note { font-size: 11px; color: #555; margin-top: 8px; line-height: 1.6; }
+
+/* 취소 규정 */
+.inv-cancel { border: 1px solid #ccc; border-radius: 4px; overflow: hidden; }
+.inv-cancel .ch { background: #b71c1c; color: #fff; padding: 4px 10px; font-weight: 700; font-size: 11px; }
+.inv-cancel .cb { padding: 6px 10px; }
+.inv-cancel table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+.inv-cancel table th { background: #ffebee; padding: 4px 8px; border: 1px solid #ffcdd2; font-weight: 700; color: #b71c1c; }
+.inv-cancel table td { padding: 3px 8px; border: 1px solid #eee; text-align: center; }
+.inv-cancel table tr:nth-child(even) td { background: #fafafa; }
+.inv-cancel-note { font-size: 10px; color: #999; margin-top: 5px; line-height: 1.4; }
+
+.inv-footer { text-align: center; margin-top: 20px; padding-top: 14px; border-top: 2px solid #1a237e; font-size: 11px; color: #888; }
+
+/* =========== 인쇄 스타일 =========== */
+@media print {
+  body { background: #fff; }
+  .form-panel { display: none !important; }
+  .preview-panel { background: #fff; padding: 0; display: block; }
+  .preview-label { display: none; }
+  .invoice-doc {
+    box-shadow: none;
+    width: 100% !important;
+    padding: 14px 18px !important;
+    transform-origin: top left;
+  }
+  /* 인쇄 시 간격 최소화 */
+  .inv-header { margin-bottom: 14px !important; }
+  .inv-meta { margin-bottom: 10px !important; }
+  .inv-table { margin-bottom: 10px !important; }
+  .inv-payment-grid { margin-bottom: 10px !important; }
+  .inv-account { margin-bottom: 10px !important; }
+  .inv-img-section { margin-bottom: 10px !important; }
+  .form-section { margin-bottom: 12px !important; }
+  @page { size: A4 portrait; margin: 0; }
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4PPLZNG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager -->
+
+
+<div class="app">
+  <!-- ========== 왼쪽: 입력 폼 ========== -->
+  <div class="form-panel">
+    <div class="form-header" style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+      <div>
+        🚢 인보이스 생성기
+        <span>입력 후 실시간 프리뷰 → 인쇄(PDF 저장)</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+        <label style="font-size:10px;opacity:0.75;letter-spacing:0.5px">선사 선택</label>
+        <select id="f_cruiseline_type" onchange="render()" style="padding:6px 10px;border-radius:6px;border:none;font-size:13px;font-weight:700;color:#1a237e;cursor:pointer;min-width:160px">
+          <option value="MSC">🔵 MSC Cruises</option>
+          <option value="NCL">🟢 Norwegian (NCL)</option>
+          <option value="Celebrity">🟣 Celebrity Cruises</option>
+          <option value="Carnival">🟠 Carnival</option>
+          <option value="Royal">🔴 Royal Caribbean</option>
+          <option value="Custom">⚙️ 직접 입력</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-body">
+
+      <!-- 기본 정보 -->
+      <div class="form-section">
+        <div class="form-section-title">📋 기본 정보</div>
+        <div class="form-row-3">
+          <div class="form-row" style="margin:0">
+            <label>고객명 (수신)</label>
+            <input type="text" id="f_customer" placeholder="예: 문성빈" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>발신일</label>
+            <input type="date" id="f_issuedate" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>담당자</label>
+            <input type="text" id="f_manager" value="이유진 (02-3788-9119)" oninput="render()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 크루즈 정보 -->
+      <div class="form-section">
+        <div class="form-section-title">🚢 크루즈 정보</div>
+        <div class="form-row-4">
+          <div class="form-row" style="margin:0">
+            <label>선박명</label>
+            <input type="text" id="f_ship" placeholder="MSC Grandiosa" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>Booking No.</label>
+            <input type="text" id="f_bookingno" placeholder="11238" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>크루즈 일정</label>
+            <input type="text" id="f_itinerary" placeholder="Mediterranean" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>승선일</label>
+            <input type="date" id="f_embark" oninput="render()">
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-row" style="margin:0">
+            <label>승선 항구</label>
+            <input type="text" id="f_embarkport" placeholder="Civitavecchia, Italy" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>하선 항구</label>
+            <input type="text" id="f_disembarkport" placeholder="Civitavecchia, Italy" oninput="render()">
+          </div>
+        </div>
+      </div>
+
+      <!-- 지도 & 일정표 이미지 -->
+      <div class="form-section">
+        <div class="form-section-title">🗺️ 지도 &amp; 일정표 이미지</div>
+        <div style="font-size:11.5px;color:#666;margin-bottom:10px">클릭하여 파일 선택 또는 <strong>Ctrl+V</strong>로 클립보드에서 붙여넣기</div>
+        <div class="img-slots">
+          <!-- 지도 슬롯 -->
+          <div class="img-slot" id="slot0" onclick="document.getElementById('fi0').click()" ondragover="dragOver(event,0)" ondragleave="dragLeave(0)" ondrop="dropImg(event,0)">
+            <input type="file" id="fi0" accept="image/*" onchange="loadFile(this,0)">
+            <div class="img-slot-icon">🗺️</div>
+            <div class="img-slot-label"><strong>항로 지도</strong>클릭 또는 Ctrl+V<br>드래그앤드롭도 가능</div>
+            <button class="img-slot-del" onclick="clearImg(event,0)">✕</button>
+          </div>
+          <!-- 일정표 슬롯 -->
+          <div class="img-slot" id="slot1" onclick="document.getElementById('fi1').click()" ondragover="dragOver(event,1)" ondragleave="dragLeave(1)" ondrop="dropImg(event,1)">
+            <input type="file" id="fi1" accept="image/*" onchange="loadFile(this,1)">
+            <div class="img-slot-icon">📋</div>
+            <div class="img-slot-label"><strong>기항지 일정표</strong>클릭 또는 Ctrl+V<br>드래그앤드롭도 가능</div>
+            <button class="img-slot-del" onclick="clearImg(event,1)">✕</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#aaa;margin-top:8px">💡 Ctrl+V는 마지막으로 클릭한 슬롯에 붙여넣어집니다</div>
+      </div>
+
+      <!-- 승객 정보 -->
+      <div class="form-section">
+        <div class="form-section-title">👥 승객 정보</div>
+        <table class="pax-table" id="paxTable">
+          <thead>
+            <tr>
+              <th style="width:30px">No</th>
+              <th style="width:44px">성별</th>
+              <th>이름</th>
+              <th>선실 카테고리</th>
+              <th style="width:70px">선실 No.</th>
+              <th style="width:90px">Dining</th>
+              <th style="width:80px">요금($)</th>
+              <th style="width:70px">팁($)</th>
+              <th style="width:70px">Tax($)</th>
+              <th style="width:28px"></th>
+            </tr>
+          </thead>
+          <tbody id="paxBody"></tbody>
+        </table>
+        <button class="btn-add-pax" onclick="addPax()">+ 승객 추가</button>
+      </div>
+
+      <!-- 요금 및 결제 -->
+      <div class="form-section">
+        <div class="form-section-title">💳 요금 및 결제</div>
+        <div class="form-row-4">
+          <div class="form-row" style="margin:0">
+            <label>적용 환율 (원/달러)</label>
+            <input type="number" id="f_rate" placeholder="1474.05" step="0.01" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>신청금 ($)</label>
+            <input type="number" id="f_deposit" placeholder="500" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>신청금 결제 기한</label>
+            <input type="date" id="f_deposit_dl" oninput="render()">
+          </div>
+          <div class="form-row" style="margin:0">
+            <label>잔금 결제 기한</label>
+            <input type="date" id="f_balance_dl" oninput="render()">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /form-body -->
+    <div class="form-footer">
+      <div style="width:100%;margin-bottom:10px;background:#f0f4ff;border-radius:8px;padding:10px 14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <label style="font-size:12px;font-weight:700;color:#1a237e;">🖨️ 인쇄 배율</label>
+          <span id="scaleLabel" style="font-size:12px;font-weight:700;color:#ff6f00;">자동</span>
+        </div>
+        <input type="range" id="scaleSlider" min="60" max="100" value="100" step="1"
+          oninput="applyScale(this.value)"
+          style="width:100%;accent-color:#1a237e;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#aaa;margin-top:2px">
+          <span>60%</span><span>70%</span><span>80%</span><span>90%</span><span>100%</span>
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:6px;">💡 내용이 많으면 줄여보세요. 인쇄 버튼 클릭 시 자동 1페이지 맞춤도 적용됩니다.</div>
+        <div style="font-size:11px;color:#c0392b;margin-top:6px;line-height:1.6;">📌 <b>날짜/시간 제거:</b> 인쇄 대화상자 → 자세히 보기 → <b>"머리글 및 바닥글" 체크 해제</b></div>
+      </div>
+      <div style="display:flex;gap:10px;width:100%">
+        <button class="btn-print" onclick="doPrint()">🖨️ 인쇄 / PDF 저장</button>
+        <button class="btn-reset" onclick="resetForm()">초기화</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 오른쪽: 인보이스 프리뷰 ========== -->
+  <div class="preview-panel">
+    <div class="preview-label">▼ 인보이스 미리보기 (인쇄 시 이 영역만 출력)</div>
+    <div class="invoice-doc" id="invoiceDoc">
+      <!-- JS로 렌더링 -->
+    </div>
+  </div>
+</div>
+
+<script>
+// ============= 선사별 취소 규정 =============
+const CANCEL_POLICIES = {
+  MSC: {
+    name: 'MSC Cruises',
+    color: '#b71c1c',
+    note: '* 환율은 인보이스 발행일 하나은행 1회차 현금 매도율 기준의 환율이 적용됩니다.\n* 취소 기준일은 승선일 기준으로 자동 계산됩니다.',
+    rows: (embark) => [
+      { period: '예약 확정 이후',    cutoff: null,           fee: '1인 $70' },
+      { period: '승선 76일 전까지',  cutoff: addDays(embark,-76), fee: '1인 $250' },
+      { period: '승선 75~61일 전',   cutoff: addDays(embark,-75), fee: '크루즈 요금의 25%' },
+      { period: '승선 60~51일 전',   cutoff: addDays(embark,-60), fee: '크루즈 요금의 50%' },
+      { period: '승선 50~31일 전',   cutoff: addDays(embark,-50), fee: '크루즈 요금의 75%' },
+      { period: '승선 30일 이내',    cutoff: addDays(embark,-30), fee: '크루즈 요금의 100%' },
+    ],
+  },
+  NCL: {
+    name: 'Norwegian Cruise Line',
+    color: '#1565c0',
+    note: '* NCL 취소 정책은 예약 시점 및 프로모션에 따라 다를 수 있습니다.\n* 취소 기준일은 승선일 기준으로 자동 계산됩니다.',
+    rows: (embark) => [
+      { period: '승선 121일 전까지', cutoff: addDays(embark,-121), fee: '예약금만 취소' },
+      { period: '승선 120~90일 전',  cutoff: addDays(embark,-120), fee: '크루즈 요금의 10%' },
+      { period: '승선 89~60일 전',   cutoff: addDays(embark,-89),  fee: '크루즈 요금의 25%' },
+      { period: '승선 59~30일 전',   cutoff: addDays(embark,-59),  fee: '크루즈 요금의 50%' },
+      { period: '승선 29~15일 전',   cutoff: addDays(embark,-29),  fee: '크루즈 요금의 75%' },
+      { period: '승선 14일 이내',    cutoff: addDays(embark,-14),  fee: '크루즈 요금의 100%' },
+    ],
+  },
+  Celebrity: {
+    name: 'Celebrity Cruises',
+    color: '#4a148c',
+    note: '* Celebrity Cruises 취소 정책은 예약 유형에 따라 다를 수 있습니다.\n* 취소 기준일은 승선일 기준으로 자동 계산됩니다.',
+    rows: (embark) => [
+      { period: '승선 75일 전까지',  cutoff: addDays(embark,-75), fee: '보증금만 취소 수수료' },
+      { period: '승선 74~56일 전',   cutoff: addDays(embark,-74), fee: '크루즈 요금의 50%' },
+      { period: '승선 55~30일 전',   cutoff: addDays(embark,-55), fee: '크루즈 요금의 75%' },
+      { period: '승선 29일 이내',    cutoff: addDays(embark,-29), fee: '크루즈 요금의 100%' },
+    ],
+  },
+  Carnival: {
+    name: 'Carnival Cruise Line',
+    color: '#e65100',
+    note: '* Carnival 취소 정책은 객실 유형 및 프로모션에 따라 다를 수 있습니다.\n* 취소 기준일은 승선일 기준으로 자동 계산됩니다.',
+    rows: (embark) => [
+      { period: '승선 121일 전까지', cutoff: addDays(embark,-121), fee: '보증금만 취소' },
+      { period: '승선 120~56일 전',  cutoff: addDays(embark,-120), fee: '크루즈 요금의 50%' },
+      { period: '승선 55~30일 전',   cutoff: addDays(embark,-55),  fee: '크루즈 요금의 75%' },
+      { period: '승선 29일 이내',    cutoff: addDays(embark,-29),  fee: '크루즈 요금의 100%' },
+    ],
+  },
+  Royal: {
+    name: 'Royal Caribbean',
+    color: '#0d47a1',
+    note: '* Royal Caribbean 취소 정책은 예약 유형 및 선박에 따라 다를 수 있습니다.\n* 취소 기준일은 승선일 기준으로 자동 계산됩니다.',
+    rows: (embark) => [
+      { period: '승선 91일 전까지',  cutoff: addDays(embark,-91), fee: '보증금만 취소' },
+      { period: '승선 90~57일 전',   cutoff: addDays(embark,-90), fee: '크루즈 요금의 50%' },
+      { period: '승선 56~30일 전',   cutoff: addDays(embark,-56), fee: '크루즈 요금의 75%' },
+      { period: '승선 29일 이내',    cutoff: addDays(embark,-29), fee: '크루즈 요금의 100%' },
+    ],
+  },
+  Custom: {
+    name: '선사 직접 입력',
+    color: '#455a64',
+    note: '* 해당 선사의 취소 규정을 직접 확인 후 고객에게 안내해 주세요.',
+    rows: () => [],
+  },
+};
+
+// ============= 이미지 슬롯 관리 =============
+const invoiceImages = [null, null]; // [지도, 일정표]
+let activeSlot = 0; // 마지막 클릭된 슬롯
+
+function setSlotImage(idx, dataUrl) {
+  invoiceImages[idx] = dataUrl;
+  const slot = document.getElementById('slot' + idx);
+  // 기존 img 제거
+  slot.querySelectorAll('img').forEach(el => el.remove());
+  if (dataUrl) {
+    slot.classList.add('has-img');
+    const img = document.createElement('img');
+    img.src = dataUrl;
+    slot.insertBefore(img, slot.querySelector('.img-slot-del'));
+  } else {
+    slot.classList.remove('has-img');
+  }
+  renderInvoice();
+}
+function loadFile(input, idx) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => setSlotImage(idx, e.target.result);
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+function clearImg(e, idx) {
+  e.stopPropagation();
+  setSlotImage(idx, null);
+}
+function dragOver(e, idx) {
+  e.preventDefault();
+  document.getElementById('slot' + idx).classList.add('drag-over');
+}
+function dragLeave(idx) {
+  document.getElementById('slot' + idx).classList.remove('drag-over');
+}
+function dropImg(e, idx) {
+  e.preventDefault();
+  document.getElementById('slot' + idx).classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = ev => setSlotImage(idx, ev.target.result);
+  reader.readAsDataURL(file);
+}
+
+// 슬롯 클릭 시 activeSlot 갱신
+document.addEventListener('DOMContentLoaded', () => {
+  [0, 1].forEach(i => {
+    document.getElementById('slot' + i).addEventListener('mousedown', () => { activeSlot = i; });
+  });
+});
+
+// Ctrl+V 전역 붙여넣기
+document.addEventListener('paste', e => {
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].type.startsWith('image/')) {
+      const file = items[i].getAsFile();
+      const reader = new FileReader();
+      reader.onload = ev => setSlotImage(activeSlot, ev.target.result);
+      reader.readAsDataURL(file);
+      break;
+    }
+  }
+});
+
+// ============= 승객 행 관리 =============
+let paxRows = [
+  { gender: 'M', name: '', cabin_cat: '', cabin_no: '', dining: 'My Choice', price: '', tip: '', tax: '' },
+  { gender: 'F', name: '', cabin_cat: '', cabin_no: '', dining: 'My Choice', price: '', tip: '', tax: '' },
+];
+
+function renderPaxTable() {
+  const tbody = document.getElementById('paxBody');
+  tbody.innerHTML = paxRows.map((p, i) => `
+    <tr>
+      <td style="text-align:center;width:24px">${i+1}</td>
+      <td>
+        <select onchange="paxRows[${i}].gender=this.value;render()" style="width:48px">
+          <option${p.gender==='M'?' selected':''}>M</option>
+          <option${p.gender==='F'?' selected':''}>F</option>
+        </select>
+      </td>
+      <td><input value="${p.name}" placeholder="이름" oninput="paxRows[${i}].name=this.value;renderInvoice()"></td>
+      <td><input value="${p.cabin_cat}" placeholder="Aurea (BA)" oninput="paxRows[${i}].cabin_cat=this.value;renderInvoice()"></td>
+      <td><input value="${p.cabin_no}" placeholder="10235" oninput="paxRows[${i}].cabin_no=this.value;renderInvoice()"></td>
+      <td>
+        <select onchange="paxRows[${i}].dining=this.value;renderInvoice()">
+          <option${p.dining==='My Choice'?' selected':''}>My Choice</option>
+          <option${p.dining==='Early'?' selected':''}>Early</option>
+          <option${p.dining==='Late'?' selected':''}>Late</option>
+          <option${p.dining==='Flex'?' selected':''}>Flex</option>
+        </select>
+      </td>
+      <td><input type="number" value="${p.price}" placeholder="1319" oninput="paxRows[${i}].price=this.value;renderInvoice()"></td>
+      <td><input type="number" value="${p.tip}" placeholder="84" oninput="paxRows[${i}].tip=this.value;renderInvoice()"></td>
+      <td><input type="number" value="${p.tax}" placeholder="240" oninput="paxRows[${i}].tax=this.value;renderInvoice()"></td>
+      <td><button class="btn-del-pax" onclick="delPax(${i})">✕</button></td>
+    </tr>`).join('');
+}
+
+function addPax() {
+  paxRows.push({ gender: 'M', name: '', cabin_cat: '', cabin_no: '', dining: 'My Choice', price: '', tip: '', tax: '' });
+  renderPaxTable();
+  renderInvoice();
+}
+function delPax(i) {
+  if (paxRows.length <= 1) return;
+  paxRows.splice(i, 1);
+  renderPaxTable();
+  renderInvoice();
+}
+
+// ============= 날짜 헬퍼 =============
+function addDays(dateStr, days) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().substring(0,10);
+}
+function fmtDate(dateStr) {
+  if (!dateStr) return '';
+  return dateStr.replace(/-/g, '-');
+}
+function fmtMoney(val) {
+  if (!val && val !== 0) return '';
+  return '$' + Number(val).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtKRW(usd, rate) {
+  if (!usd || !rate) return '';
+  return '₩' + Math.round(usd * rate).toLocaleString();
+}
+
+// ============= 인보이스 렌더 =============
+function renderInvoice() {
+  const customer = document.getElementById('f_customer').value || '고객명';
+  const issueDate = document.getElementById('f_issuedate').value;
+  const manager = document.getElementById('f_manager').value;
+  const ship = document.getElementById('f_ship').value || '선박명';
+  const bookingNo = document.getElementById('f_bookingno').value || '';
+  const itinerary = document.getElementById('f_itinerary').value || '';
+  const embark = document.getElementById('f_embark').value;
+  const embarkPort = document.getElementById('f_embarkport').value || '';
+  const disembarkPort = document.getElementById('f_disembarkport').value || '';
+  const cruiseLineKey = document.getElementById('f_cruiseline_type').value || 'MSC';
+  const cruiseLinePolicy = CANCEL_POLICIES[cruiseLineKey] || CANCEL_POLICIES.MSC;
+  const rate = parseFloat(document.getElementById('f_rate').value) || 0;
+  const deposit = parseFloat(document.getElementById('f_deposit').value) || 0;
+  const depositDL = document.getElementById('f_deposit_dl').value;
+  const balanceDL = document.getElementById('f_balance_dl').value;
+
+  // 합계 계산
+  let totalCruise = 0, totalTip = 0, totalTax = 0;
+  paxRows.forEach(p => {
+    totalCruise += parseFloat(p.price) || 0;
+    totalTip += parseFloat(p.tip) || 0;
+    totalTax += parseFloat(p.tax) || 0;
+  });
+  const grandTotal = totalCruise + totalTip + totalTax;
+  const balance = grandTotal - deposit;
+
+  // 취소 규정 날짜는 CANCEL_POLICIES 내부에서 선사별로 자동 계산
+
+  // 승객 테이블 행 생성
+  const paxRowsHTML = paxRows.map((p, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td>${p.gender}</td>
+      <td class="left">${p.name || ''}</td>
+      <td>${p.cabin_cat || ''}</td>
+      <td>${p.cabin_no || ''}</td>
+      <td>${bookingNo}</td>
+      <td>${p.dining || ''}</td>
+      <td>${p.price ? fmtMoney(p.price) : ''}</td>
+      <td>${p.tip ? fmtMoney(p.tip) : ''}</td>
+      <td>${p.tax ? fmtMoney(p.tax) : ''}</td>
+    </tr>`).join('');
+
+  document.getElementById('invoiceDoc').innerHTML = `
+    <!-- 헤더 -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <img src="assets/images/cruiselink-logo.png" alt="Cruise Link" style="height:44px;width:auto;object-fit:contain;">
+      <div style="text-align:right;font-size:11px;color:#888;">
+        발신일: ${fmtDate(issueDate)}<br>
+        담당: ${manager}
+      </div>
+    </div>
+    <div class="inv-header" style="margin-bottom:18px;">
+      <div class="inv-title-main">CONFIRM &amp; INVOICE</div>
+      <div class="inv-subtitle">${customer} 고객님 크루즈링크 ${ship} 예약 인보이스</div>
+    </div>
+
+    <!-- 메타 정보 -->
+    <div class="inv-meta">
+      <div class="inv-meta-cell label">수 신</div>
+      <div class="inv-meta-cell value">${customer} 고객님</div>
+      <div class="inv-meta-cell label">발신일</div>
+      <div class="inv-meta-cell value">${fmtDate(issueDate)}</div>
+      <div class="inv-meta-cell label">발 신</div>
+      <div class="inv-meta-cell value">아남항공 ㈜ (크루즈링크)</div>
+      <div class="inv-meta-cell label">담당자</div>
+      <div class="inv-meta-cell value">${manager}</div>
+      <div class="inv-meta-cell label">제 목</div>
+      <div class="inv-meta-cell value" style="grid-column:span 3">크루즈링크 ${ship} 예약 인보이스</div>
+    </div>
+
+    <!-- 크루즈 정보 -->
+    <table class="inv-table" style="margin-bottom:8px">
+      <thead>
+        <tr>
+          <th>선박명</th><th>승선일</th><th>승선 항구</th><th>하선 항구</th><th>크루즈 일정</th><th>Booking No.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${ship}</td>
+          <td>${fmtDate(embark)}</td>
+          <td>${embarkPort}</td>
+          <td>${disembarkPort}</td>
+          <td>${itinerary}</td>
+          <td>${bookingNo}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 지도 & 일정표 이미지 -->
+    ${(invoiceImages[0] || invoiceImages[1]) ? `
+    <div class="inv-img-section">
+      <div class="inv-img-row${invoiceImages[0] && invoiceImages[1] ? '' : ' single'}">
+        ${invoiceImages[0] ? `<div class="inv-img-box"><img src="${invoiceImages[0]}" alt="항로 지도"><div class="inv-img-label">항로 지도</div></div>` : ''}
+        ${invoiceImages[1] ? `<div class="inv-img-box"><img src="${invoiceImages[1]}" alt="기항지 일정표"><div class="inv-img-label">기항지 일정표</div></div>` : ''}
+      </div>
+    </div>` : ''}
+
+    <!-- 승객 테이블 -->
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>No</th><th>성별</th><th>Name</th><th>선실 카테고리</th>
+          <th>선실 번호</th><th>Booking No.</th><th>Dining</th>
+          <th>크루즈 요금</th><th>선상팁</th><th>Tax</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${paxRowsHTML}
+        ${paxRows.length > 1 ? `
+        <tr class="subtotal">
+          <td colspan="7" style="text-align:right">소계</td>
+          <td>${totalCruise ? fmtMoney(totalCruise) : ''}</td>
+          <td>${totalTip ? fmtMoney(totalTip) : ''}</td>
+          <td>${totalTax ? fmtMoney(totalTax) : ''}</td>
+        </tr>` : ''}
+        <tr class="total-row">
+          <td colspan="7" class="label-col">총 크루즈 요금</td>
+          <td colspan="3">${grandTotal ? fmtMoney(grandTotal) : ''}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 환율 -->
+    ${rate ? `
+    <div class="inv-exchange">
+      <strong>적용 환율 ${rate.toLocaleString('en-US', {minimumFractionDigits:2})}원/USD</strong>
+      &nbsp;·&nbsp; 인보이스 발행일 하나은행 1회차 현금 매도율 기준 &nbsp;·&nbsp;
+      총액 원화: <strong>${fmtKRW(grandTotal, rate)}</strong>
+      <br>
+      <span style="font-size:11px;color:#555">* 신용카드 결제 시, 환율이 적용된 원화로 결제 가능합니다. 결제하실 카드 앞/뒷면 사진을 이메일 또는 010-3495-9119로 발송해 주시면 됩니다.</span>
+    </div>` : ''}
+
+    <!-- 결제 기한 -->
+    <div class="inv-payment-grid">
+      <div class="inv-payment-box">
+        <div class="ph">💳 신청금</div>
+        <div class="pb">
+          <div class="inv-payment-row">
+            <span>신청금</span>
+            <span class="amt">${deposit ? fmtMoney(deposit) : ''} ${rate && deposit ? `(${fmtKRW(deposit, rate)})` : ''}</span>
+          </div>
+          <div class="inv-payment-row">
+            <span>결제 기한</span>
+            <span class="deadline">${fmtDate(depositDL)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="inv-payment-box">
+        <div class="ph">💰 잔금</div>
+        <div class="pb">
+          <div class="inv-payment-row">
+            <span>잔금</span>
+            <span class="amt">${balance > 0 ? fmtMoney(balance) : ''} ${rate && balance > 0 ? `(${fmtKRW(balance, rate)})` : ''}</span>
+          </div>
+          <div class="inv-payment-row">
+            <span>결제 기한</span>
+            <span class="deadline">${fmtDate(balanceDL)}</span>
+          </div>
+          <div class="inv-payment-row">
+            <span>입금 일자</span>
+            <span></span>
+          </div>
+          <div class="inv-payment-row">
+            <span>비고</span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 입금 계좌 -->
+    <div class="inv-account">
+      <div class="ah">🏦 입금 안내</div>
+      <div class="ab">
+        <div class="inv-account-grid">
+          <div class="inv-account-item">
+            <div class="bank">하나은행 (USD 입금)</div>
+            <div class="num">109-890027-46938</div>
+            <div class="owner">예금주: 아남항공 주식회사</div>
+          </div>
+          <div class="inv-account-item">
+            <div class="bank">하나은행 (원화 입금)</div>
+            <div class="num">109-910025-06504</div>
+            <div class="owner">예금주: 아남항공 주식회사</div>
+          </div>
+        </div>
+        <div class="inv-account-note">
+          * 계좌 입금 시, 하기의 계좌번호로 USD 또는 원화로 입금해 주시면 됩니다.<br>
+          * 원화금액 입금 시, 인보이스 발행일 1회차 현금 매도율 기준의 환율이 적용됩니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- 취소료 규정 (선사 동적) -->
+    <div class="inv-cancel" style="margin-top:10px">
+      <div class="ch" style="background:${cruiseLinePolicy.color}">⚠️ ${cruiseLinePolicy.name} 취소료 규정</div>
+      <div class="cb">
+        ${cruiseLineKey === 'Custom' ? `
+          <div style="font-size:11px;color:#777;padding:8px 0;">취소 규정을 직접 입력하거나 별도 안내 자료를 첨부해 주세요.</div>
+        ` : `
+        <table>
+          <thead>
+            <tr><th>취소 시점</th><th>취소 기준일</th><th>취소 수수료</th></tr>
+          </thead>
+          <tbody>
+            ${cruiseLinePolicy.rows(embark).map(r =>
+              `<tr><td>${r.period}</td><td>${r.cutoff || '—'}</td><td>${r.fee}</td></tr>`
+            ).join('')}
+          </tbody>
+        </table>`}
+        <div class="inv-cancel-note">${cruiseLinePolicy.note.replace(/\n/g,'<br>')}</div>
+      </div>
+    </div>
+
+    <!-- 직인 / 서명 영역 -->
+    <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:20px; padding-top:14px; border-top:1px solid #e0e0e0;">
+      <div style="text-align:right; margin-right:12px; font-size:11.5px; color:#555; line-height:1.8;">
+        <div>발 신</div>
+        <div style="font-size:13px; font-weight:700; color:#1a237e;">아남항공 주식회사</div>
+        <div>담당: ${manager}</div>
+      </div>
+      <img src="assets/images/company-stamp.png" alt="아남항공 직인" style="height:90px; width:auto; object-fit:contain;">
+    </div>
+
+    <div class="inv-footer">
+      아남항공 주식회사 (크루즈링크) &nbsp;|&nbsp; 대표이사: 김영성 &nbsp;|&nbsp; 사업자등록번호: 104-81-84918<br>
+      서울특별시 강서구 마곡서로 152, A-5층 &nbsp;|&nbsp; T. 02-3788-9119 &nbsp;|&nbsp; cruiselink.co.kr
+    </div>
+  `;
+}
+
+function render() {
+  renderInvoice();
+}
+
+function resetForm() {
+  if (!confirm('입력 내용을 모두 초기화할까요?')) return;
+  document.querySelectorAll('#f_customer, #f_ship, #f_bookingno, #f_itinerary, #f_embarkport, #f_disembarkport, #f_rate, #f_deposit').forEach(el => el.value = '');
+  document.getElementById('f_manager').value = '이유진 (02-3788-9119)';
+  const today = new Date().toISOString().substring(0,10);
+  document.getElementById('f_issuedate').value = today;
+  document.getElementById('f_embark').value = '';
+  document.getElementById('f_deposit_dl').value = '';
+  document.getElementById('f_balance_dl').value = '';
+  paxRows = [
+    { gender: 'M', name: '', cabin_cat: '', cabin_no: '', dining: 'My Choice', price: '', tip: '', tax: '' },
+    { gender: 'F', name: '', cabin_cat: '', cabin_no: '', dining: 'My Choice', price: '', tip: '', tax: '' },
+  ];
+  renderPaxTable();
+  renderInvoice();
+}
+
+// ============= 배율 조절 =============
+let manualScale = null; // null = 자동
+
+function applyScale(val) {
+  const pct = parseInt(val);
+  if (pct >= 99) {
+    manualScale = null;
+    document.getElementById('scaleLabel').textContent = '자동';
+  } else {
+    manualScale = pct / 100;
+    document.getElementById('scaleLabel').textContent = pct + '%';
+  }
+  updatePreviewScale();
+}
+
+function updatePreviewScale() {
+  const doc = document.getElementById('invoiceDoc');
+  const scale = manualScale !== null ? manualScale : 1;
+  doc.style.transform = `scale(${scale})`;
+  doc.style.transformOrigin = 'top left';
+  // 컨테이너 높이 보정 (scale 후 빈 공간 방지)
+  doc.style.marginBottom = scale < 1 ? `${-(doc.offsetHeight * (1 - scale))}px` : '';
+  doc.closest('.preview-panel').style.alignItems = 'flex-start';
+}
+
+function doPrint() {
+  const doc = document.getElementById('invoiceDoc');
+
+  // ① 먼저 zoom/transform 완전 리셋 → 자연 높이 측정
+  doc.style.zoom = '';
+  doc.style.transform = '';
+
+  requestAnimationFrame(() => {
+    // A4 (@page margin:8mm) 실사용 높이: 1123px - (8mm×2×3.78px/mm) = 약 1063px
+    // 이미지 등 동적 콘텐츠 여유를 위해 보수적으로 1020px 사용
+    const A4_H = 1020;
+    const docH = doc.scrollHeight;
+    let printZoom = manualScale !== null ? manualScale : 1;
+
+    if (manualScale === null && docH > A4_H) {
+      printZoom = Math.max(0.45, A4_H / docH);
+    }
+
+    // ② zoom 적용 (Chrome Save as PDF 레이아웃에 반영됨)
+    doc.style.zoom = printZoom < 0.99 ? String(printZoom.toFixed(3)) : '';
+
+    // ③ document.title → 인쇄 헤더에서 제거
+    const customer = document.getElementById('f_customer').value || '';
+    const ship = document.getElementById('f_ship').value || '';
+    const issueDate = document.getElementById('f_issuedate').value || '';
+    const prevTitle = document.title;
+    document.title = [customer, ship, issueDate].filter(Boolean).join('_') || '\u00A0';
+
+    // ④ 브라우저가 zoom 적용 렌더 완료 후 인쇄
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => {
+        document.title = prevTitle;
+        doc.style.zoom = '';
+        updatePreviewScale();
+      }, 1000);
+    }, 200);
+  });
+}
+
+// ===== 초기 실행 =====
+document.getElementById('f_issuedate').value = new Date().toISOString().substring(0,10);
+renderPaxTable();
+renderInvoice();
+</script>
+</body>
+</html>

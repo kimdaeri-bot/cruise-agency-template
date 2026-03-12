@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K4PPLZNG');</script>
+<!-- End Google Tag Manager -->
+<meta charset="UTF-8">
+<title>레일클릭 B2B 광고 시안</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #c8c8c8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+    padding: 40px;
+  }
+
+  /* ── 출력용: 168×222mm ── */
+  .ad {
+    width: 635px;   /* 168mm @ 96dpi */
+    height: 840px;  /* 222mm @ 96dpi */
+    position: relative;
+    overflow: hidden;
+    background: #0b1e3d;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 12px 60px rgba(0,0,0,0.45);
+  }
+
+  /* ── 배경 레이어 ── */
+  .bg-map {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: radial-gradient(circle at 30% 60%, #4a9eff 0%, transparent 55%),
+                      radial-gradient(circle at 75% 25%, #7ec8ff 0%, transparent 45%);
+  }
+
+  /* 유럽 지도 선 느낌 SVG */
+  .bg-lines {
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    position: relative; z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 32px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: #e63946;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+  .logo-text span { color: #e63946; }
+  .top-tag {
+    background: rgba(230,57,70,0.2);
+    border: 1px solid rgba(230,57,70,0.5);
+    color: #ff8a93;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 2;
+    padding: 30px 32px 0;
+    flex-shrink: 0;
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    color: #7ec8ff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 2px;
+    background: #7ec8ff;
+    border-radius: 2px;
+  }
+  .hero-title {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1.18;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: #e63946;
+    display: block;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 380px;
+  }
+
+  /* ── TRAIN VISUAL ── */
+  .train-visual {
+    position: relative; z-index: 2;
+    padding: 0 0 0 32px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  .route-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 32px;
+  }
+  .route-city {
+    flex: 1;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .route-city .city-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .route-city .city-label { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .route-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 10px;
+    gap: 3px;
+  }
+  .route-line {
+    height: 2px;
+    width: 40px;
+    background: linear-gradient(to right, #7ec8ff, #e63946);
+    border-radius: 2px;
+  }
+  .route-train { font-size: 16px; margin: 2px 0; }
+  .route-time { font-size: 9px; color: rgba(255,255,255,0.4); }
+
+  /* ── FEATURES ── */
+  .features {
+    position: relative; z-index: 2;
+    padding: 24px 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .feat-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 16px 14px;
+    transition: all 0.2s;
+  }
+  .feat-icon { font-size: 22px; margin-bottom: 8px; }
+  .feat-title { font-size: 12px; font-weight: 800; color: #fff; margin-bottom: 4px; line-height: 1.3; }
+  .feat-desc { font-size: 10.5px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  /* ── PRICE HIGHLIGHT ── */
+  .price-section {
+    position: relative; z-index: 2;
+    margin: 0 32px 20px;
+    background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .price-left .price-label { font-size: 11px; opacity: 0.85; margin-bottom: 4px; }
+  .price-left .price-main { font-size: 26px; font-weight: 900; line-height: 1; }
+  .price-left .price-main span { font-size: 13px; font-weight: 400; opacity: 0.8; }
+  .price-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .price-badge {
+    background: rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  /* ── ROUTES ── */
+  .routes-section {
+    position: relative; z-index: 2;
+    padding: 0 32px 20px;
+    flex-shrink: 0;
+  }
+  .routes-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .routes-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 500;
+  }
+  .chip.highlight {
+    background: rgba(126,200,255,0.15);
+    border-color: rgba(126,200,255,0.35);
+    color: #7ec8ff;
+  }
+
+  /* ── BOTTOM CTA ── */
+  .bottom-cta {
+    position: relative; z-index: 2;
+    margin-top: auto;
+    padding: 20px 32px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .cta-left .cta-label { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+  .cta-left .cta-url {
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 0.3px;
+  }
+  .cta-left .cta-url span { color: #e63946; }
+  .cta-btn {
+    background: #e63946;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 13px 22px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+    text-align: center;
+  }
+  .cta-btn small { display: block; font-size: 10px; font-weight: 500; opacity: 0.85; margin-top: 2px; }
+
+  /* ── 인쇄 ── */
+  @media print {
+    body { background: none; padding: 0; }
+    .ad { box-shadow: none; }
+    @page { size: 168mm 222mm; margin: 0; }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4PPLZNG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager -->
+
+
+<div class="ad">
+
+  <!-- 배경 -->
+  <div class="bg-map"></div>
+  <svg class="bg-lines" viewBox="0 0 635 840" preserveAspectRatio="xMidYMid slice">
+    <!-- 유럽 노선 느낌의 선들 -->
+    <line x1="0" y1="420" x2="635" y2="320" stroke="white" stroke-width="1"/>
+    <line x1="80" y1="0" x2="550" y2="840" stroke="white" stroke-width="0.7"/>
+    <line x1="200" y1="840" x2="635" y2="180" stroke="white" stroke-width="0.7"/>
+    <circle cx="180" cy="390" r="5" fill="white" opacity="0.4"/>
+    <circle cx="320" cy="345" r="5" fill="white" opacity="0.4"/>
+    <circle cx="460" cy="310" r="5" fill="white" opacity="0.4"/>
+    <circle cx="560" cy="230" r="5" fill="white" opacity="0.4"/>
+    <circle cx="90" cy="450" r="3" fill="white" opacity="0.3"/>
+    <circle cx="580" cy="420" r="3" fill="white" opacity="0.3"/>
+    <!-- 점선 노선 -->
+    <line x1="180" y1="390" x2="560" y2="230" stroke="#4a9eff" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.3"/>
+  </svg>
+
+  <!-- 상단 로고 -->
+  <div class="top-bar">
+    <div class="logo-area">
+      <div class="logo-icon">🚄</div>
+      <div class="logo-text">Rail<span>Click</span></div>
+    </div>
+    <div class="top-tag">B2B Portal</div>
+  </div>
+
+  <!-- 히어로 -->
+  <div class="hero">
+    <div class="hero-eyebrow">여행사 전용 유럽철도 발권 플랫폼</div>
+    <h1 class="hero-title">
+      유럽 기차票,<br>
+      <em>최저 수수료로</em>
+      더 많이 남기세요
+    </h1>
+    <p class="hero-sub">
+      독일·스위스·프랑스·스페인·이탈리아 등<br>
+      유럽 전 노선 실시간 발권 · API 연동 · 화이트라벨 제공
+    </p>
+  </div>
+
+  <!-- 노선 바 -->
+  <div class="train-visual">
+    <div class="route-bar">
+      <div class="route-city">
+        <div class="city-name">🇫🇷 파리</div>
+        <div class="city-label">Paris Gare du Nord</div>
+      </div>
+      <div class="route-divider">
+        <div class="route-line"></div>
+        <div class="route-train">🚄</div>
+        <div class="route-time">2h 15m</div>
+      </div>
+      <div class="route-city">
+        <div class="city-name">🇧🇪 브뤼셀</div>
+        <div class="city-label">Bruxelles-Midi</div>
+      </div>
+      <div class="route-divider">
+        <div class="route-line"></div>
+        <div class="route-train">🚄</div>
+        <div class="route-time">1h 51m</div>
+      </div>
+      <div class="route-city">
+        <div class="city-name">🇬🇧 런던</div>
+        <div class="city-label">London St Pancras</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 기능 3가지 -->
+  <div class="features">
+    <div class="feat-card">
+      <div class="feat-icon">💰</div>
+      <div class="feat-title">업계 최저<br>수수료</div>
+      <div class="feat-desc">여행사 마진을<br>최대로 확보</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">실시간<br>즉시 발권</div>
+      <div class="feat-desc">B2B 포털에서<br>바로 티켓 발행</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔗</div>
+      <div class="feat-title">API &amp;<br>화이트라벨</div>
+      <div class="feat-desc">자사 브랜드로<br>서비스 제공 가능</div>
+    </div>
+  </div>
+
+  <!-- 가격 하이라이트 -->
+  <div class="price-section">
+    <div class="price-left">
+      <div class="price-label">여행사 수수료</div>
+      <div class="price-main">업계 최저 <span>보장</span></div>
+    </div>
+    <div class="price-right">
+      <div class="price-badge">✅ 무료 가입</div>
+      <div class="price-badge">✅ 즉시 이용</div>
+      <div class="price-badge">✅ 별도 계약 불필요</div>
+    </div>
+  </div>
+
+  <!-- 취급 노선 -->
+  <div class="routes-section">
+    <div class="routes-label">취급 노선</div>
+    <div class="routes-chips">
+      <span class="chip highlight">🇩🇪 독일 DB</span>
+      <span class="chip highlight">🇨🇭 스위스 SBB</span>
+      <span class="chip">🇫🇷 프랑스 SNCF</span>
+      <span class="chip">🇪🇸 스페인 Renfe</span>
+      <span class="chip">🇮🇹 이탈리아 FS</span>
+      <span class="chip">🚄 유로스타</span>
+      <span class="chip">🇦🇹 오스트리아 ÖBB</span>
+      <span class="chip">🇳🇱 네덜란드 NS</span>
+    </div>
+  </div>
+
+  <!-- 하단 CTA -->
+  <div class="bottom-cta">
+    <div class="cta-left">
+      <div class="cta-label">지금 무료로 시작하세요</div>
+      <div class="cta-url"><span>rail</span>click.com</div>
+    </div>
+    <div class="cta-btn">
+      B2B 무료 가입
+      <small>가입 즉시 발권 가능</small>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

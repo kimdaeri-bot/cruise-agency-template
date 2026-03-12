@@ -1,0 +1,304 @@
+[
+  {
+    "ref": "EXPLORAEP20260402SJUMIA",
+    "shipSlug": "explora-ii",
+    "shipTitle": "EXPLORA II",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-04-02",
+    "dateTo": "2026-04-09",
+    "nights": 7,
+    "destination": "caribbean",
+    "title": "카리브해 아일랜드 7박 럭셔리 크루즈",
+    "portRoute": "산후안(PR) → 세인트 존스 → 구스타비아 → 푸에르토플라타 → 키웨스트 → 마이애미",
+    "priceInside": 0,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%20Explora%20II%20Exterior.jpg",
+    "portImage": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80",
+    "hashtags": [
+      "#럭셔리크루즈",
+      "#ExploraJourneys",
+      "#카리브해크루즈",
+      "#올인클루시브",
+      "#산후안"
+    ]
+  },
+  {
+    "ref": "EXPLORAEX20260527BCNMCM",
+    "shipSlug": "explora-i",
+    "shipTitle": "EXPLORA I",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-05-27",
+    "nights": 7,
+    "destination": "mediterranean",
+    "startsAt": {
+      "name": "Barcelona",
+      "nameKo": "바르셀로나"
+    },
+    "endsAt": {
+      "name": "Monte-Carlo",
+      "nameKo": "Monte-Carlo"
+    },
+    "portRoute": "바르셀로나 → Mahón, Menorca → Alghero → 칸 → Saint-Tropez → At Sea → 치비타베키아 → Monte-Carlo",
+    "countriesKo": [
+      "스페인",
+      "이탈리아",
+      "프랑스",
+      "모나코"
+    ],
+    "priceInside": 0,
+    "priceOutside": 0,
+    "priceBalcony": 0,
+    "priceSuite": 4230,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys%2C%20EXPLORA%20I%2C%20Exterior%202.jpg",
+    "title": "지중해 7박 크루즈",
+    "hashtags": [
+      "#지중해크루즈",
+      "#Explora크루즈",
+      "#EXPLORAI",
+      "#바르셀로나",
+      "#Mahón, Menorca"
+    ]
+  },
+  {
+    "ref": "EXPLORAEP20260528ISTFSA",
+    "shipSlug": "explora-ii",
+    "shipTitle": "EXPLORA II",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-05-28",
+    "nights": 11,
+    "destination": "mediterranean",
+    "startsAt": {
+      "name": "Istanbul",
+      "nameKo": "Istanbul"
+    },
+    "endsAt": {
+      "name": "Fusina",
+      "nameKo": "Fusina"
+    },
+    "portRoute": "Istanbul → Bodrum → Pátmos → 피레우스 → Páros → 로도스 → At Sea → 코르푸 → Hvar Island → Rijeka → Fusina",
+    "countriesKo": [
+      "터키",
+      "그리스",
+      "크로아티아",
+      "이탈리아"
+    ],
+    "priceInside": 0,
+    "priceOutside": 0,
+    "priceBalcony": 0,
+    "priceSuite": 8260,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%2C%20Explora%20II%20Exterior.png",
+    "title": "지중해 11박 크루즈",
+    "hashtags": [
+      "#지중해크루즈",
+      "#Explora크루즈",
+      "#EXPLORAII",
+      "#Istanbul",
+      "#Bodrum"
+    ]
+  },
+  {
+    "ref": "EXPLORAEP20260601PIRFSA",
+    "shipSlug": "explora-ii",
+    "shipTitle": "EXPLORA II",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-06-01",
+    "nights": 7,
+    "destination": "mediterranean",
+    "startsAt": {
+      "name": "Piraeus",
+      "nameKo": "피레우스"
+    },
+    "endsAt": {
+      "name": "Fusina",
+      "nameKo": "Fusina"
+    },
+    "portRoute": "피레우스 → Páros → 로도스 → At Sea → 코르푸 → Hvar Island → Rijeka → Fusina",
+    "countriesKo": [
+      "그리스",
+      "크로아티아",
+      "이탈리아"
+    ],
+    "priceInside": 0,
+    "priceOutside": 0,
+    "priceBalcony": 0,
+    "priceSuite": 4675,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%2C%20Explora%20II%20Exterior.png",
+    "title": "그리스·크로아티아·이탈리아 7박 크루즈",
+    "hashtags": [
+      "#지중해크루즈",
+      "#Explora크루즈",
+      "#EXPLORAII",
+      "#피레우스",
+      "#Páros"
+    ]
+  },
+  {
+    "ref": "EXPLORAEP20260601PIRPIR",
+    "shipSlug": "explora-ii",
+    "shipTitle": "EXPLORA II",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-06-01",
+    "nights": 14,
+    "destination": "mediterranean",
+    "startsAt": {
+      "name": "Piraeus",
+      "nameKo": "피레우스"
+    },
+    "endsAt": {
+      "name": "Piraeus",
+      "nameKo": "피레우스"
+    },
+    "portRoute": "피레우스 → Páros → 로도스 → At Sea → 코르푸 → Hvar Island → Rijeka → Fusina → Rovinj → Zadar → 두브로브니크 → Brindisi → Milos",
+    "countriesKo": [
+      "그리스",
+      "크로아티아",
+      "이탈리아"
+    ],
+    "priceInside": 0,
+    "priceOutside": 0,
+    "priceBalcony": 0,
+    "priceSuite": 8840,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%2C%20Explora%20II%20Exterior.png",
+    "title": "그리스·크로아티아·이탈리아 14박 크루즈",
+    "hashtags": [
+      "#지중해크루즈",
+      "#Explora크루즈",
+      "#EXPLORAII",
+      "#피레우스",
+      "#Páros"
+    ]
+  },
+  {
+    "ref": "EXPLORAEX20260602CVVCVV",
+    "shipSlug": "explora-i",
+    "shipTitle": "EXPLORA I",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-06-02",
+    "nights": 7,
+    "destination": "mediterranean",
+    "startsAt": {
+      "name": "Civitavecchia",
+      "nameKo": "치비타베키아"
+    },
+    "endsAt": {
+      "name": "Civitavecchia",
+      "nameKo": "치비타베키아"
+    },
+    "portRoute": "치비타베키아 → Monte-Carlo",
+    "countriesKo": [
+      "이탈리아",
+      "모나코"
+    ],
+    "priceInside": 0,
+    "priceOutside": 0,
+    "priceBalcony": 0,
+    "priceSuite": 12500,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys%2C%20EXPLORA%20I%2C%20Exterior%202.jpg",
+    "title": "이탈리아·모나코 7박 크루즈",
+    "hashtags": [
+      "#지중해크루즈",
+      "#Explora크루즈",
+      "#EXPLORAI",
+      "#치비타베키아",
+      "#Monte-Carlo"
+    ]
+  },
+  {
+    "ref": "EXPLORAEX20260608MCMBCN",
+    "shipSlug": "explora-i",
+    "shipTitle": "EXPLORA I",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-06-08",
+    "nights": 7,
+    "destination": "mediterranean",
+    "startsAt": {
+      "name": "Monte-Carlo",
+      "nameKo": "Monte-Carlo"
+    },
+    "endsAt": {
+      "name": "Barcelona",
+      "nameKo": "바르셀로나"
+    },
+    "portRoute": "Monte-Carlo → 치비타베키아 → Sorrento → Giardini Naxos → 발레타 → At Sea → 팔마 데 마요르카 → 바르셀로나",
+    "countriesKo": [
+      "모나코",
+      "이탈리아",
+      "몰타",
+      "스페인"
+    ],
+    "priceInside": 0,
+    "priceOutside": 0,
+    "priceBalcony": 0,
+    "priceSuite": 5000,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys%2C%20EXPLORA%20I%2C%20Exterior%202.jpg",
+    "title": "지중해 7박 크루즈",
+    "hashtags": [
+      "#지중해크루즈",
+      "#Explora크루즈",
+      "#EXPLORAI",
+      "#Monte-Carlo",
+      "#치비타베키아"
+    ]
+  },
+  {
+    "ref": "EXPLORAEL20260817SOUCPH",
+    "shipSlug": "explora-iii",
+    "shipTitle": "EXPLORA III",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2026-08-17",
+    "dateTo": "2026-08-25",
+    "nights": 8,
+    "destination": "northern-europe",
+    "title": "노르웨이 피요르드·코펜하겐 8박 럭셔리 크루즈",
+    "portRoute": "사우샘프턴 → 만달 → 올덴 → 베르겐 → Flåm → 코펜하겐",
+    "priceInside": 0,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2025/01/02/12/22/07/974008bc-6388-4ee4-82b3-04349e2e13e4/Explora%20Journeys%20Explora%20III%20Exterior.jpg",
+    "portImage": "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80",
+    "hashtags": [
+      "#럭셔리크루즈",
+      "#ExploraJourneys",
+      "#노르웨이피요르드",
+      "#북유럽크루즈",
+      "#올인클루시브"
+    ]
+  },
+  {
+    "ref": "EXPLORAEL20270510VANVAN",
+    "shipSlug": "explora-iii",
+    "shipTitle": "EXPLORA III",
+    "operator": "Explora Journeys",
+    "operatorShort": "Explora",
+    "dateFrom": "2027-05-10",
+    "dateTo": "2027-05-21",
+    "nights": 11,
+    "destination": "alaska",
+    "title": "알래스카 빙하·피오르 11박 럭셔리 크루즈",
+    "portRoute": "밴쿠버 → 랭겔 → 주노 → 엔디콧암(빙하) → 싯카 → 밴쿠버",
+    "priceInside": 0,
+    "currency": "USD",
+    "image": "https://assets.widgety.co.uk/2025/01/02/12/22/07/974008bc-6388-4ee4-82b3-04349e2e13e4/Explora%20Journeys%20Explora%20III%20Exterior.jpg",
+    "portImage": "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=600&q=80",
+    "hashtags": [
+      "#럭셔리크루즈",
+      "#ExploraJourneys",
+      "#알래스카크루즈",
+      "#빙하크루즈",
+      "#올인클루시브"
+    ]
+  }
+]

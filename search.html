@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K4PPLZNG');</script>
+<!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>검색 결과 - 크루즈링크</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <style>
+    .search-hero { background: var(--navy); color: #fff; padding: 32px 0; text-align: center; }
+    .search-hero h1 { font-size: 1.6rem; font-weight: 900; margin-bottom: 8px; }
+    .search-hero p { opacity: 0.8; font-size: 0.95rem; }
+    .search-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .search-tag { background: rgba(255,255,255,0.15); padding: 4px 14px; border-radius: 20px; font-size: 0.85rem; }
+    .search-loading { text-align: center; padding: 80px 20px; }
+    .search-loading .loading-spinner { width: 48px; height: 48px; border-width: 4px; margin: 0 auto 16px; }
+    .search-progress { width: 280px; height: 4px; background: var(--gray-200); border-radius: 2px; margin: 20px auto 0; overflow: hidden; }
+    .search-progress-bar { height: 100%; background: var(--orange); border-radius: 2px; width: 0%; transition: width 0.3s ease; }
+    .search-status { font-size: 0.9rem; color: var(--gray-500); margin-top: 12px; }
+    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .result-count { font-size: 1.1rem; font-weight: 700; color: var(--navy); }
+    .result-count span { color: var(--orange); }
+  </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4PPLZNG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager -->
+
+  <div id="header"></div>
+
+  <div class="search-hero">
+    <div class="container">
+      <h1>🔍 크루즈 검색 결과</h1>
+      <p id="searchSummary">검색 조건에 맞는 크루즈를 찾고 있습니다...</p>
+      <div class="search-tags" id="searchTags"></div>
+    </div>
+  </div>
+
+  <section class="section" style="background: var(--gray-50); min-height: 400px;">
+    <div class="container">
+      <!-- Loading state -->
+      <div id="loadingState" class="search-loading">
+        <div class="loading-spinner"></div>
+        <p style="font-size:1.1rem; font-weight:700; color:var(--navy);">실시간 크루즈 검색 중...</p>
+        <div class="search-progress"><div class="search-progress-bar" id="progressBar"></div></div>
+        <p class="search-status" id="statusText">데이터를 불러오고 있습니다</p>
+      </div>
+      <!-- Results -->
+      <div id="resultArea" style="display:none;">
+        <div class="result-header">
+          <div class="result-count" id="resultCount"></div>
+          <div style="margin-top:12px;position:relative;max-width:420px">
+            <input id="kwInput" type="text" placeholder="🔍 결과 내 검색 (한글·영문·선박명·항구명 모두 가능)" autocomplete="off"
+              style="width:100%;box-sizing:border-box;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:.88rem;font-family:inherit;outline:none"
+              oninput="applyKeywordFilter()" onfocus="this.style.borderColor='var(--navy)'" onblur="this.style.borderColor='#ddd'">
+          </div>
+        </div>
+        <div id="resultList" class="cruise-list"></div>
+        <div id="pagination" class="pagination"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="ctaSection"></div>
+  <div id="footer"></div>
+
+  <script src="assets/data/translations.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    document.getElementById('header').innerHTML = Components.header();
+    document.getElementById('footer').innerHTML = Components.footer();
+    document.getElementById('ctaSection').innerHTML = Components.ctaSection();
+
+    const params = new URLSearchParams(location.search);
+    const dest = params.get('dest') || '';
+    const operators = params.get('operators') ? params.get('operators').split(',') : [];
+    const ports = params.get('ports') ? params.get('ports').split(',') : [];
+    const month = params.get('month') || '';
+    const dateFrom = params.get('dateFrom') || '';
+    const dateTo = params.get('dateTo') || '';
+    const duration = params.get('duration') || '';
+    const nightsFilter = params.get('nights') || '';
+    const ship = params.get('ship') || '';
+
+    // Show search tags
+    const tagsEl = document.getElementById('searchTags');
+    const destNames = {'korea':'한국/일본','mediterranean':'지중해','alaska':'알래스카','caribbean':'카리브해','northern-europe':'북유럽','asia':'아시아/중동','south-america':'남미','oceania':'오세아니아','hawaii':'하와이'};
+    const durNames = {'short':'1~5박','medium':'6~10박','long':'11박 이상'};
+    if (dest) tagsEl.innerHTML += `<span class="search-tag">📍 ${destNames[dest]||dest}</span>`;
+    ports.forEach(p => tagsEl.innerHTML += `<span class="search-tag">🚢 ${p}</span>`);
+    const _opFullName = {
+      'MSC': 'MSC Cruises', 'Norwegian': 'Norwegian Cruise Line',
+      'Royal Caribbean': 'Royal Caribbean International', 'Celebrity': 'Celebrity Cruises',
+      'Princess': 'Princess Cruises', 'Carnival': 'Carnival Cruise Line',
+      'Oceania': 'Oceania Cruises', 'Regent': 'Regent Seven Seas Cruises',
+      'Explora': 'Explora Journeys'
+    };
+    operators.forEach(o => tagsEl.innerHTML += `<span class="search-tag">⚓ ${Translations.operatorName(_opFullName[o] || o)}</span>`);
+    if (month) tagsEl.innerHTML += `<span class="search-tag">📅 ${month.replace('-','년 ')}월</span>`;
+    if (dateFrom || dateTo) tagsEl.innerHTML += `<span class="search-tag">📅 ${dateFrom||'~'} ~ ${dateTo||'~'}</span>`;
+    if (ship) tagsEl.innerHTML += `<span class="search-tag">🛳️ ${ship}</span>`;
+    if (duration) tagsEl.innerHTML += `<span class="search-tag">⏱️ ${durNames[duration]||duration}</span>`;
+    const nightsNames = {'1-4':'1~4박','5-8':'5~8박','9-':'9박 이상'};
+    if (nightsFilter) tagsEl.innerHTML += `<span class="search-tag">🌙 ${nightsNames[nightsFilter]||nightsFilter}</span>`;
+
+    // Animated loading
+    const bar = document.getElementById('progressBar');
+    const statusText = document.getElementById('statusText');
+    const steps = [
+      [20, '6,000+ 크루즈 데이터 로딩 중...'],
+      [50, '조건에 맞는 크루즈 필터링 중...'],
+      [80, '가격 및 일정 정보 확인 중...'],
+      [95, '결과 정렬 중...'],
+    ];
+
+    let allResults = [];
+    let filteredResults = [];
+    const PER_PAGE = 20;
+    let currentPage = 1;
+
+    function matchKeyword(c, q) {
+      if (!q) return true;
+      const lq = q.toLowerCase();
+      const T = typeof Translations !== 'undefined' ? Translations : null;
+      const fields = [
+        c.title || '',
+        c.portRoute || '',
+        T ? T.portRoute(c.portRoute || '') : '',
+        c.shipTitle || '',
+        T ? T.shipName(c.shipTitle || '') : '',
+        c.operator || '',
+        T ? T.operatorName(c.operator || '') : '',
+        c.startsAt?.name || '',
+        c.startsAt?.nameKo || '',
+        T ? T.portName(c.startsAt?.name || '') : '',
+        c.endsAt?.name || '',
+        c.endsAt?.nameKo || '',
+        c.destination || '',
+      ];
+      return fields.some(f => f.toLowerCase().includes(lq));
+    }
+
+    function applyKeywordFilter() {
+      const q = (document.getElementById('kwInput')?.value || '').trim();
+      filteredResults = q ? allResults.filter(c => matchKeyword(c, q)) : [...allResults];
+      currentPage = 1;
+      document.getElementById('resultCount').innerHTML = `총 <span>${filteredResults.length}</span>개의 크루즈를 찾았습니다`;
+      renderPage();
+    }
+
+    async function doSearch() {
+      // Animate progress
+      for (const [pct, text] of steps) {
+        bar.style.width = pct + '%';
+        statusText.textContent = text;
+        await new Promise(r => setTimeout(r, 400));
+      }
+
+      let results = await API.filterCruises({ dest, operators, ports, month, duration, limit: 9999, minDate: dateFrom || undefined, maxDate: dateTo || undefined });
+      if (ship) {
+        const sq = ship.toLowerCase();
+        results = results.filter(c =>
+          c.shipSlug === ship ||
+          (c.shipTitle && c.shipTitle.toLowerCase().includes(sq)) ||
+          (c.shipSlug && c.shipSlug.toLowerCase().includes(sq))
+        );
+      }
+      // 박수 필터
+      if (nightsFilter) {
+        results = results.filter(c => {
+          const n = Number(c.nights || c.duration || 0);
+          if (nightsFilter === '1-4') return n >= 1 && n <= 4;
+          if (nightsFilter === '5-8') return n >= 5 && n <= 8;
+          if (nightsFilter === '9-') return n >= 9;
+          return true;
+        });
+      }
+      allResults = results;
+      filteredResults = [...results];
+
+      bar.style.width = '100%';
+      statusText.textContent = '완료!';
+      await new Promise(r => setTimeout(r, 300));
+
+      // Show results
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('resultArea').style.display = 'block';
+      document.getElementById('resultCount').innerHTML = `총 <span>${filteredResults.length}</span>개의 크루즈를 찾았습니다`;
+      document.getElementById('searchSummary').textContent = `${results.length}개의 크루즈가 검색되었습니다`;
+      document.title = `검색 결과 (${results.length}건) - 크루즈링크`;
+
+      renderPage();
+    }
+
+    function renderPage() {
+      const container = document.getElementById('resultList');
+      const pagination = document.getElementById('pagination');
+
+      if (filteredResults.length === 0) {
+        container.innerHTML = '<div class="empty-state"><span class="emoji">🔍</span><p>조건에 맞는 크루즈가 없습니다.<br>검색 조건을 변경해 보세요.</p></div>';
+        pagination.innerHTML = '';
+        return;
+      }
+
+      const totalPages = Math.ceil(filteredResults.length / PER_PAGE);
+      const start = (currentPage - 1) * PER_PAGE;
+      const pageItems = filteredResults.slice(start, start + PER_PAGE);
+
+      container.innerHTML = pageItems.map(c => Components.localCruiseItem(c)).join('');
+
+      if (totalPages > 1) {
+        let html = '';
+        const maxVisible = 10;
+        let startP = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endP = startP + maxVisible - 1;
+        if (endP > totalPages) { endP = totalPages; startP = Math.max(1, endP - maxVisible + 1); }
+        if (startP > 1) html += `<button class="page-btn" onclick="goPage(1)">1</button><span class="page-ellipsis">…</span>`;
+        for (let i = startP; i <= endP; i++) {
+          html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+        }
+        if (endP < totalPages) html += `<span class="page-ellipsis">…</span><button class="page-btn" onclick="goPage(${totalPages})">${totalPages}</button>`;
+        pagination.innerHTML = html;
+      } else {
+        pagination.innerHTML = '';
+      }
+    }
+
+    function goPage(p) {
+      currentPage = p;
+      renderPage();
+      window.scrollTo({ top: 200, behavior: 'smooth' });
+    }
+
+    doSearch();
+  </script>
+  
+  <div class="modal-overlay" id="inquiryModal">
+    <div class="modal">
+      <div class="modal-header"><h2>🚢 크루즈 문의하기</h2><button class="modal-close" onclick="closeInquiry()">&times;</button></div>
+      <div class="modal-body">
+        <div class="form-status" id="formStatus"></div>
+        <form id="inquiryForm" onsubmit="submitInquiry(event)">
+          <input type="hidden" name="_subject" value="[크루즈링크] 새 문의가 접수되었습니다">
+          <input type="hidden" name="_template" value="table">
+          <input type="text" name="_honey" style="display:none">
+          <div class="form-group"><label>영문 이름 (여권 기재명) <span class="req">*</span></label><input type="text" name="customer_name" required placeholder="HONG GILDONG"></div>
+          <div class="form-group"><label>이메일 <span class="req">*</span></label><input type="email" name="customer_email" required placeholder="example@email.com"></div>
+          <div class="form-group"><label>연락처 <span class="req">*</span></label><input type="tel" name="customer_phone" required placeholder="010-1234-5678"></div>
+          <div class="form-group"><label>관심 크루즈 / 요청사항 <span class="req">*</span></label><textarea name="message" rows="3" required placeholder="관심 있는 크루즈나 여행 일정을 알려주세요."></textarea></div>
+          <div class="privacy-section">
+            <div class="privacy-check"><input type="checkbox" id="privacyAgree3" required><label for="privacyAgree3">개인정보 수집·이용에 동의합니다. (필수)</label></div>
+            <button type="button" class="privacy-toggle" onclick="document.getElementById('privacyDetail').classList.toggle('open')">약관 보기 ▼</button>
+            <div class="privacy-detail" id="privacyDetail"><strong>수집항목:</strong> 이름, 이메일, 연락처<br><strong>수집목적:</strong> 크루즈 상담 및 예약 안내<br><strong>보유기간:</strong> 상담 완료 후 1년</div>
+          </div>
+          <button type="submit" class="btn btn-orange" id="submitBtn" style="width:100%;margin-top:16px;padding:14px;font-size:1.05rem">문의하기 전송</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openInquiryWith(title, operator, ship, dateFrom, nights, price, ref, currency) {
+      document.getElementById('modalProductName').textContent = title;
+      document.getElementById('modalProductDetail').innerHTML =
+        `${operator} · ${ship}<br>출발: ${dateFrom} / ${nights}박${price ? (currency==='EUR'?' / €':' / $')+price+'~' : ''}`;
+      document.getElementById('f_product').value = title;
+      document.getElementById('f_cruiseline').value = operator;
+      document.getElementById('f_ship').value = ship;
+      document.getElementById('f_date').value = dateFrom;
+      document.getElementById('f_ports').value = '';
+      document.getElementById('f_price').value = price ? (currency==='EUR'?'€':'$')+price+'~' : '문의';
+      document.getElementById('f_ref').value = ref;
+      document.getElementById('inquiryModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function openInquiry() {
+      document.getElementById('modalProductName').textContent = '';
+      document.getElementById('modalProductDetail').innerHTML = '';
+      document.getElementById('f_product').value = '';
+      document.getElementById('f_cruiseline').value = '';
+      document.getElementById('f_ship').value = '';
+      document.getElementById('f_date').value = '';
+      document.getElementById('f_ports').value = '';
+      document.getElementById('f_price').value = '';
+      document.getElementById('f_ref').value = '';
+      document.getElementById('inquiryModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeInquiry() {
+      document.getElementById('inquiryModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('click', e => { if (e.target.id === 'inquiryModal') closeInquiry(); });
+    function submitInquiry(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true; btn.textContent = '전송 중...';
+      const fd = {
+        _subject: `[크루즈링크] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
+        _template: 'table',
+        '크루즈 상품': document.getElementById('f_product').value,
+        '선사': document.getElementById('f_cruiseline').value,
+        '선박': document.getElementById('f_ship').value,
+        '출발일': document.getElementById('f_date').value,
+        '참고가격': document.getElementById('f_price').value,
+        'Ref': document.getElementById('f_ref').value,
+        '고객 이름': document.getElementById('f_name').value,
+        '고객 이메일': document.getElementById('f_email').value,
+        '고객 연락처': document.getElementById('f_phone').value,
+        '인원': document.getElementById('f_pax').value,
+        '희망 객실': document.getElementById('f_cabin').value,
+        '요청사항': document.getElementById('f_message').value || '없음',
+      };
+      const data = new FormData();
+      Object.entries(fd).forEach(([k,v]) => data.append(k,v));
+      fetch('https://formsubmit.co/ajax/info@cruiselink.co.kr', { method:'POST', body:data })
+      .then(() => {
+        document.getElementById('formStatus').innerHTML = '<div style="background:#e8f5e9;padding:12px;border-radius:8px;color:#2e7d32;font-size:0.9rem">✅ 문의가 접수되었습니다.<br>입력하신 이메일로 견적서를 회신드리겠습니다.</div>';
+        document.getElementById('inquiryForm').style.display = 'none'; btn.style.display = 'none';
+      }).catch(() => {
+        document.getElementById('formStatus').innerHTML = '<div style="background:#e8f5e9;padding:12px;border-radius:8px;color:#2e7d32;font-size:0.9rem">✅ 문의가 접수되었습니다.<br>입력하신 이메일로 견적서를 회신드리겠습니다.</div>';
+        document.getElementById('inquiryForm').style.display = 'none'; btn.style.display = 'none';
+      });
+    }
+  </script>
+  <div class="modal-overlay" id="inquiryModal">
+    <div class="modal" style="max-width:460px">
+      <div class="modal-header" style="padding:14px 20px">
+        <h2 style="font-size:1.05rem">🚢 크루즈 문의하기</h2>
+        <button class="modal-close" onclick="closeInquiry()">&times;</button>
+      </div>
+      <div class="modal-body" style="padding:16px 20px">
+        <div class="modal-product-info" style="padding:10px 12px;margin-bottom:12px;font-size:0.88rem;background:#f5f5f5;border-radius:8px">
+          <strong id="modalProductName"></strong><br>
+          <span id="modalProductDetail" style="color:#666"></span>
+        </div>
+        <div class="form-status" id="formStatus"></div>
+        <form id="inquiryForm" onsubmit="submitInquiry(event)">
+          <input type="hidden" id="f_product" name="product_name">
+          <input type="hidden" id="f_cruiseline" name="cruise_line">
+          <input type="hidden" id="f_ship" name="ship">
+          <input type="hidden" id="f_date" name="departure_date">
+          <input type="hidden" id="f_ports" name="ports">
+          <input type="hidden" id="f_price" name="price">
+          <input type="hidden" id="f_ref" name="cruise_ref">
+          <input type="text" name="_honey" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-group" style="margin-bottom:8px">
+              <label style="font-size:0.8rem;margin-bottom:3px">이름 <span class="req">*</span></label>
+              <input type="text" id="f_name" name="customer_name" required placeholder="홍길동" style="padding:8px 10px;font-size:0.9rem">
+            </div>
+            <div class="form-group" style="margin-bottom:8px">
+              <label style="font-size:0.8rem;margin-bottom:3px">연락처 <span class="req">*</span></label>
+              <input type="tel" id="f_phone" name="customer_phone" required placeholder="010-1234-5678" style="padding:8px 10px;font-size:0.9rem">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px">
+            <label style="font-size:0.8rem;margin-bottom:3px">이메일 <span class="req">*</span></label>
+            <input type="email" id="f_email" name="customer_email" required placeholder="example@email.com" style="padding:8px 10px;font-size:0.9rem">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="form-group" style="margin-bottom:8px">
+              <label style="font-size:0.8rem;margin-bottom:3px">인원 <span class="req">*</span></label>
+              <select id="f_pax" name="pax" required style="padding:8px 10px;font-size:0.9rem">
+                <option value="">선택</option>
+                <option value="1">1명</option><option value="2">2명</option><option value="3">3명</option>
+                <option value="4">4명</option><option value="5">5명</option><option value="6~10">6~10명</option>
+                <option value="11+">11명 이상</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:8px">
+              <label style="font-size:0.8rem;margin-bottom:3px">객실 타입 <span class="req">*</span></label>
+              <select id="f_cabin" name="cabin_type" required style="padding:8px 10px;font-size:0.9rem">
+                <option value="">선택</option>
+                <option value="내측">내측</option>
+                <option value="오션뷰">오션뷰</option>
+                <option value="발코니">발코니</option>
+                <option value="스위트">스위트</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:8px">
+            <label style="font-size:0.8rem;margin-bottom:3px">요청사항</label>
+            <textarea id="f_message" name="message" rows="2" placeholder="기타 요청사항" style="padding:8px 10px;font-size:0.9rem"></textarea>
+          </div>
+          <div class="privacy-section" style="margin-top:8px;padding-top:8px">
+            <div class="privacy-check" style="margin-bottom:4px">
+              <input type="checkbox" id="privacyAgree" required style="width:16px;height:16px">
+              <label for="privacyAgree" style="font-size:0.8rem">개인정보 수집·이용에 동의합니다. (필수)</label>
+            </div>
+            <button type="button" class="privacy-toggle" style="font-size:0.78rem" onclick="document.getElementById('privacyDetail').classList.toggle('open')">약관 보기 ▼</button>
+            <div class="privacy-detail" id="privacyDetail">
+              <strong>수집항목:</strong> 이름, 이메일, 연락처<br>
+              <strong>수집목적:</strong> 크루즈 상담 및 예약 안내<br>
+              <strong>보유기간:</strong> 상담 완료 후 1년
+            </div>
+          </div>
+          <button type="submit" class="btn btn-orange" id="submitBtn" style="width:100%;margin-top:10px;padding:12px;font-size:1rem">문의하기 전송</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

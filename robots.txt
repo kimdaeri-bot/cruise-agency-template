@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /aircairo_invoice.html
+Disallow: /invoice.html
+
+Sitemap: https://www.cruiselink.co.kr/sitemap.xml

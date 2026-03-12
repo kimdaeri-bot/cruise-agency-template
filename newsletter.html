@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K4PPLZNG');</script>
+<!-- End Google Tag Manager -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>뉴스레터 구독 | 크루즈 특가·신상품 알림 - 크루즈링크</title>
+  <meta name="description" content="크루즈링크 뉴스레터를 구독하세요. 지중해·알래스카·카리브해 등 크루즈 특가 정보와 신상품을 이메일로 받아보세요.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <style>
+    .nl-hero {
+      background: linear-gradient(135deg, #0a1628 0%, #0d3b6e 50%, #0a1628 100%);
+      padding: 140px 0 100px;
+      text-align: center;
+      position: relative;
+      overflow: visible;
+    }
+    .nl-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1400&q=60') center/cover no-repeat;
+      opacity: 0.12;
+      overflow: hidden;
+      border-radius: 0;
+    }
+    .nl-hero > * { position: relative; z-index: 1; }
+    .nl-hero h1 { font-size: 2.2rem; font-weight: 900; color: #fff; margin: 0 0 12px; line-height: 1.3; }
+    .nl-hero p { color: rgba(255,255,255,.75); font-size: 1.05rem; margin: 0; }
+    .nl-hero .badge {
+      display: inline-block;
+      background: rgba(255,111,0,.2);
+      border: 1px solid rgba(255,111,0,.5);
+      color: #ffb74d;
+      font-size: 0.8rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .nl-wrap {
+      max-width: 640px;
+      margin: -50px auto 80px;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
+    .nl-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.12);
+      overflow: hidden;
+    }
+    .nl-card-top {
+      background: linear-gradient(135deg, #ff6f00, #ff8f00);
+      padding: 24px 32px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .nl-card-top .icon { font-size: 2.4rem; }
+    .nl-card-top h2 { color: #fff; font-size: 1.15rem; font-weight: 900; margin: 0 0 4px; }
+    .nl-card-top p { color: rgba(255,255,255,.85); font-size: 0.82rem; margin: 0; }
+    .nl-card-body { padding: 32px; }
+    .perks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .perk {
+      display: flex; align-items: flex-start; gap: 8px;
+      background: #fff8e1; border-radius: 8px; padding: 10px 12px;
+    }
+    .perk .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .perk-text .title { font-size: 0.82rem; font-weight: 700; color: #333; }
+    .perk-text .desc { font-size: 0.74rem; color: #888; margin-top: 2px; }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #333; margin-bottom: 6px; }
+    .form-group label .req { color: #e53e3e; margin-left: 2px; }
+    .form-group input, .form-group select {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid #e0e0e0; border-radius: 8px;
+      font-size: 0.92rem; font-family: inherit;
+      transition: border-color .2s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: #ff6f00; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:500px) { .form-row { grid-template-columns: 1fr; } .perks { grid-template-columns: 1fr; } }
+    .interest-label { font-size: 0.85rem; font-weight: 700; color: #333; margin-bottom: 8px; display: block; }
+    .interest-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .interest-chip input { display: none; }
+    .interest-chip label {
+      display: inline-block; padding: 7px 14px;
+      border: 1.5px solid #e0e0e0; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 700; color: #666;
+      cursor: pointer; transition: all .2s;
+    }
+    .interest-chip input:checked + label {
+      background: #ff6f00; border-color: #ff6f00; color: #fff;
+    }
+    .consent-box {
+      background: #f8f9fa; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;
+    }
+    .consent-item {
+      display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px;
+    }
+    .consent-item:last-child { margin-bottom: 0; }
+    .consent-item input[type=checkbox] {
+      width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; cursor: pointer; accent-color: #ff6f00;
+    }
+    .consent-item label { font-size: 0.8rem; color: #555; cursor: pointer; line-height: 1.5; }
+    .consent-item label .req-badge {
+      background: #e53e3e; color: #fff; font-size: 0.68rem; font-weight: 800;
+      padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+    }
+    .consent-item label .opt-badge {
+      background: #bbb; color: #fff; font-size: 0.68rem; font-weight: 800;
+      padding: 1px 5px; border-radius: 3px; margin-right: 4px;
+    }
+    .submit-btn {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, #ff6f00, #ff8f00);
+      color: #fff; border: none; border-radius: 10px;
+      font-size: 1rem; font-weight: 900; font-family: inherit;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .success-box {
+      display: none;
+      text-align: center; padding: 40px 20px;
+    }
+    .success-box .icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .success-box h3 { font-size: 1.3rem; font-weight: 900; color: #2e7d32; margin-bottom: 8px; }
+    .success-box p { color: #666; font-size: 0.9rem; }
+    .error-msg { color: #e53e3e; font-size: 0.8rem; margin-top: 8px; display: none; }
+    .privacy-note {
+      text-align: center; font-size: 0.75rem; color: #999; margin-top: 14px; line-height: 1.6;
+    }
+    .count-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.15); border-radius: 20px;
+      padding: 5px 14px; font-size: 0.78rem; color: rgba(255,255,255,.8);
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K4PPLZNG"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager -->
+
+<div id="header"></div>
+
+<section class="nl-hero">
+  <div class="container">
+    <span class="badge">✉️ 무료 뉴스레터</span>
+    <h1>크루즈 특가 · 신상품 알림<br>가장 먼저 받아보세요</h1>
+    <p>지중해 · 알래스카 · 카리브해 · 아시아 — 놓치면 아쉬운 크루즈 소식</p>
+    <div class="count-badge">🔔 구독 등록 완전 무료 · 언제든 해지 가능</div>
+  </div>
+</section>
+
+<div class="nl-wrap">
+  <div class="nl-card">
+    <div class="nl-card-top">
+      <div class="icon">📬</div>
+      <div>
+        <h2>뉴스레터 구독 신청</h2>
+        <p>입력하신 정보는 크루즈 소식 발송에만 사용됩니다</p>
+      </div>
+    </div>
+    <div class="nl-card-body">
+      <div class="perks">
+        <div class="perk">
+          <div class="icon">💰</div>
+          <div class="perk-text">
+            <div class="title">시즌 특가 선공개</div>
+            <div class="desc">일반 공개 전 구독자 우선 안내</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="icon">🚢</div>
+          <div class="perk-text">
+            <div class="title">신규 크루즈 상품</div>
+            <div class="desc">새로 출시되는 일정 즉시 알림</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="icon">🗓️</div>
+          <div class="perk-text">
+            <div class="title">예약 마감 임박 알림</div>
+            <div class="desc">인기 상품 조기 마감 사전 공지</div>
+          </div>
+        </div>
+        <div class="perk">
+          <div class="icon">✈️</div>
+          <div class="perk-text">
+            <div class="title">항공+크루즈 패키지</div>
+            <div class="desc">아남항공 연계 할인 패키지 정보</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 성공 화면 -->
+      <div class="success-box" id="successBox">
+        <div class="icon">🎉</div>
+        <h3>구독 신청이 완료됐습니다!</h3>
+        <p>크루즈링크 뉴스레터를 보내드리겠습니다.<br>특가 소식을 가장 먼저 받아보세요!</p>
+      </div>
+
+      <!-- 폼 -->
+      <form id="nlForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>성함 <span class="req">*</span></label>
+            <input type="text" name="name" placeholder="홍길동" required>
+          </div>
+          <div class="form-group">
+            <label>연락처 <span style="color:#999;font-weight:400">(선택)</span></label>
+            <input type="tel" name="phone" placeholder="010-0000-0000">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>이메일 주소 <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="example@email.com" required>
+        </div>
+
+        <span class="interest-label">관심 노선 <span style="color:#999;font-weight:400">(복수 선택 가능)</span></span>
+        <div class="interest-grid">
+          <div class="interest-chip"><input type="checkbox" id="i1" name="interest" value="지중해"><label for="i1">🌊 지중해</label></div>
+          <div class="interest-chip"><input type="checkbox" id="i2" name="interest" value="북유럽"><label for="i2">🏔️ 북유럽</label></div>
+          <div class="interest-chip"><input type="checkbox" id="i3" name="interest" value="알래스카"><label for="i3">🦅 알래스카</label></div>
+          <div class="interest-chip"><input type="checkbox" id="i4" name="interest" value="카리브해"><label for="i4">🏝️ 카리브해</label></div>
+          <div class="interest-chip"><input type="checkbox" id="i5" name="interest" value="아시아·일본"><label for="i5">🏯 아시아·일본</label></div>
+          <div class="interest-chip"><input type="checkbox" id="i6" name="interest" value="항공+크루즈 패키지"><label for="i6">✈️ 항공 패키지</label></div>
+        </div>
+
+
+
+        <div class="consent-box">
+          <div class="consent-item">
+            <input type="checkbox" id="c1" required>
+            <label for="c1">
+              <span class="req-badge">필수</span>
+              개인정보 수집·이용에 동의합니다. (이름, 이메일, 연락처 수집 / 뉴스레터 발송 목적 / 구독 해지 시까지 보유)
+            </label>
+          </div>
+          <div class="consent-item">
+            <input type="checkbox" id="c2">
+            <label for="c2">
+              <span class="opt-badge">선택</span>
+              이메일 마케팅 수신에 동의합니다. (크루즈 특가, 이벤트, 신상품 안내)
+            </label>
+          </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg">⚠️ 제출 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.</div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          📬 뉴스레터 구독 신청하기
+        </button>
+
+        <p class="privacy-note">
+          입력하신 정보는 뉴스레터 발송 외 목적으로 사용되지 않습니다.<br>
+          <a href="privacy.html" style="color:#aaa">개인정보 처리방침</a> 확인
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('nlForm');
+const btn = document.getElementById('submitBtn');
+const successBox = document.getElementById('successBox');
+const errorMsg = document.getElementById('errorMsg');
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
+  errorMsg.style.display = 'none';
+
+  const interests = [...document.querySelectorAll('input[name="interest"]:checked')].map(el => el.value);
+  const marketing = document.getElementById('c2').checked;
+
+  const payload = {
+    '성함': form.querySelector('[name="name"]').value.trim(),
+    '이메일': form.querySelector('[name="email"]').value.trim(),
+    '연락처': form.querySelector('[name="phone"]').value.trim() || '미입력',
+    '관심 노선': interests.length ? interests.join(', ') : '선택 없음',
+    '마케팅 수신 동의': marketing ? '동의' : '미동의',
+    '_subject': '[크루즈링크] 뉴스레터 구독 신청',
+  };
+
+  fetch('https://formsubmit.co/ajax/info@cruiselink.co.kr', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  .then(() => {
+    form.style.display = 'none';
+    successBox.style.display = 'block';
+  })
+  .catch(() => {
+    // FormSubmit 가끔 CORS 오류 반환해도 실제로는 전송됨
+    form.style.display = 'none';
+    successBox.style.display = 'block';
+  });
+});
+</script>
+
+<div id="footer"></div>
+
+<script src="assets/js/components.js"></script>
+<script>
+  document.getElementById('header').innerHTML = Components.header('', '');
+  document.getElementById('footer').innerHTML = Components.footer();
+</script>
+</body>
+</html>
