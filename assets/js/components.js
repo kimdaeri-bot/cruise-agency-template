@@ -27,42 +27,47 @@ const Components = {
     return `
     <footer class="footer">
       <div class="container">
-        <div class="footer-content">
-          <div class="footer-col">
-            <h4>크루즈나라는?</h4>
-            <p><a href="${base}about.html">회사소개</a></p>
-            <p><a href="${base}newsletter.html">📬 뉴스레터 구독</a></p>
-            <p><a href="${base}privacy.html">개인정보 처리방침</a></p>
-            <p><a href="${base}terms.html">이용약관</a></p>
-          </div>
-          <div class="footer-col">
-            <h4>연락처 정보</h4>
-            <p>📞 <a href="tel:02-3788-9119">02-3788-9119</a></p>
-            <p>💬 <a href="https://pf.kakao.com/_xgYbJG" target="_blank">카카오톡 상담</a></p>
-            <p>✉️ <a href="mailto:info@cruiselink.co.kr">info@cruiselink.co.kr</a></p>
-          </div>
-          <div class="footer-col">
-            <h4>크루즈 가이드</h4>
-            <p><a href="${base}guide/">가이드 홈</a></p>
-            <p><a href="${base}guide/cruise-lines/">선사 소개</a></p>
-            <p><a href="${base}guide/ships/">선박 소개</a></p>
-            <p><a href="${base}guide/ports/">기항지 가이드</a></p>
-            <p><a href="${base}guide/news/">크루즈 뉴스</a></p>
-            <p><a href="${base}guide/tips/">크루즈 실전 팁</a></p>
+        <div class="footer-grid">
+          <div>
+            <div class="footer-logo">크루즈나라</div>
+            <p class="footer-desc">전문가가 엄선한 크루즈 상품만을 소개합니다.<br>지중해부터 알래스카까지, 믿을 수 있는 크루즈 여행.</p>
+            <p style="font-size:0.82rem;color:var(--gray-500)">📞 <a href="tel:02-3788-9119" style="color:var(--primary);font-weight:600">02-3788-9119</a></p>
+            <p style="font-size:0.82rem;color:var(--gray-500);margin-top:4px">✉️ info@cruiselink.co.kr</p>
           </div>
           <div class="footer-col">
             <h4>목적지</h4>
-            <p><a href="${base}destinations.html">목적지 가이드</a></p>
-            <p><a href="${base}destination.html?dest=korea">한국/일본</a></p>
-            <p><a href="${base}destination.html?dest=mediterranean">지중해</a></p>
-            <p><a href="${base}destination.html?dest=alaska">알래스카</a></p>
-            <p><a href="${base}destination.html?dest=caribbean">카리브해</a></p>
+            <ul>
+              <li><a href="${base}destination.html?dest=mediterranean">지중해</a></li>
+              <li><a href="${base}destination.html?dest=alaska">알래스카</a></li>
+              <li><a href="${base}destination.html?dest=caribbean">카리브해</a></li>
+              <li><a href="${base}destination.html?dest=northern-europe">북유럽</a></li>
+              <li><a href="${base}destination.html?dest=korea">한국/일본</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>크루즈 선사</h4>
+            <ul>
+              <li><a href="${base}search.html?operators=MSC">MSC 크루즈</a></li>
+              <li><a href="${base}search.html?operators=Norwegian">NCL 크루즈</a></li>
+              <li><a href="${base}search.html?operators=Royal+Caribbean">로얄 캐리비안</a></li>
+              <li><a href="${base}search.html?operators=Celebrity">셀러브리티</a></li>
+              <li><a href="${base}search.html?operators=Explora">익스플로라 저니</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>고객지원</h4>
+            <ul>
+              <li><a href="${base}about.html">회사소개</a></li>
+              <li><a href="https://pf.kakao.com/_xgYbJG" target="_blank">카카오톡 상담</a></li>
+              <li><a href="${base}newsletter.html">뉴스레터 구독</a></li>
+              <li><a href="${base}privacy.html">개인정보처리방침</a></li>
+              <li><a href="${base}terms.html">이용약관</a></li>
+            </ul>
           </div>
         </div>
-        <div class="footer-bottom" style="font-size:0.8rem;line-height:1.6;color:var(--gray-500)">
-          <p>서울특별시 강서구 마곡서로 152, 두산 더 랜드타워 5층</p>
-          <p>크루즈나라 | 대표: 김영성 | 사업자 등록번호: 104-81-84918</p>
-          <p style="margin-top:8px">© ${new Date().getFullYear()} 크루즈나라. All rights reserved.</p>
+        <div class="footer-bottom">
+          <span>서울특별시 강서구 마곡서로 152, 두산 더 랜드타워 5층 | 사업자 104-81-84918</span>
+          <span>© ${new Date().getFullYear()} 크루즈나라. All rights reserved.</span>
         </div>
       </div>
     </footer>`;
