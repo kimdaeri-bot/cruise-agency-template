@@ -951,21 +951,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     });
 
-    // Promo slider
+    // Promo slider (removed from HTML — skip gracefully)
     let promoIdx = 0;
     const slides = document.getElementById('promoSlides');
     const dotsContainer = document.getElementById('promoDots');
-    for (let i = 0; i < 3; i++) {
-      const dot = document.createElement('button');
-      dot.className = 'promo-dot' + (i === 0 ? ' active' : '');
-      dot.onclick = () => { promoIdx = i; updatePromo(); };
-      dotsContainer.appendChild(dot);
-    }
     function updatePromo() {
+      if (!slides || !dotsContainer) return;
       slides.style.transform = `translateX(-${promoIdx * 100}%)`;
       dotsContainer.querySelectorAll('.promo-dot').forEach((d, i) => d.classList.toggle('active', i === promoIdx));
     }
-    setInterval(() => { promoIdx = (promoIdx + 1) % 3; updatePromo(); }, 5000);
+    if (slides && dotsContainer) {
+      for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'promo-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => { promoIdx = i; updatePromo(); };
+        dotsContainer.appendChild(dot);
+      }
+      setInterval(() => { promoIdx = (promoIdx + 1) % 3; updatePromo(); }, 5000);
+    }
 
     // ── 공통 터치/마우스 드래그 스와이프 헬퍼 ──
     function addSwipe(el, onLeft, onRight) {
