@@ -202,7 +202,7 @@ const Components = {
       <div class="czn-card-img-wrap">
         <img src="${c.image}" alt="${c.title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 240%22><rect fill=%22%23cfe8fc%22 width=%22400%22 height=%22240%22/><text x=%2250%%22 y=%2250%%22 fill=%22%231a73e8%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2248%22>🚢</text></svg>'">
         <span class="czn-badge" style="background:${badgeColor}">${badge}</span>
-        <button class="czn-wish" onclick="event.stopPropagation();this.textContent=this.textContent==='♡'?'♥':'♡'" title="위시리스트">♡</button>
+        <button class="czn-wish" data-ref="${c.ref}" onclick="event.stopPropagation();cznToggleWish(this,'${c.ref}')"><svg viewBox="0 0 24 24" width="16" height="16" class="czn-heart-svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
       </div>
       <div class="czn-body">
         <div class="czn-operator">${opName}${destName ? ' · ' + destName : ''}</div>
@@ -216,8 +216,7 @@ const Components = {
         ${includes.length ? `<div class="czn-tags">${tagsHtml}</div>` : ''}
         <div class="czn-footer">
           <div class="czn-price-wrap">
-            <span class="czn-from">부터</span>
-            <span class="czn-price">${priceStr}</span>
+            <span class="czn-price">${priceStr} ~</span>
             <span class="czn-unit">/ 1인</span>
           </div>
           <a href="cruise-view.html?ref=${c.ref}" class="czn-btn" onclick="event.stopPropagation()">예약하기</a>
