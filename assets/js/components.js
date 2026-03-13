@@ -180,6 +180,7 @@ const Components = {
     })();
     const port = c.startsAt?.nameKo || c.startsAt?.name || c.portRoute?.split('→')[0]?.trim() || '';
     const arrPort = c.endsAt?.nameKo || c.endsAt?.name || '';
+    const routeStr = c.portRoute ? (typeof Translations !== 'undefined' ? Translations.portRoute(c.portRoute) : c.portRoute) : '';
     const today = new Date().toISOString().slice(0,10);
     const daysLeft = c.dateFrom ? Math.round((new Date(c.dateFrom) - new Date(today)) / 86400000) : 999;
     // 배지
@@ -208,8 +209,9 @@ const Components = {
         <div class="czn-title">🚢 ${c.title || ''}</div>
         <div class="czn-meta">
           ${port ? `<div>📍 ${port}${arrPort && arrPort !== port ? ' → ' + arrPort : ''}</div>` : ''}
-          ${dateStr ? `<div>✈️ 출발 ${dateStr}${dateToStr ? ' ~ ' + dateToStr + ' 도착' : ''}</div>` : ''}
+          ${dateStr ? `<div>🗓️ ${dateStr}${dateToStr ? ' ~ ' + dateToStr : ''}</div>` : ''}
           ${nights ? `<div>🌙 ${nights}박 ${Number(nights)+1}일</div>` : ''}
+          ${routeStr ? `<div style="font-size:11px;color:#777;line-height:1.6;margin-top:4px;">🗺️ ${routeStr}</div>` : ''}
         </div>
         ${includes.length ? `<div class="czn-tags">${tagsHtml}</div>` : ''}
         <div class="czn-footer">
