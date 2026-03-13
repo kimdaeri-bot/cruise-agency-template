@@ -659,3 +659,29 @@ img { max-width: 100%; height: auto; }
   .dest-card img { width: 90px; height: 90px; }
   .dest-card .name { font-size: 0.7rem; width: 76px; }
 }
+
+/* ── czn-card (새 검색결과 카드) ── */
+.czn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:900px){.czn-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.czn-grid{grid-template-columns:1fr;}}
+.czn-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid #e8eaed;transition:box-shadow .2s,transform .2s;}
+.czn-card:hover{box-shadow:0 8px 28px rgba(0,0,0,.13);transform:translateY(-3px);}
+.czn-card-img-wrap{position:relative;height:200px;overflow:hidden;background:#e0e0e0;}
+.czn-card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s;display:block;}
+.czn-card:hover .czn-card-img-wrap img{transform:scale(1.05);}
+.czn-badge{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800;color:#fff;letter-spacing:.3px;}
+.czn-wish{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.85);border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.czn-body{padding:16px;}
+.czn-operator{font-size:11px;font-weight:700;color:#1565C0;letter-spacing:.5px;margin-bottom:6px;}
+.czn-title{font-size:15px;font-weight:800;color:#0a1628;line-height:1.4;margin-bottom:10px;}
+.czn-meta{font-size:13px;color:#555;line-height:1.9;margin-bottom:10px;}
+.czn-tags{margin-bottom:12px;}
+.czn-card{display:flex;flex-direction:column;}
+.czn-body{flex:1;display:flex;flex-direction:column;}
+.czn-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid #f0f0f0;margin-top:auto;}
+.czn-price-wrap{display:flex;align-items:baseline;gap:2px;}
+.czn-from{font-size:11px;color:#888;margin-right:2px;}
+.czn-price{font-size:24px;font-weight:900;color:#0a1628;}
+.czn-unit{font-size:11px;color:#888;}
+.czn-btn{background:#00338D;color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;white-space:nowrap;}
+.czn-btn:hover{background:#001f6b;}
