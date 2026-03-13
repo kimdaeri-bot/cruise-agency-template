@@ -685,6 +685,7 @@
         <div class="form-group">
           <label>카테고리</label>
           <select id="pCategory">
+            <option value="크루즈나라 인기상품">⭐ 크루즈나라 인기상품</option>
             <option value="지중해">지중해</option>
             <option value="알래스카">알래스카</option>
             <option value="카리브해">카리브해</option>
@@ -1253,6 +1254,7 @@ ${remarksHtml}
   }
 
   const CAT_META = {
+    '크루즈나라 인기상품': { icon:'⭐', color:'#e67e22' },
     '지중해':    { icon:'🌊', color:'#1e6fd4' },
     '알래스카':  { icon:'🏔️', color:'#0891b2' },
     '카리브해':  { icon:'🏝️', color:'#0d9488' },
@@ -1261,7 +1263,7 @@ ${remarksHtml}
     '아시아중동':{ icon:'🕌', color:'#b45309' },
     '기타':      { icon:'📌', color:'#374151' },
   };
-  const CAT_ORDER = ['지중해','알래스카','카리브해','한국일본','북유럽','아시아중동','기타'];
+  const CAT_ORDER = ['크루즈나라 인기상품','지중해','알래스카','카리브해','한국일본','북유럽','아시아중동','기타'];
 
   function renderPartners() {
     const wrap = document.getElementById('partnerGrid');
