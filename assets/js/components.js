@@ -216,10 +216,10 @@ const Components = {
         ${includes.length ? `<div class="czn-tags">${tagsHtml}</div>` : ''}
         <div class="czn-footer">
           <div class="czn-price-wrap">
-            <span class="czn-price">${priceStr} ~</span>
+            <span class="czn-price" style="color:#E65100">${priceStr} ~</span>
             <span class="czn-unit">/ 1인</span>
           </div>
-          <a href="cruise-view.html?ref=${c.ref}" class="czn-btn" onclick="event.stopPropagation()">예약하기</a>
+          <a href="cruise-view.html?ref=${c.ref}" class="czn-btn" onclick="event.stopPropagation()">자세히 보기</a>
         </div>
       </div>
     </div>`;
