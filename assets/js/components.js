@@ -163,6 +163,67 @@ const Components = {
     </div>`;
   },
 
+  // New search result card — 3-col grid style (사장님 카드 디자인)
+  searchCruiseCard(c) {
+    const fromPrice = c.priceInside || c.priceOutside || c.priceBalcony;
+    const opName = (Translations.operatorName(c.operator) || c.operator || '').toUpperCase();
+    const destName = c.destination || (c.regions?.[0] ? Translations.regionName(c.regions[0]) : '');
+    const dateStr = c.dateFrom ? c.dateFrom.substring(0,10).replace(/-/g,'. ') : '';
+    const nights = c.nights || c.duration || '';
+    const dateToStr = (() => {
+      if (c.dateTo) return c.dateTo.substring(0,10).replace(/-/g,'. ');
+      if (c.dateFrom && nights) {
+        const d = new Date(c.dateFrom); d.setDate(d.getDate() + Number(nights));
+        return d.toISOString().substring(0,10).replace(/-/g,'. ');
+      }
+      return '';
+    })();
+    const port = c.startsAt?.nameKo || c.startsAt?.name || c.portRoute?.split('→')[0]?.trim() || '';
+    const arrPort = c.endsAt?.nameKo || c.endsAt?.name || '';
+    const today = new Date().toISOString().slice(0,10);
+    const daysLeft = c.dateFrom ? Math.round((new Date(c.dateFrom) - new Date(today)) / 86400000) : 999;
+    // 배지
+    let badge = '', badgeColor = '';
+    if (c.operator === 'Explora' || c.operator === 'Regent' || (fromPrice && fromPrice >= 3000)) { badge = '럭셔리'; badgeColor = '#C9A84C'; }
+    else if (daysLeft <= 30) { badge = '출발 임박'; badgeColor = '#d32f2f'; }
+    else if (daysLeft <= 60) { badge = '얼리버드'; badgeColor = '#2e7d32'; }
+    else if (fromPrice && fromPrice < 500) { badge = '특가'; badgeColor = '#c62828'; }
+    else { badge = '인기'; badgeColor = '#1565C0'; }
+    // 포함사항 태그
+    const includes = [];
+    if (c.includes?.meals !== false) includes.push('식사 포함');
+    if (c.includes?.drinks) includes.push('음료 포함');
+    if (c.includes?.entertainment !== false) includes.push('엔터');
+    const tagsHtml = includes.map(t => `<span style="display:inline-block;padding:3px 10px;border:1px solid #e0e0e0;border-radius:4px;font-size:11px;color:#555;margin-right:4px">${t}</span>`).join('');
+    const priceStr = fromPrice ? '$' + parseFloat(fromPrice).toLocaleString('en-US', {maximumFractionDigits:0}) : '문의';
+    return `
+    <div class="czn-card" onclick="location.href='cruise-view.html?ref=${c.ref}'" style="cursor:pointer">
+      <div class="czn-card-img-wrap">
+        <img src="${c.image}" alt="${c.title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 240%22><rect fill=%22%23cfe8fc%22 width=%22400%22 height=%22240%22/><text x=%2250%%22 y=%2250%%22 fill=%22%231a73e8%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2248%22>🚢</text></svg>'">
+        <span class="czn-badge" style="background:${badgeColor}">${badge}</span>
+        <button class="czn-wish" onclick="event.stopPropagation();this.textContent=this.textContent==='♡'?'♥':'♡'" title="위시리스트">♡</button>
+      </div>
+      <div class="czn-body">
+        <div class="czn-operator">${opName}${destName ? ' · ' + destName : ''}</div>
+        <div class="czn-title">🚢 ${c.title || ''}</div>
+        <div class="czn-meta">
+          ${port ? `<div>📍 ${port}${arrPort && arrPort !== port ? ' → ' + arrPort : ''}</div>` : ''}
+          ${dateStr ? `<div>✈️ 출발 ${dateStr}${dateToStr ? ' ~ ' + dateToStr + ' 도착' : ''}</div>` : ''}
+          ${nights ? `<div>🌙 ${nights}박 ${Number(nights)+1}일</div>` : ''}
+        </div>
+        ${includes.length ? `<div class="czn-tags">${tagsHtml}</div>` : ''}
+        <div class="czn-footer">
+          <div class="czn-price-wrap">
+            <span class="czn-from">부터</span>
+            <span class="czn-price">${priceStr}</span>
+            <span class="czn-unit">/ 1인</span>
+          </div>
+          <a href="cruise-view.html?ref=${c.ref}" class="czn-btn" onclick="event.stopPropagation()">예약하기</a>
+        </div>
+      </div>
+    </div>`;
+  },
+
   // Legacy: Live API cruise card (for cruise-view.html)
   cruiseCard(holiday, shipInfo) {
     const price = holiday.headline_prices?.cruise?.double;
