@@ -1,15 +1,5 @@
 [
   {
-    "id": "1774055018004",
-    "title": "동부 지중해 일주 크루즈 & 돌로미티 15",
-    "desc": "크루즈나라 패키지 상품",
-    "image": "https://www.cruznara.com/upload/cruznara/image/goods/main/30000082/cruznara_cm9900_30000393.jpg",
-    "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000082&eventSeq=30000156",
-    "category": "크루즈나라 인기상품",
-    "price": "4900000",
-    "priceUnit": ""
-  },
-  {
     "id": "1774055028431",
     "title": "그리스/튀르키예 성지순례 크루즈 9일",
     "desc": "4만톤급 성지순레 전문 크루즈 선박인 셀레스티알 디스커버리호",
@@ -27,6 +17,16 @@
     "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000081&eventSeq=30000158",
     "category": "크루즈나라 인기상품",
     "price": "11,900,000원",
+    "priceUnit": ""
+  },
+  {
+    "id": "1774055110971",
+    "title": "동부 지중해 일주 크루즈 & 돌로미티 15",
+    "desc": "크루즈나라 패키지 상품",
+    "image": "https://www.cruznara.com/upload/cruznara/image/goods/main/30000082/cruznara_cm9900_30000393.jpg",
+    "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000082&eventSeq=30000156",
+    "category": "크루즈나라 인기상품",
+    "price": "4,900,000원",
     "priceUnit": ""
   }
 ]
