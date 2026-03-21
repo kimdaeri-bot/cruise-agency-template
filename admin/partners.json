@@ -1,13 +1,5 @@
 [
   {
-    "id": "1774054079230",
-    "title": "지중해 7박 크루즈 특가",
-    "desc": "이탈리아·스페인·프랑스 기항. MSC 오케스트라 탑승.",
-    "image": "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80",
-    "link": "",
-    "category": "크루즈나라 인기상품"
-  },
-  {
     "id": "1774054219183",
     "title": "All Inclusive 이탈리아/프랑스/스페인 3개국 크루즈 11일",
     "desc": "코스타 토스카나",
@@ -21,6 +13,14 @@
     "desc": "크루즈나라 패키지 상품",
     "image": "https://www.cruznara.com/upload/cruznara/image/goods/main/30000082/cruznara_cm9900_30000393.jpg",
     "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000082&eventSeq=30000156",
+    "category": "크루즈나라 인기상품"
+  },
+  {
+    "id": "1774054384767",
+    "title": "그리스/튀르키예 성지순례 크루즈 9일",
+    "desc": "4만톤급 성지순레 전문 크루즈 선박인 셀레스티알 디스커버리호",
+    "image": "https://www.cruznara.com/goods/goods_view?goodSeq=30000070&eventSeq=30000144",
+    "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000070&eventSeq=30000144",
     "category": "크루즈나라 인기상품"
   }
 ]
