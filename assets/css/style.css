@@ -220,32 +220,33 @@ img { max-width: 100%; height: auto; }
 
 /* ===== 목적지 원형 (다크 오버레이 Official Leagues 스타일) ===== */
 .dest-section { background: var(--white); }
-.dest-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
-.dest-grid::-webkit-scrollbar { display: none; }
-.dest-card {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  flex-shrink: 0; text-decoration: none; cursor: pointer;
+.dest-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+  padding-bottom: 8px;
 }
 /* 목적지 원형 — 다크 오버레이 스타일 */
 .dest-card {
   position: relative; display: flex; flex-direction: column; align-items: center;
-  text-decoration: none; flex-shrink: 0;
+  text-decoration: none;
 }
 .dest-card img {
-  width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
+  width: 100%; aspect-ratio: 1/1;
+  border-radius: 50%; object-fit: cover;
   transition: transform 0.25s;
   filter: brightness(0.65);
 }
 .dest-card:hover img { transform: scale(1.07); filter: brightness(0.5); }
 .dest-card .name {
   position: absolute;
-  top: 50%; left: 50%; transform: translate(-50%, -50%);
-  font-size: 0.8rem; font-weight: 900; color: #fff;
-  text-align: center; text-transform: uppercase; letter-spacing: 0.8px;
-  width: 90px; line-height: 1.2; pointer-events: none;
+  top: 45%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 0.88rem; font-weight: 900; color: #fff;
+  text-align: center; letter-spacing: 0.5px;
+  width: 85%; line-height: 1.3; pointer-events: none;
   text-shadow: 0 1px 6px rgba(0,0,0,0.6);
 }
-.dest-card .count { font-size: 0.72rem; color: var(--gray-500); margin-top: 6px; }
+.dest-card .count { font-size: 0.75rem; color: var(--gray-500); margin-top: 8px; text-align: center; }
 
 /* ===== CRUISE CARDS ===== */
 /* ===== CRUISE CARD — Royal Caribbean 스타일 ===== */
@@ -447,7 +448,7 @@ img { max-width: 100%; height: auto; }
   .footer-grid { grid-template-columns: 1fr; }
   .consult-actions { flex-direction: column; align-items: center; }
   .nl-form { flex-direction: column; }
-  .dest-card img { width: 80px; height: 80px; }
+  .dest-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
 }
 
 /* ===== TAB CARD IMAGE FIX ===== */
@@ -656,8 +657,8 @@ img { max-width: 100%; height: auto; }
 }
 @media (max-width: 600px) {
   .featured-track .cv2-card { flex: 0 0 calc(85%); }
-  .dest-card img { width: 90px; height: 90px; }
-  .dest-card .name { font-size: 0.7rem; width: 76px; }
+  .dest-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .dest-card .name { font-size: 0.75rem; }
 }
 
 /* ── czn-card (새 검색결과 카드) ── */
