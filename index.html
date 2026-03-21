@@ -1055,7 +1055,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           track.innerHTML = '<div style="padding:40px;text-align:center;color:#888">표시할 크루즈가 없습니다</div>';
           return;
         }
-        track.innerHTML = cruises.map(c => Components.searchCruiseCard(c)).join('');
+        track.innerHTML = cruises.map(c => Components.localCruiseCard(c)).join('');
         try { updateFeaturedArrows(); } catch(_) {}
       } catch (e) {
         console.warn('loadRecommended retry in 2s:', e.message);
@@ -1063,7 +1063,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           try {
             API._featuredCache = null;
             const cruises = await API.getRecommendedCruises(12);
-            if (cruises && cruises.length > 0) track.innerHTML = cruises.map(c => Components.searchCruiseCard(c)).join('');
+            if (cruises && cruises.length > 0) track.innerHTML = cruises.map(c => Components.localCruiseCard(c)).join('');
           } catch(_) {}
         }, 2000);
       }
@@ -1184,14 +1184,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           track.innerHTML = '<div style="padding:40px;text-align:center;color:#888">표시할 크루즈가 없습니다</div>';
           return;
         }
-        track.innerHTML = cruises.map(c => Components.searchCruiseCard(c)).join('');
+        track.innerHTML = cruises.map(c => Components.localCruiseCard(c)).join('');
       } catch (e) {
         console.warn('loadRecommended2 retry in 2s:', e.message);
         setTimeout(async () => {
           try {
             API._featured2Cache = null;
             const cruises = await API.getRecommendedCruises2(12);
-            if (cruises && cruises.length > 0) track.innerHTML = cruises.map(c => Components.searchCruiseCard(c)).join('');
+            if (cruises && cruises.length > 0) track.innerHTML = cruises.map(c => Components.localCruiseCard(c)).join('');
           } catch(_) {}
         }, 2000);
       }

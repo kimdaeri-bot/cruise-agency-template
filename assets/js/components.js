@@ -371,4 +371,70 @@ const Components = {
     t.textContent = msg; t.style.display = 'block';
     setTimeout(() => t.style.display = 'none', 2200);
   },
+
+
+  localCruiseCard(c) {
+    const fromPrice = c.priceBalcony || c.priceOutside || c.priceInside;
+    const opName = (Translations.operatorName(c.operator) || c.operator || '').toUpperCase();
+    const shipKo = c.shipTitleKo || Translations.shipName(c.shipTitle) || c.shipTitle || '';
+    const destName = c.destination || '';
+    const port = c.startsAt?.nameKo || Translations.portName(c.startsAt?.name||'') || c.startsAt?.name || '';
+    const arrPort = c.endsAt?.nameKo || Translations.portName(c.endsAt?.name||'') || c.endsAt?.name || '';
+    const routeStr = c.portRouteKo || (c.portRoute ? Translations.portRoute(c.portRoute) : '');
+    const dateStr = c.dateFrom ? c.dateFrom.substring(0,10).replace(/-/g,'. ') : '';
+    const nights = c.nights || c.duration || '';
+    const dateToStr = (() => {
+      if (c.dateTo) return c.dateTo.substring(0,10).replace(/-/g,'. ');
+      if (c.dateFrom && nights) {
+        const d = new Date(c.dateFrom); d.setDate(d.getDate() + Number(nights));
+        return d.toISOString().substring(0,10).replace(/-/g,'. ');
+      }
+      return '';
+    })();
+    const today = new Date().toISOString().slice(0,10);
+    const daysLeft = c.dateFrom ? Math.round((new Date(c.dateFrom)-new Date(today))/86400000) : 999;
+    let badge='', badgeColor='';
+    if (c.badge) { badge=c.badge; badgeColor=c.badgeColor||'#d32f2f'; }
+    else if (c.operator==='Explora'||c.operator==='Regent'||(fromPrice&&fromPrice>=3000)){badge='럭셔리';badgeColor='#C9A84C';}
+    else if (daysLeft<=30){badge='출발 임박';badgeColor='#d32f2f';}
+    else if (daysLeft<=60){badge='얼리버드';badgeColor='#2e7d32';}
+    else if (fromPrice&&fromPrice<500){badge='특가';badgeColor='#c62828';}
+    else {badge='인기';badgeColor='#1565C0';}
+    const priceStr = fromPrice ? '$'+parseFloat(fromPrice).toLocaleString('en-US',{maximumFractionDigits:0}) : '문의';
+    return `
+    <div class="czn-card" onclick="location.href='cruise-view.html?ref=${c.ref}'" style="cursor:pointer">
+      <div class="czn-card-img-wrap">
+        <img src="${c.image}" alt="${c.title||''}" loading="lazy" onerror="this.parentElement.style.background='#cfe8fc'">
+        <span class="czn-badge" style="background:${badgeColor}">${badge}</span>
+        <button class="czn-wish" data-ref="${c.ref}" onclick="event.stopPropagation();cznToggleWish(this,'${c.ref}')"><svg viewBox="0 0 24 24" width="16" height="16" class="czn-heart-svg"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+      </div>
+      <div class="czn-body">
+        <div class="czn-operator">${opName}${destName?' · '+destName:''}</div>
+        <div class="czn-title">🚢 ${c.title||shipKo}</div>
+        <div class="czn-meta">
+          ${port?`<div>📍 ${port}${arrPort&&arrPort!==port?' → '+arrPort:''}</div>`:''}
+          ${dateStr?`<div>🗓️ ${dateStr}${dateToStr?' ~ '+dateToStr:''}</div>`:''}
+          ${nights?`<div>🌙 ${nights}박 ${Number(nights)+1}일</div>`:''}
+          ${routeStr?`<div style="font-size:11px;color:#777;line-height:1.6;margin-top:4px;">🗺️ ${routeStr}</div>`:''}
+        </div>
+        <div class="czn-footer">
+          <div class="czn-price-wrap">
+            <span class="czn-price" style="color:#E65100">${priceStr} ~</span>
+            <span class="czn-unit">/ 1인</span>
+          </div>
+          <a href="cruise-view.html?ref=${c.ref}" class="czn-btn" onclick="event.stopPropagation()">자세히 보기</a>
+        </div>
+      </div>
+    </div>`;
+  },
 };
+function cznToggleWish(btn, ref) {
+  try {
+    const list = JSON.parse(localStorage.getItem('cl_wishlist')||'[]');
+    const idx = list.indexOf(ref);
+    const wished = idx < 0;
+    if (wished) list.push(ref); else list.splice(idx,1);
+    localStorage.setItem('cl_wishlist', JSON.stringify(list));
+    btn.classList.toggle('wished', wished);
+  } catch {}
+}
