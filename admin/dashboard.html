@@ -703,6 +703,14 @@
           <label>외부 링크 URL</label>
           <input type="url" id="pLink" placeholder="https://...">
         </div>
+        <div class="form-group">
+          <label>💰 가격 (예: $1,299~)</label>
+          <input type="text" id="pPrice" placeholder="예: $1,299~ / 문의">
+        </div>
+        <div class="form-group">
+          <label>가격 단위 (예: /1인 기준)</label>
+          <input type="text" id="pPriceUnit" placeholder="/1인 기준">
+        </div>
         <div class="form-group full">
           <label>설명 (최대 100자)</label>
           <textarea id="pDesc" placeholder="파트너 상품 설명을 입력하세요" maxlength="100"></textarea>
@@ -1316,19 +1324,22 @@ ${remarksHtml}
     const image = document.getElementById('pImage').value.trim();
     const link = document.getElementById('pLink').value.trim();
     const category = document.getElementById('pCategory').value;
+    const price = document.getElementById('pPrice').value.trim();
+    const priceUnit = document.getElementById('pPriceUnit').value.trim();
 
     if (!title) { showToast('❌ 카드 제목을 입력하세요'); return; }
 
-    const newPartner = { id: Date.now().toString(), title, desc, image, link, category };
+    const newPartner = { id: Date.now().toString(), title, desc, image, link, category, price, priceUnit };
     currentPartners.push(newPartner);
     try {
       await saveToGitHub('admin/partners.json', currentPartners);
       renderPartners();
-      // clear form
       document.getElementById('pTitle').value = '';
       document.getElementById('pDesc').value = '';
       document.getElementById('pImage').value = '';
       document.getElementById('pLink').value = '';
+      document.getElementById('pPrice').value = '';
+      document.getElementById('pPriceUnit').value = '';
       showToast('✅ 파트너 카드가 추가되었습니다');
     } catch(e) {
       currentPartners.pop();
@@ -1343,6 +1354,8 @@ ${remarksHtml}
     document.getElementById('pDesc').value = p.desc || '';
     document.getElementById('pImage').value = p.image || '';
     document.getElementById('pLink').value = p.link || '';
+    document.getElementById('pPrice').value = p.price || '';
+    document.getElementById('pPriceUnit').value = p.priceUnit || '';
     document.getElementById('pCategory').value = p.category || '기타';
     // Remove old entry
     currentPartners.splice(i, 1);
