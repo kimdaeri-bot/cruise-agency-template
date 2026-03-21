@@ -1,13 +1,5 @@
 [
   {
-    "id": "1774054409661",
-    "title": "그리스/튀르키예 성지순례 크루즈 9일",
-    "desc": "4만톤급 성지순레 전문 크루즈 선박인 셀레스티알 디스커버리호",
-    "image": "https://www.cruznara.com/upload/cruznara/image/goods/main/30000070/cruznara_cm9900_30000330.jpg",
-    "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000070&eventSeq=30000144",
-    "category": "크루즈나라 인기상품"
-  },
-  {
     "id": "1774055007541",
     "title": "All Inclusive 이탈리아/프랑스/스페인 3개국 크루즈 11일",
     "desc": "코스타 토스카나",
@@ -25,6 +17,16 @@
     "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000082&eventSeq=30000156",
     "category": "크루즈나라 인기상품",
     "price": "4900000",
+    "priceUnit": ""
+  },
+  {
+    "id": "1774055028431",
+    "title": "그리스/튀르키예 성지순례 크루즈 9일",
+    "desc": "4만톤급 성지순레 전문 크루즈 선박인 셀레스티알 디스커버리호",
+    "image": "https://www.cruznara.com/upload/cruznara/image/goods/main/30000070/cruznara_cm9900_30000330.jpg",
+    "link": "https://www.cruznara.com/goods/goods_view?goodSeq=30000070&eventSeq=30000144",
+    "category": "크루즈나라 인기상품",
+    "price": "5900000",
     "priceUnit": ""
   }
 ]
