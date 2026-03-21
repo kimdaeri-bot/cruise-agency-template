@@ -10,17 +10,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" id="canonicalTag" href="https://www.cruiselink.co.kr/cruise-view.html">
+  <link rel="canonical" id="canonicalTag" href="https://www.kimdaeri-bot.github.io/cruise-agency-template/cruise-view.html">
   <meta property="og:site_name" content="크루즈나라">
   <meta property="og:type" content="product">
   <meta id="ogTitle" property="og:title" content="크루즈나라 - 크루즈 상품 상세">
   <meta id="ogDesc" property="og:description" content="크루즈나라에서 최적의 크루즈 여행을 찾아보세요.">
-  <meta id="ogImage" property="og:image" content="https://www.cruiselink.co.kr/assets/images/og-image.jpg">
-  <meta id="ogUrl" property="og:url" content="https://www.cruiselink.co.kr/cruise-view.html">
+  <meta id="ogImage" property="og:image" content="https://www.kimdaeri-bot.github.io/cruise-agency-template/assets/images/og-image.jpg">
+  <meta id="ogUrl" property="og:url" content="https://www.kimdaeri-bot.github.io/cruise-agency-template/cruise-view.html">
   <title>크루즈 상세 - 크루즈나라</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  
-  
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="shortcut icon" href="favicon.ico">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -48,7 +48,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     const ref = new URLSearchParams(location.search).get('ref');
     if (!ref) {
-      document.getElementById('content').innerHTML = '<div class="empty-state"><span class="emoji">⚠️</span><p>잘못된 접근입니다</p></div>';
+      window.location.replace('search.html');
     }
 
     function stripHtml(html) {
@@ -60,6 +60,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function fmtPrice(v) {
       if (!v) return '-';
       return '$' + parseFloat(v).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+    }
+
+    // 찜하기 (localStorage)
+    function getWishlist() {
+      try { return JSON.parse(localStorage.getItem('cl_wishlist') || '[]'); } catch { return []; }
+    }
+    function toggleWish(ref) {
+      if (!ref) return;
+      const list = getWishlist();
+      const idx = list.indexOf(ref);
+      if (idx >= 0) { list.splice(idx, 1); } else { list.push(ref); }
+      localStorage.setItem('cl_wishlist', JSON.stringify(list));
+      updateWishBtn(ref);
+    }
+    function updateWishBtn(ref) {
+      const btn = document.getElementById('wishBtn');
+      const icon = document.getElementById('wishIcon');
+      if (!btn || !icon) return;
+      const inList = getWishlist().includes(ref);
+      icon.textContent = inList ? '♥' : '♡';
+      btn.style.background = inList ? 'rgba(255,80,80,0.35)' : 'rgba(255,255,255,0.15)';
+      btn.style.borderColor = inList ? '#ff5050' : 'rgba(255,255,255,0.5)';
     }
 
     // 로컬 JSON에서 ref로 크루즈 찾기 (cruises.json + featured.json + cruises-mini.json 순차 검색)
@@ -258,8 +280,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('ogTitle')?.setAttribute('content', `${c.title} - 크루즈나라`);
       document.getElementById('ogDesc')?.setAttribute('content', `${c.portRoute || ''} · ${c.nights || ''}박 · ${c.operator || ''} · $${c.priceInside || ''}~`);
       document.getElementById('ogImage')?.setAttribute('content', c.image || '');
-      document.getElementById('ogUrl')?.setAttribute('content', `https://www.cruiselink.co.kr/cruise-view.html?ref=${ref}`);
-      document.getElementById('canonicalTag')?.setAttribute('href', `https://www.cruiselink.co.kr/cruise-view.html?ref=${ref}`);
+      document.getElementById('ogUrl')?.setAttribute('content', `https://www.kimdaeri-bot.github.io/cruise-agency-template/cruise-view.html?ref=${ref}`);
+      document.getElementById('canonicalTag')?.setAttribute('href', `https://www.kimdaeri-bot.github.io/cruise-agency-template/cruise-view.html?ref=${ref}`);
 
       let html = '';
 
@@ -268,7 +290,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <section class="detail-hero">
         <div class="container">
           <div class="operator-name">${Translations.operatorName(c.operator)} · ${c.shipTitleKo || Translations.shipName(c.shipTitle)}</div>
-          <h1>🚢 ${c.title}</h1>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <h1 style="margin:0;">🚢 ${c.title}</h1>
+            <button id="wishBtn" onclick="toggleWish('${c.ref||ref}')" style="background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.5);color:#fff;border-radius:50px;padding:8px 18px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+              <span id="wishIcon">♡</span> 찜하기
+            </button>
+          </div>
           <div class="meta">
             <span>📅 ${API.formatDateKo(c.dateFrom)} ~ ${API.formatDateKo(c.dateTo)}</span>
             <span>🌙 ${nights}박 ${nights+1}일</span>
@@ -379,6 +406,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </section>`;
 
       content.innerHTML = html;
+      // 찜하기 버튼 초기 상태
+      setTimeout(() => updateWishBtn(c.ref || new URLSearchParams(location.search).get('ref')), 50);
     }
 
     function renderShipSection(c, ship, detail, liveDetail = null) {
@@ -971,7 +1000,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       const form = document.createElement('form');
       form.method = 'POST';
-      form.action = 'https://formsubmit.co/ajax/info@cruiselink.co.kr';
+      form.action = 'https://formsubmit.co/ajax/info@kimdaeri-bot.github.io/cruise-agency-template';
 
       const fd = {
         _subject: `[크루즈나라] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
@@ -990,7 +1019,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '요청사항': document.getElementById('f_message').value || '없음',
       };
 
-      fetch('https://formsubmit.co/ajax/info@cruiselink.co.kr', {
+      fetch('https://formsubmit.co/ajax/info@kimdaeri-bot.github.io/cruise-agency-template', {
         method: 'POST',
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
         body: JSON.stringify(fd)
@@ -1025,11 +1054,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         cabin: fd["희망 객실"],
         message: fd["요청사항"],
       };
-      fetch("https://cruiselink-v2.vercel.app/api/inquiry", {
+      // 백오피스 저장은 서버사이드 API 통해서만 처리
+      fetch("https://enttix-omega.vercel.app/api/cl-inquiry", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify(inquiryPayload)
-      }).catch(() => {});
+      }).catch(()=>{});
     }
   </script>
 
@@ -1367,7 +1397,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const params = new URLSearchParams(location.search);
       const ref = params.get('ref');
       const url = ref
-        ? 'https://www.cruiselink.co.kr/c/' + ref + '.html'
+        ? 'https://www.kimdaeri-bot.github.io/cruise-agency-template/c/' + ref + '.html'
         : location.href;
       const titleEl = document.querySelector('.detail-hero h1');
       const title = titleEl ? titleEl.innerText.replace('🚢 ','') : document.title;
