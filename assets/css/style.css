@@ -970,10 +970,18 @@ img { max-width: 100%; height: auto; }
 .cta-section h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 12px; color: #fff; }
 .cta-section p { opacity: 0.9; margin-bottom: 32px; color: #fff; }
 .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.cta-buttons.cta-two, .cta-two-center { max-width: 420px; margin: 0 auto; justify-content: center; display: flex; gap: 12px; flex-wrap: nowrap; align-items: stretch; }
-.cta-buttons.cta-two .btn, .cta-two-center .btn { flex: 1 1 0; min-width: 0; text-align: center; padding: 16px 20px; font-size: 1.05rem; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-.cta-buttons.cta-three { max-width: 600px; margin: 0 auto; }
-.cta-buttons.cta-three .btn { flex: 1; min-width: 0; text-align: center; padding: 16px 12px; font-size: 1.02rem; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+/* ── 버튼 크기 통일 (cta-two / cta-three 공통) ── */
+.cta-buttons.cta-two, .cta-two-center { max-width: 440px; margin: 0 auto; justify-content: center; display: flex; gap: 12px; flex-wrap: nowrap; align-items: center; }
+.cta-buttons.cta-three { max-width: 620px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: nowrap; align-items: center; justify-content: center; }
+.cta-buttons.cta-two .btn,
+.cta-two-center .btn,
+.cta-buttons.cta-three .btn {
+  flex: 1 1 0; min-width: 140px; max-width: 200px;
+  height: 52px; padding: 0 20px;
+  font-size: 1rem; font-weight: 700; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  white-space: nowrap; text-align: center; box-sizing: border-box;
+}
 .btn-white { background: rgba(255,255,255,0.1); color: #fff; border: 2px solid rgba(255,255,255,0.4); }
 .btn-white:hover { background: rgba(255,255,255,0.2); }
 .btn-white-solid { background: #fff; color: #0a2540; border: 2px solid #dde3f0; }
