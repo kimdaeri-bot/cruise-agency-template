@@ -293,7 +293,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
 
   <!-- CRUISE TABS (인기목적지 위치) -->
-  <section class="section" style="padding-top:60px;padding-bottom:40px">
+  <section class="section" style="padding-top:60px;padding-bottom:40px;overflow:visible">
     <div class="container">
       <div style="margin-bottom:28px">
         <h2 class="section-title" style="margin-bottom:4px">지역별 추천 크루즈</h2>
@@ -326,11 +326,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         /* PC 화살표 */
         .tab-arrow { display:none; }
         @media (min-width:641px) {
-          .tab-slider-wrap { display:flex; align-items:center; gap:12px; }
-          .tab-slider-viewport { flex:1; min-width:0; overflow:hidden; }
+          .tab-slider-outer { position:relative; }
+          .tab-slider-wrap { position:static; }
+          .tab-slider-viewport { overflow:hidden; }
           .tab-arrow {
             display:flex; align-items:center; justify-content:center;
-            flex-shrink:0; position:static; transform:none;
+            position:absolute; top:50%; transform:translateY(-50%); z-index:10;
             width:44px; height:44px; border-radius:50%;
             border:2px solid #0a2540; background:#0a2540;
             box-shadow:0 4px 16px rgba(0,0,0,0.28);
@@ -338,6 +339,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }
           .tab-arrow:hover { background:#1a5dc8; border-color:#1a5dc8; }
           .tab-arrow.disabled { opacity:0.2; pointer-events:none; }
+          .tab-arrow-left { left:-56px; }
+          .tab-arrow-right { right:-56px; }
         }
         @media (max-width:1024px) { .tab-card { flex:0 0 calc((100% - 32px) / 3); } }
         @media (max-width:640px) {
@@ -387,13 +390,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button class="cruise-tab-btn" onclick="switchTab(this,'northern-europe')">북유럽</button>
         <button class="cruise-tab-btn" onclick="switchTab(this,'asia')">아시아·중동</button>
       </nav>
-      <div class="tab-slider-wrap" id="tabSliderWrap">
-        <button class="tab-arrow tab-arrow-left disabled" id="tabArrowLeft" onclick="slideTab(-1)" aria-label="이전">&#8249;</button>
-        <div class="tab-slider-viewport" id="tabSliderViewport">
-          <div class="tab-cruise-grid" id="tabCruiseGrid">
-            <div class="tabs-loading">불러오는 중...</div>
+      <div class="tab-slider-outer">
+        <div class="tab-slider-wrap" id="tabSliderWrap">
+          <div class="tab-slider-viewport" id="tabSliderViewport">
+            <div class="tab-cruise-grid" id="tabCruiseGrid">
+              <div class="tabs-loading">불러오는 중...</div>
+            </div>
           </div>
         </div>
+        <button class="tab-arrow tab-arrow-left disabled" id="tabArrowLeft" onclick="slideTab(-1)" aria-label="이전">&#8249;</button>
         <button class="tab-arrow tab-arrow-right" id="tabArrowRight" onclick="slideTab(1)" aria-label="다음">&#8250;</button>
       </div>
     </div>
