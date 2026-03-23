@@ -239,9 +239,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div id="drCalBody">
             <div class="dr-nav-row" id="drNavRow">
-              <button class="dr-nav" id="drNavPrev" onclick="drNav(-1)" type="button">&#8249;</button>
               <div class="dr-months" id="drMonths"></div>
-              <button class="dr-nav" id="drNavNext" onclick="drNav(1)" type="button">&#8250;</button>
               <div class="dr-ym-picker" id="drYMPicker"></div>
             </div>
             <div class="dr-footer">
@@ -356,12 +354,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         .dr-tabs{display:flex;border-bottom:1px solid #eee}
         .dr-tab{flex:1;padding:14px;border:none;background:none;font-size:.93rem;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px}
         .dr-tab.active{color:var(--navy);border-bottom-color:var(--navy)}
-        .dr-nav-row{display:flex;align-items:flex-start;padding:16px 12px 12px}
+        .dr-nav-row{display:flex;align-items:flex-start;padding:12px 12px 8px}
         .dr-months{display:flex;flex:1;gap:0}
-        .dr-month{flex:1;padding:0 8px}
-        .dr-month-header{text-align:center;font-size:.97rem;font-weight:700;color:#222;margin-bottom:12px}
-        .dr-nav{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;border:1.5px solid #d0d6e0;background:#f5f7fa;cursor:pointer;font-size:1.5rem;color:#0a2540;line-height:1;align-self:center;flex-shrink:0;transition:all .18s}
+        .dr-month{flex:1;padding:0 12px}
+        .dr-month-header{display:flex;align-items:center;justify-content:space-between;font-size:.97rem;font-weight:700;color:#222;margin-bottom:12px;min-height:36px}
+        .dr-month-title{flex:1;text-align:center}
+        .dr-nav{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:1.5px solid #d0d6e0;background:#f5f7fa;cursor:pointer;font-size:1.4rem;color:#0a2540;line-height:1;flex-shrink:0;transition:all .18s;padding:0}
         .dr-nav:hover{background:var(--navy);border-color:var(--navy);color:#fff}
+        .dr-nav-hidden{visibility:hidden;pointer-events:none}
         .dr-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:.76rem;color:#888;font-weight:600;margin-bottom:6px;gap:0}
         .dr-days{display:grid;grid-template-columns:repeat(7,1fr);gap:0}
         .dr-day{height:36px;display:flex;align-items:center;justify-content:center;font-size:.83rem;cursor:pointer;position:relative;background:transparent}
@@ -853,7 +853,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       for (var mi = 0; mi < 2; mi++) {
         var yr = drViewYear, mo = drViewMonth + mi;
         if (mo >= 12) { yr += Math.floor(mo/12); mo = mo % 12; }
-        html += renderDRMonth(yr, mo);
+        html += renderDRMonth(yr, mo, mi);
       }
       container.innerHTML = html;
     }
@@ -865,7 +865,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (tab === 'tbd') { drFrom=null; drTo=null; updateDRDisplay(); }
     }
 
-    function renderDRMonth(yr, mo) {
+    function renderDRMonth(yr, mo, idx) {
       var today = new Date(); today.setHours(0,0,0,0);
       var monthNames = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
       // Monday-first: Mon=0...Sun=6
@@ -873,7 +873,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var firstDay = rawFirst === 0 ? 6 : rawFirst - 1; // shift: Mon=0,...Sun=6
       var daysInMonth = new Date(yr, mo+1, 0).getDate();
       var html = '<div class="dr-month">';
-      html += '<div class="dr-month-header">' + yr + '년 ' + monthNames[mo] + '</div>';
+      // 왼쪽 달: ← 화살표, 오른쪽 달: → 화살표
+      var leftBtn  = idx === 0
+        ? '<button class="dr-nav" onclick="drNav(-1)" type="button">&#8249;</button>'
+        : '<span class="dr-nav dr-nav-hidden">&#8249;</span>';
+      var rightBtn = idx !== 0
+        ? '<button class="dr-nav" onclick="drNav(1)" type="button">&#8250;</button>'
+        : '<span class="dr-nav dr-nav-hidden">&#8250;</span>';
+      html += '<div class="dr-month-header">' + leftBtn + '<span class="dr-month-title">' + yr + '년 ' + monthNames[mo] + '</span>' + rightBtn + '</div>';
       html += '<div class="dr-weekdays"><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span><span>일</span></div>';
       html += '<div class="dr-days">';
       for (var i=0; i<firstDay; i++) html += '<div class="dr-day dr-empty"><span class="dr-di"></span></div>';
