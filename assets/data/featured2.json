@@ -13,7 +13,7 @@
     "portRoute": "산후안(PR) → 세인트 존스 → 구스타비아 → 푸에르토플라타 → 키웨스트 → 마이애미",
     "priceInside": 0,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%20Explora%20II%20Exterior.jpg",
+    "image": "assets/images/explora/explora-ii.png",
     "portImage": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80",
     "hashtags": [
       "#럭셔리크루즈",
@@ -52,7 +52,7 @@
     "priceBalcony": 0,
     "priceSuite": 4230,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys%2C%20EXPLORA%20I%2C%20Exterior%202.jpg",
+    "image": "assets/images/explora/explora-i.jpg",
     "title": "지중해 7박 크루즈",
     "hashtags": [
       "#지중해크루즈",
@@ -91,7 +91,7 @@
     "priceBalcony": 0,
     "priceSuite": 8260,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%2C%20Explora%20II%20Exterior.png",
+    "image": "assets/images/explora/explora-ii.png",
     "title": "지중해 11박 크루즈",
     "hashtags": [
       "#지중해크루즈",
@@ -129,7 +129,7 @@
     "priceBalcony": 0,
     "priceSuite": 4675,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%2C%20Explora%20II%20Exterior.png",
+    "image": "assets/images/explora/explora-ii.png",
     "title": "그리스·크로아티아·이탈리아 7박 크루즈",
     "hashtags": [
       "#지중해크루즈",
@@ -167,7 +167,7 @@
     "priceBalcony": 0,
     "priceSuite": 8840,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/03/25/08/04/11/50835acc-b828-492c-bd5c-c29db3c399f4/Explora%20Journeys%2C%20Explora%20II%20Exterior.png",
+    "image": "assets/images/explora/explora-ii.png",
     "title": "그리스·크로아티아·이탈리아 14박 크루즈",
     "hashtags": [
       "#지중해크루즈",
@@ -204,7 +204,7 @@
     "priceBalcony": 0,
     "priceSuite": 12500,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys%2C%20EXPLORA%20I%2C%20Exterior%202.jpg",
+    "image": "assets/images/explora/explora-i.jpg",
     "title": "이탈리아·모나코 7박 크루즈",
     "hashtags": [
       "#지중해크루즈",
@@ -243,7 +243,7 @@
     "priceBalcony": 0,
     "priceSuite": 5000,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2024/05/10/05/06/56/cd0a2664-e1b6-4224-be61-cdb7e99444fa/Explora%20Journeys%2C%20EXPLORA%20I%2C%20Exterior%202.jpg",
+    "image": "assets/images/explora/explora-i.jpg",
     "title": "지중해 7박 크루즈",
     "hashtags": [
       "#지중해크루즈",
@@ -267,7 +267,7 @@
     "portRoute": "사우샘프턴 → 만달 → 올덴 → 베르겐 → Flåm → 코펜하겐",
     "priceInside": 0,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2025/01/02/12/22/07/974008bc-6388-4ee4-82b3-04349e2e13e4/Explora%20Journeys%20Explora%20III%20Exterior.jpg",
+    "image": "assets/images/explora/explora-iii.jpg",
     "portImage": "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80",
     "hashtags": [
       "#럭셔리크루즈",
@@ -291,7 +291,7 @@
     "portRoute": "밴쿠버 → 랭겔 → 주노 → 엔디콧암(빙하) → 싯카 → 밴쿠버",
     "priceInside": 0,
     "currency": "USD",
-    "image": "https://assets.widgety.co.uk/2025/01/02/12/22/07/974008bc-6388-4ee4-82b3-04349e2e13e4/Explora%20Journeys%20Explora%20III%20Exterior.jpg",
+    "image": "assets/images/explora/explora-iii.jpg",
     "portImage": "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=600&q=80",
     "hashtags": [
       "#럭셔리크루즈",
