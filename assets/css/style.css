@@ -49,7 +49,7 @@ img { max-width: 100%; height: auto; }
 
 /* ===== HERO ===== */
 .hero {
-  background: url('https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1600&q=80') center/cover no-repeat;
+  background: url('https://www.cruznara.com/upload/cruznara/file/we1100/202505/cruznara_cm9910_30001049.jpg') center/cover no-repeat;
   color: var(--white); padding: 100px 0 120px; text-align: center; position: relative; min-height: 460px;
 }
 .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,23,60,0.65) 0%, rgba(15,23,60,0.5) 100%); }
@@ -950,3 +950,37 @@ img { max-width: 100%; height: auto; }
 .pop-card:hover .pop-btn { background: #fbbf24; }
 @media (max-width: 900px) { .popular-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .popular-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .pop-price { font-size: 1.3rem; } .pop-btn { font-size: 0.7rem; padding: 6px 10px; } }
+
+/* ===== PAGINATION (크루즈링크 동일) ===== */
+.pagination { display: flex; justify-content: center; gap: 8px; margin-top: 32px; flex-wrap: wrap; }
+.page-btn {
+  width: 40px; height: 40px; border: 2px solid #d0d7de; border-radius: 8px;
+  background: #fff; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; font-family: inherit;
+  font-size: 0.9rem; color: #1a3a6a;
+}
+.page-btn.active, .page-btn:hover { background: #0a2540; color: #fff; border-color: #0a2540; }
+.page-btn.page-arrow { font-size: 1.1rem; }
+
+/* ===== CTA SECTION (크루즈링크 동일) ===== */
+.cta-section {
+  background: linear-gradient(135deg, #061b33 0%, #0a2540 100%);
+  color: #fff; text-align: center; padding: 60px 0;
+}
+.cta-section h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 12px; color: #fff; }
+.cta-section p { opacity: 0.9; margin-bottom: 32px; color: #fff; }
+.cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-buttons.cta-two, .cta-two-center { max-width: 420px; margin: 0 auto; justify-content: center; display: flex; gap: 12px; flex-wrap: nowrap; align-items: stretch; }
+.cta-buttons.cta-two .btn, .cta-two-center .btn { flex: 1 1 0; min-width: 0; text-align: center; padding: 16px 20px; font-size: 1.05rem; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.cta-buttons.cta-three { max-width: 600px; margin: 0 auto; }
+.cta-buttons.cta-three .btn { flex: 1; min-width: 0; text-align: center; padding: 16px 12px; font-size: 1.02rem; font-weight: 700; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.btn-white { background: rgba(255,255,255,0.1); color: #fff; border: 2px solid rgba(255,255,255,0.4); }
+.btn-white:hover { background: rgba(255,255,255,0.2); }
+.btn-white-solid { background: #fff; color: #0a2540; border: 2px solid #dde3f0; }
+.btn-white-solid:hover { background: #f0f4f8; }
+@media (max-width: 640px) {
+  .cta-section { padding: 40px 0; }
+  .cta-section h2 { font-size: 1.4rem; }
+  .cta-buttons.cta-three { flex-direction: column; align-items: stretch; }
+  .cta-buttons.cta-three .btn { width: 100%; }
+}
