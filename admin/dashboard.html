@@ -903,6 +903,14 @@
         <button onclick="addFareRow()" style="padding:7px 16px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">＋ 객실 추가</button>
       </div>
 
+      <!-- 상품 소개 이미지 (일정 위에 표시) -->
+      <div class="detail-section">
+        <h4>🖼️ 상품 소개 이미지 <span style="font-size:11px;font-weight:400;color:#888">(일정 위에 순서대로 표시 — 여행사 디자인 이미지, 소개 배너 등 무제한 추가)</span></h4>
+        <div id="prIntroImages" style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px"></div>
+        <button onclick="addIntroImg()" style="padding:8px 18px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">＋ 소개 이미지 추가</button>
+        <div id="prIntroPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"></div>
+      </div>
+
       <!-- 항공 일정 -->
       <div class="detail-section">
         <h4>✈️ 항공 일정</h4>
@@ -2128,8 +2136,7 @@ ${remarksHtml}
 
   function buildCruiseDetailPage(d, sourceUrl, slug) {
     const thumbs = d.thumbImages || [];
-    const bodyImgs = d.bodyImages || [];
-    const base = d.baseOrigin || 'https://www.cruznara.com';
+    const introImgs = d.introImages || [];  // 상품 소개 이미지 (일정 위)
     const title = d.title || '상품명';
     const period = d.period || '';
     const departures = d.departures || [];
@@ -2140,60 +2147,48 @@ ${remarksHtml}
     const excluded = d.excluded || [];
     const notice = d.notice || [];
 
-    // 슬라이더 HTML
-    const sliderSlides = thumbs.map((img, i) => `
-      <div class="czn-slide ${i===0?'active':''}" onclick="gotoSlide(${i})">
-        <img src="${img}" alt="상품 이미지 ${i+1}">
-      </div>`).join('');
+    // 슬라이더
+    const sliderSlides = thumbs.map((img, i) => `<div class="czn-slide ${i===0?'active':''}" onclick="gotoSlide(${i})"><img src="${img}" alt="이미지 ${i+1}"></div>`).join('');
 
-    // 상단 요금 (첫 번째 출발일 기준)
+    // 첫 출발일 기준 가격
     const firstDep = departures[0] || {};
     const priceStr = firstDep.priceAdult ? firstDep.priceAdult.toLocaleString() + '원~' : '문의';
     const cabinStr = firstDep.cabin || '';
 
-    // 출발일 탭
-    const depTabs = departures.map((dep, i) => `
-      <div class="czn-dep-tab ${i===0?'active':''}" onclick="selectDep(${i}, this)">
+    // 출발일 목록
+    const depListHtml = departures.length ? departures.map((dep,i) => `
+      <div class="czn-dep-tab ${i===0?'active':''}" onclick="selectDep(${i},this)">
         <div class="czn-dep-date">${dep.date||''}</div>
         <div class="czn-dep-cabin">${dep.cabin||''}</div>
         <div class="czn-dep-price">${dep.priceAdult?(dep.priceAdult).toLocaleString()+'원':'문의'}</div>
-      </div>`).join('');
+      </div>`).join('') : '';
 
-    // 항공 정보
+    // 항공 정보 (사이드바용)
     const flightHtml = (flightOut.airline || flightIn.airline) ? `
       <div class="czn-flight-box">
-        <div class="czn-flight-row">
-          <span class="czn-flight-label">출발</span>
-          <span class="czn-flight-airline">${flightOut.airline||''} ${flightOut.flightNo||''}</span>
-          <span class="czn-flight-time">${flightOut.depTime||''}</span>
-          <span class="czn-flight-date">${flightOut.depDate||''}</span>
-          <span class="czn-flight-port">${flightOut.depPort||''} 출발</span>
-          <span class="czn-flight-arrow">→</span>
-          <span class="czn-flight-time">${flightOut.arrTime||''}</span>
-          <span class="czn-flight-port">${flightOut.arrPort||''} 도착</span>
-        </div>
-        <div class="czn-flight-row">
-          <span class="czn-flight-label">귀국</span>
-          <span class="czn-flight-airline">${flightIn.airline||''} ${flightIn.flightNo||''}</span>
-          <span class="czn-flight-time">${flightIn.depTime||''}</span>
-          <span class="czn-flight-date">${flightIn.depDate||''}</span>
-          <span class="czn-flight-port">${flightIn.depPort||''} 출발</span>
-          <span class="czn-flight-arrow">→</span>
-          <span class="czn-flight-time">${flightIn.arrTime||''}</span>
-          <span class="czn-flight-port">${flightIn.arrPort||''} 도착</span>
-        </div>
+        <div class="czn-flight-row"><span class="czn-fl-label">출발</span><span class="czn-fl-al">${flightOut.airline||''} ${flightOut.flightNo||''}</span><span class="czn-fl-t">${flightOut.depTime||''}</span><span class="czn-fl-p">${flightOut.depPort||''}</span><span class="czn-fl-arr">→</span><span class="czn-fl-t">${flightOut.arrTime||''}</span><span class="czn-fl-p">${flightOut.arrPort||''}</span></div>
+        <div class="czn-flight-row"><span class="czn-fl-label czn-fl-ret">귀국</span><span class="czn-fl-al">${flightIn.airline||''} ${flightIn.flightNo||''}</span><span class="czn-fl-t">${flightIn.depTime||''}</span><span class="czn-fl-p">${flightIn.depPort||''}</span><span class="czn-fl-arr">→</span><span class="czn-fl-t">${flightIn.arrTime||''}</span><span class="czn-fl-p">${flightIn.arrPort||''}</span></div>
       </div>` : '';
 
-    // 일정표
-    const itinHtml = itinerary.map((it, i) => `
-      <div class="czn-itin-row ${i%2?'even':''}">
-        <div class="czn-itin-day"><span>${it.day||''}</span><small>${it.date||''}</small></div>
-        <div class="czn-itin-city">${it.city||''}</div>
-        <div class="czn-itin-desc">${(it.description||'').replace(/\n/g,'<br>')}</div>
-      </div>`).join('');
+    // 소개 이미지 HTML
+    const introHtml = introImgs.map(img => `<img src="${img}" alt="" style="max-width:100%;display:block;margin:0 auto 4px">`).join('');
 
-    // 상품소개 본문 이미지
-    const bodyHtml = bodyImgs.map(img => `<img src="${img}" alt="" style="max-width:100%;display:block;margin:4px 0">`).join('');
+    // 일정 Day 카드
+    const itinCardsHtml = itinerary.map((it, i) => {
+      const imgs = (it.images||[]).map(img => `<img src="${img}" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
+      const desc = (it.description||'').replace(/\n/g,'<br>');
+      return `<div class="czn-day-card">
+        <div class="czn-day-header">
+          <div class="czn-day-badge">Day ${it.day||i+1}</div>
+          ${it.date?`<span class="czn-day-date">${it.date}</span>`:''}
+          <span class="czn-day-city">${it.city||''}</span>
+        </div>
+        <div class="czn-day-body">
+          ${desc?`<div class="czn-day-desc">${desc}</div>`:''}
+          ${imgs?`<div class="czn-day-imgs">${imgs}</div>`:''}
+        </div>
+      </div>`;
+    }).join('');
 
     return `<!DOCTYPE html>
 <html lang="ko">
@@ -2202,203 +2197,179 @@ ${remarksHtml}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${title} — 크루즈나라</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Malgun Gothic','Apple SD Gothic Neo',sans-serif; background:#f5f6fa; color:#222; }
-a { text-decoration: none; color: inherit; }
-
-/* ===== HEADER ===== */
-.czn-header { background:#1a237e; padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
-.czn-header-logo { color:#fff; font-size:18px; font-weight:900; }
-.czn-header-phone { color:#fff; font-size:13px; font-weight:600; }
-.czn-header-phone a { color:#ffeb3b; }
-
-/* ===== LAYOUT ===== */
-.czn-wrap { max-width:1080px; margin:0 auto; padding:24px 16px; display:grid; grid-template-columns:1fr 340px; gap:24px; }
-@media(max-width:768px){ .czn-wrap { grid-template-columns:1fr; } .czn-side { order:-1; } }
-
-/* ===== SLIDER ===== */
-.czn-slider-wrap { background:#000; border-radius:12px; overflow:hidden; position:relative; aspect-ratio:16/9; }
-.czn-slide { display:none; width:100%; height:100%; }
-.czn-slide.active { display:block; }
-.czn-slide img { width:100%; height:100%; object-fit:cover; }
-.czn-slider-nav { position:absolute; top:50%; transform:translateY(-50%); display:flex; justify-content:space-between; width:100%; padding:0 12px; pointer-events:none; }
-.czn-slider-btn { pointer-events:all; background:rgba(0,0,0,.5); color:#fff; border:none; border-radius:50%; width:40px; height:40px; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-.czn-slider-dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; }
-.czn-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.5); cursor:pointer; transition:background .2s; }
-.czn-dot.active { background:#fff; }
-.czn-slider-count { position:absolute; top:12px; right:14px; background:rgba(0,0,0,.55); color:#fff; font-size:12px; padding:3px 10px; border-radius:20px; }
-.czn-thumbs { display:flex; gap:6px; margin-top:8px; overflow-x:auto; padding-bottom:4px; }
-.czn-thumb { width:72px; height:54px; border-radius:6px; overflow:hidden; cursor:pointer; flex-shrink:0; border:2px solid transparent; transition:border-color .2s; }
-.czn-thumb.active { border-color:#1a237e; }
-.czn-thumb img { width:100%; height:100%; object-fit:cover; }
-
-/* ===== STICKY TABS ===== */
-.czn-tabs { display:flex; gap:0; border-bottom:2px solid #e0e0e0; background:#fff; border-radius:10px 10px 0 0; overflow-x:auto; margin-top:20px; }
-.czn-tab { padding:13px 20px; font-size:14px; font-weight:600; color:#888; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s; }
-.czn-tab.active { color:#1a237e; border-bottom-color:#1a237e; }
-.czn-tab-panel { background:#fff; border-radius:0 0 10px 10px; padding:24px; display:none; }
-.czn-tab-panel.active { display:block; }
-
-/* ===== 상품소개 ===== */
-.czn-body-images img { max-width:100%; display:block; margin:4px auto; }
-
-/* ===== 포함/불포함/유의 ===== */
-.czn-list-item { padding:8px 0; border-bottom:1px solid #f0f0f0; font-size:14px; line-height:1.7; }
-.czn-list-item:last-child { border:none; }
-
-/* ===== 일정표 ===== */
-.czn-itin-row { display:grid; grid-template-columns:80px 100px 1fr; gap:0; border-bottom:1px solid #e8eaf6; padding:12px 0; }
-.czn-itin-row.even { background:#f5f7ff; }
-.czn-itin-day { text-align:center; }
-.czn-itin-day span { display:block; font-size:18px; font-weight:900; color:#1a237e; }
-.czn-itin-day small { font-size:11px; color:#888; }
-.czn-itin-city { font-weight:700; font-size:14px; color:#333; padding:2px 8px; }
-.czn-itin-desc { font-size:13px; color:#555; line-height:1.7; }
-@media(max-width:600px){ .czn-itin-row { grid-template-columns:60px 80px 1fr; } }
-
-/* ===== 사이드바 ===== */
-.czn-side { position:sticky; top:72px; align-self:start; }
-.czn-side-card { background:#fff; border-radius:12px; box-shadow:0 2px 16px rgba(0,0,0,.1); overflow:hidden; }
-.czn-side-title { background:#1a237e; color:#fff; padding:16px 20px; font-size:15px; font-weight:700; }
-.czn-side-body { padding:20px; }
-.czn-side-info { margin-bottom:16px; }
-.czn-side-label { font-size:12px; color:#888; margin-bottom:3px; }
-.czn-side-value { font-size:14px; font-weight:600; color:#222; }
-.czn-price-box { background:#fff8f0; border-radius:8px; padding:14px 16px; margin-bottom:16px; border:1px solid #ffe0b2; }
-.czn-price-cabin { font-size:12px; color:#e65100; font-weight:700; margin-bottom:4px; }
-.czn-price-amount { font-size:26px; font-weight:900; color:#e65100; }
-.czn-price-unit { font-size:12px; color:#888; margin-top:2px; }
-.czn-btn-inquiry { display:block; width:100%; padding:14px; background:#1a237e; color:#fff; text-align:center; border-radius:8px; font-size:15px; font-weight:700; margin-bottom:8px; cursor:pointer; border:none; font-family:inherit; }
-.czn-btn-kakao { display:block; width:100%; padding:13px; background:#FEE500; color:#191919; text-align:center; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; border:none; font-family:inherit; }
-
-/* ===== 출발일 탭 ===== */
-.czn-dep-tabs { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
-.czn-dep-tab { border:1.5px solid #e0e0e0; border-radius:8px; padding:10px 12px; cursor:pointer; transition:all .15s; }
-.czn-dep-tab.active { border-color:#1a237e; background:#e8eaf6; }
-.czn-dep-date { font-size:13px; font-weight:700; color:#1a237e; }
-.czn-dep-cabin { font-size:11px; color:#666; margin-top:2px; }
-.czn-dep-price { font-size:15px; font-weight:900; color:#e65100; margin-top:2px; }
-
-/* ===== 항공 정보 ===== */
-.czn-flight-box { background:#f0f4ff; border-radius:8px; padding:14px; margin-bottom:16px; font-size:12px; }
-.czn-flight-row { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
-.czn-flight-row:last-child { margin:0; }
-.czn-flight-label { background:#1a237e; color:#fff; padding:2px 8px; border-radius:4px; font-weight:700; font-size:11px; }
-.czn-flight-airline { font-weight:700; }
-.czn-flight-time { font-weight:700; color:#1a237e; }
-.czn-flight-arrow { color:#888; }
-.czn-flight-port { color:#555; }
-
-/* ===== 출처 표시 ===== */
-.czn-source { font-size:11px; color:#aaa; text-align:right; margin-top:8px; }
-
-/* ===== FOOTER ===== */
-.czn-footer-bar { background:#1a237e; color:rgba(255,255,255,.7); text-align:center; padding:16px; font-size:12px; margin-top:40px; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f5f6fa;color:#222}
+a{text-decoration:none;color:inherit}
+/* Header */
+.czn-hd{background:#1a237e;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.czn-hd-logo{color:#fff;font-size:17px;font-weight:900}
+.czn-hd-phone{color:#ffeb3b;font-size:13px;font-weight:700}
+/* Sticky nav tabs */
+.czn-nav{position:sticky;top:56px;z-index:150;background:#fff;border-bottom:2px solid #e0e6ff;display:flex;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.czn-nav a{padding:14px 22px;font-size:14px;font-weight:700;color:#888;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .15s}
+.czn-nav a.on,.czn-nav a:hover{color:#1a237e;border-bottom-color:#1a237e}
+/* Layout */
+.czn-wrap{max-width:1080px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:1fr 320px;gap:24px}
+@media(max-width:768px){.czn-wrap{grid-template-columns:1fr}.czn-side{order:-1}}
+/* Slider */
+.czn-sl-wrap{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0a1628}
+.czn-slide{display:none;width:100%;height:100%}
+.czn-slide.active{display:block}
+.czn-slide img{width:100%;height:100%;object-fit:cover}
+.czn-sl-nav{position:absolute;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;width:100%;padding:0 12px;pointer-events:none}
+.czn-sl-btn{pointer-events:all;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.czn-sl-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.czn-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:background .2s}
+.czn-dot.active{background:#fff}
+.czn-sl-cnt{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px}
+.czn-thumbs{display:flex;gap:6px;margin-top:8px;overflow-x:auto;padding-bottom:4px}
+.czn-thumb{width:72px;height:54px;border-radius:6px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid transparent;transition:border-color .2s}
+.czn-thumb.active{border-color:#1a237e}
+.czn-thumb img{width:100%;height:100%;object-fit:cover}
+/* Section */
+.czn-sec{background:#fff;border-radius:12px;padding:24px;margin-top:16px}
+.czn-sec-title{font-size:16px;font-weight:900;color:#1a237e;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8eaf6;display:flex;align-items:center;gap:8px}
+/* 상품소개 이미지 */
+.czn-intro img{max-width:100%;display:block;margin:0 auto 4px}
+/* 포함불포함 */
+.czn-list-item{padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:14px;line-height:1.7}
+.czn-list-item:last-child{border:none}
+/* Day 카드 */
+.czn-day-card{border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;margin-bottom:12px}
+.czn-day-header{background:linear-gradient(135deg,#1a237e,#283593);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.czn-day-badge{background:#fff;color:#1a237e;font-weight:900;font-size:13px;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.czn-day-date{color:rgba(255,255,255,.75);font-size:12px}
+.czn-day-city{color:#fff;font-weight:700;font-size:15px}
+.czn-day-body{padding:14px 16px;background:#fff}
+.czn-day-desc{font-size:13px;color:#444;line-height:1.85;margin-bottom:10px}
+.czn-day-imgs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+/* 사이드바 */
+.czn-side{position:sticky;top:112px;align-self:start}
+.czn-card{background:#fff;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.1);overflow:hidden;margin-bottom:14px}
+.czn-card-hd{background:#1a237e;color:#fff;padding:14px 18px;font-size:14px;font-weight:700;line-height:1.4}
+.czn-card-bd{padding:18px}
+.czn-info-row{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;font-size:13px}
+.czn-info-lbl{color:#888;white-space:nowrap;min-width:58px}
+.czn-info-val{font-weight:700;color:#222}
+.czn-price-box{background:#fff8f0;border:1px solid #ffe0b2;border-radius:8px;padding:14px;margin-bottom:14px;text-align:center}
+.czn-price-cabin{font-size:12px;color:#e65100;font-weight:700;margin-bottom:4px}
+.czn-price-amount{font-size:28px;font-weight:900;color:#e65100}
+.czn-price-unit{font-size:11px;color:#888;margin-top:2px}
+.czn-btn-tel{display:block;width:100%;padding:14px;background:#1a237e;color:#fff;text-align:center;border-radius:8px;font-size:14px;font-weight:700;margin-bottom:8px;cursor:pointer;border:none;font-family:inherit}
+.czn-btn-kko{display:block;width:100%;padding:13px;background:#FEE500;color:#191919;text-align:center;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit}
+.czn-dep-tab{border:1.5px solid #e0e0e0;border-radius:8px;padding:10px 12px;cursor:pointer;transition:all .15s;margin-bottom:8px}
+.czn-dep-tab.active{border-color:#1a237e;background:#e8eaf6}
+.czn-dep-date{font-size:13px;font-weight:700;color:#1a237e}
+.czn-dep-cabin{font-size:11px;color:#666;margin-top:2px}
+.czn-dep-price{font-size:15px;font-weight:900;color:#e65100;margin-top:2px}
+/* 항공 */
+.czn-fl-box{background:#f0f4ff;border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px}
+.czn-flight-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.czn-flight-row:last-child{margin:0}
+.czn-fl-label{background:#1a237e;color:#fff;padding:2px 7px;border-radius:4px;font-weight:700;font-size:10px}
+.czn-fl-ret{background:#e53935}
+.czn-fl-al{font-weight:700}
+.czn-fl-t{font-weight:700;color:#1a237e}
+.czn-fl-p{color:#555}
+.czn-fl-arr{color:#aaa}
+/* Footer */
+.czn-ft{background:#1a237e;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px}
+.czn-src{font-size:11px;color:#aaa;text-align:right;margin-top:8px}
 </style>
 </head>
 <body>
-<header class="czn-header">
-  <div class="czn-header-logo">🚢 크루즈나라</div>
-  <div class="czn-header-phone">📞 <a href="tel:1577-3227">1577-3227</a></div>
+<header class="czn-hd">
+  <div class="czn-hd-logo">🚢 크루즈나라</div>
+  <a href="tel:1577-3227" class="czn-hd-phone">📞 1577-3227</a>
 </header>
 
+<!-- 스티키 탭 네비게이션 -->
+<nav class="czn-nav" id="cznNav">
+  <a class="on" onclick="scrollTo('sec-intro')">상품소개</a>
+  <a onclick="scrollTo('sec-itin')">여행일정</a>
+  ${included.length?'<a onclick="scrollTo(\'sec-inc\')">포함사항</a>':''}
+  ${excluded.length?'<a onclick="scrollTo(\'sec-exc\')">불포함사항</a>':''}
+  ${notice.length?'<a onclick="scrollTo(\'sec-notice\')">유의사항</a>':''}
+</nav>
+
 <div class="czn-wrap">
-  <!-- ===== 메인 콘텐츠 ===== -->
+  <!-- ===== 메인 ===== -->
   <div class="czn-main">
 
-    <!-- 이미지 슬라이더 -->
-    <div class="czn-slider-wrap" id="czn-slider">
-      ${sliderSlides || '<div class="czn-slide active" style="background:#1a237e;display:flex;align-items:center;justify-content:center;font-size:60px">🚢</div>'}
-      <div class="czn-slider-nav">
-        <button class="czn-slider-btn" onclick="slideStep(-1)">‹</button>
-        <button class="czn-slider-btn" onclick="slideStep(1)">›</button>
+    <!-- 슬라이더 -->
+    <div class="czn-sl-wrap" id="cznSlider">
+      ${sliderSlides || '<div class="czn-slide active" style="display:flex;align-items:center;justify-content:center;font-size:60px;height:100%">🚢</div>'}
+      <div class="czn-sl-nav">
+        <button class="czn-sl-btn" onclick="slideStep(-1)">‹</button>
+        <button class="czn-sl-btn" onclick="slideStep(1)">›</button>
       </div>
-      <div class="czn-slider-dots" id="cznDots">
-        ${thumbs.map((_,i)=>`<span class="czn-dot ${i===0?'active':''}" onclick="gotoSlide(${i})"></span>`).join('')}
-      </div>
-      <div class="czn-slider-count" id="cznCount">${thumbs.length>0?'1 / '+thumbs.length:''}</div>
+      <div class="czn-sl-dots" id="cznDots">${thumbs.map((_,i)=>`<span class="czn-dot ${i===0?'active':''}" onclick="gotoSlide(${i})"></span>`).join('')}</div>
+      <div class="czn-sl-cnt" id="cznCount">${thumbs.length>1?'1 / '+thumbs.length:''}</div>
     </div>
-    <!-- 썸네일 -->
-    <div class="czn-thumbs">
-      ${thumbs.map((img,i)=>`<div class="czn-thumb ${i===0?'active':''}" onclick="gotoSlide(${i})"><img src="${img}" alt="썸네일${i+1}"></div>`).join('')}
+    <div class="czn-thumbs">${thumbs.map((img,i)=>`<div class="czn-thumb ${i===0?'active':''}" onclick="gotoSlide(${i})"><img src="${img}"></div>`).join('')}</div>
+
+    <!-- 상품 소개 -->
+    <div class="czn-sec" id="sec-intro">
+      <div class="czn-sec-title">🎯 상품 소개</div>
+      <div class="czn-intro">${introHtml || '<p style="color:#aaa;text-align:center;padding:30px">소개 이미지가 없습니다.</p>'}</div>
     </div>
 
-    <!-- 탭 -->
-    <div class="czn-tabs">
-      <div class="czn-tab active" onclick="showTab('intro',this)">상품소개</div>
-      <div class="czn-tab" onclick="showTab('include',this)">포함사항</div>
-      <div class="czn-tab" onclick="showTab('exclude',this)">불포함사항</div>
-      ${itinerary.length?'<div class="czn-tab" onclick="showTab(\'itin\',this)">일정표</div>':''}
-      ${notice.length?'<div class="czn-tab" onclick="showTab(\'notice\',this)">유의사항</div>':''}
+    <!-- 여행 일정 -->
+    <div class="czn-sec" id="sec-itin">
+      <div class="czn-sec-title">🗺️ 여행 일정</div>
+      ${itinCardsHtml || '<p style="color:#aaa;padding:20px;text-align:center">일정 정보 없음</p>'}
     </div>
-    <div class="czn-tab-panel active" id="tab-intro">
-      <div class="czn-body-images">${bodyHtml || '<p style="color:#aaa;text-align:center;padding:40px">상품 소개 이미지가 없습니다.</p>'}</div>
-    </div>
-    <div class="czn-tab-panel" id="tab-include">
-      ${included.map(s=>`<div class="czn-list-item">${esc(s)}</div>`).join('') || '<p style="color:#aaa;padding:20px">없음</p>'}
-    </div>
-    <div class="czn-tab-panel" id="tab-exclude">
-      ${excluded.map(s=>`<div class="czn-list-item">${esc(s)}</div>`).join('') || '<p style="color:#aaa;padding:20px">없음</p>'}
-    </div>
-    <div class="czn-tab-panel" id="tab-itin">
-      ${itinHtml || '<p style="color:#aaa;padding:20px">일정 정보 없음</p>'}
-    </div>
-    <div class="czn-tab-panel" id="tab-notice">
-      ${notice.map(s=>`<div class="czn-list-item">${esc(s)}</div>`).join('') || '<p style="color:#aaa;padding:20px">없음</p>'}
-    </div>
+
+    ${included.length?`<div class="czn-sec" id="sec-inc">
+      <div class="czn-sec-title">✅ 포함 사항</div>
+      ${included.map(s=>`<div class="czn-list-item">${s}</div>`).join('')}
+    </div>`:''}
+
+    ${excluded.length?`<div class="czn-sec" id="sec-exc">
+      <div class="czn-sec-title">❌ 불포함 사항</div>
+      ${excluded.map(s=>`<div class="czn-list-item">${s}</div>`).join('')}
+    </div>`:''}
+
+    ${notice.length?`<div class="czn-sec" id="sec-notice">
+      <div class="czn-sec-title">📌 유의 사항</div>
+      ${notice.map(s=>`<div class="czn-list-item">${s}</div>`).join('')}
+    </div>`:''}
+
   </div>
 
   <!-- ===== 사이드바 ===== -->
   <div class="czn-side">
-    <div class="czn-side-card">
-      <div class="czn-side-title">${title}</div>
-      <div class="czn-side-body">
-        ${period?`<div class="czn-side-info"><div class="czn-side-label">여행기간</div><div class="czn-side-value">${period}</div></div>`:''}
+    <div class="czn-card">
+      <div class="czn-card-hd">${title}</div>
+      <div class="czn-card-bd">
+        ${period?`<div class="czn-info-row"><span class="czn-info-lbl">여행기간</span><span class="czn-info-val">${period}</span></div>`:''}
+        ${d.cruiseline?`<div class="czn-info-row"><span class="czn-info-lbl">선사</span><span class="czn-info-val">${d.cruiseline}</span></div>`:''}
+        ${d.ship?`<div class="czn-info-row"><span class="czn-info-lbl">선박</span><span class="czn-info-val">${d.ship}</span></div>`:''}
         ${flightHtml}
         <div class="czn-price-box">
-          <div class="czn-price-cabin">${cabinStr}</div>
+          ${cabinStr?`<div class="czn-price-cabin">${cabinStr}</div>`:''}
           <div class="czn-price-amount">성인 ${priceStr}</div>
           <div class="czn-price-unit">유류할증료·제세공과금 포함</div>
         </div>
-        ${departures.length > 1 ? `<div style="font-size:12px;font-weight:700;color:#444;margin-bottom:8px">📅 출발일 선택</div><div class="czn-dep-tabs">${depTabs}</div>` : ''}
-        <button class="czn-btn-inquiry" onclick="window.open('tel:1577-3227')">📞 전화 문의 1577-3227</button>
-        <a href="https://pf.kakao.com/_vSamC/chat" target="_blank" class="czn-btn-kakao">💬 카카오 채널 상담</a>
-        <div class="czn-source">원본: <a href="${sourceUrl}" target="_blank" style="color:#1a237e">cruznara.com</a></div>
+        ${departures.length>1?`<div style="font-size:12px;font-weight:700;color:#444;margin-bottom:8px">📅 출발일 선택</div><div class="czn-dep-tabs">${depListHtml}</div>`:''}
+        <button class="czn-btn-tel" onclick="window.open('tel:1577-3227')">📞 전화 문의 1577-3227</button>
+        <a href="https://pf.kakao.com/_vSamC/chat" target="_blank" class="czn-btn-kko">💬 카카오 채널 상담</a>
+        <div class="czn-src">원본: <a href="${sourceUrl}" target="_blank" style="color:#1a237e">출처보기</a></div>
       </div>
     </div>
   </div>
 </div>
 
-<footer class="czn-footer-bar">
-  크루즈나라 | 📞 1577-3227 | 아남항공 주식회사
-</footer>
+<footer class="czn-ft">크루즈나라 | 📞 1577-3227 | 아남항공 주식회사</footer>
 
 <scr` + `ipt>
-  let czn_idx = 0;
-  const czn_total = ${thumbs.length};
-
-  function gotoSlide(i) {
-    czn_idx = (i + czn_total) % czn_total;
-    document.querySelectorAll('.czn-slide').forEach((s,j) => s.classList.toggle('active', j===czn_idx));
-    document.querySelectorAll('.czn-dot').forEach((d,j) => d.classList.toggle('active', j===czn_idx));
-    document.querySelectorAll('.czn-thumb').forEach((t,j) => t.classList.toggle('active', j===czn_idx));
-    const cnt = document.getElementById('cznCount');
-    if(cnt) cnt.textContent = (czn_idx+1) + ' / ' + czn_total;
-  }
-  function slideStep(d){ gotoSlide(czn_idx + d); }
-
-  function showTab(id, el) {
-    document.querySelectorAll('.czn-tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.czn-tab').forEach(t => t.classList.remove('active'));
-    const panel = document.getElementById('tab-' + id);
-    if(panel) panel.classList.add('active');
-    if(el) el.classList.add('active');
-  }
-
-  function selectDep(i, el) {
-    document.querySelectorAll('.czn-dep-tab').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-  }
+  let czn_idx=0; const czn_total=${thumbs.length};
+  function gotoSlide(i){czn_idx=(i+czn_total)%czn_total;document.querySelectorAll('.czn-slide').forEach((s,j)=>s.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-dot').forEach((d,j)=>d.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-thumb').forEach((t,j)=>t.classList.toggle('active',j===czn_idx));const c=document.getElementById('cznCount');if(c)c.textContent=(czn_idx+1)+' / '+czn_total;}
+  function slideStep(d){gotoSlide(czn_idx+d);}
+  function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});const hd=56+42;window.scrollBy(0,-hd);}
+  function selectDep(i,el){document.querySelectorAll('.czn-dep-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+  // 스크롤 시 네비 활성화
+  window.addEventListener('scroll',()=>{const secs=['sec-intro','sec-itin','sec-inc','sec-exc','sec-notice'];const links=document.querySelectorAll('.czn-nav a');let cur=0;secs.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});links.forEach((l,i)=>l.classList.toggle('on',i===cur));});
 <\/scr` + `ipt>
 <\/body>
 <\/html>`;
@@ -2465,6 +2436,9 @@ a { text-decoration: none; color: inherit; }
     document.getElementById('prDesc').value = '';
     document.getElementById('prIncluded').value = '';
     document.getElementById('prExcluded').value = '';
+    // 소개 이미지 초기화
+    document.getElementById('prIntroImages').innerHTML = '';
+    document.getElementById('prIntroPreview').innerHTML = '';
     // 항공 초기화
     ['flOutAirline','flOutNo','flOutDepTime','flOutArrTime','flOutDepDate','flOutArrDate','flOutDepPort','flOutArrPort',
      'flInAirline','flInNo','flInDepTime','flInArrTime','flInDepDate','flInArrDate','flInDepPort','flInArrPort'].forEach(id => {
@@ -2511,6 +2485,10 @@ a { text-decoration: none; color: inherit; }
       if (p.fares && p.fares.length) {
         document.getElementById('prFareBody').innerHTML = p.fares.map(f => makeFareRow(f.type,f.price,f.note)).join('');
       }
+      // 소개 이미지
+      document.getElementById('prIntroImages').innerHTML = '';
+      document.getElementById('prIntroPreview').innerHTML = '';
+      (p.introImages || []).forEach(u => addIntroImg(u));
       // 항공
       const fo = p.flightOut || {}; const fi = p.flightIn || {};
       ['Airline','No','DepTime','ArrTime','DepDate','ArrDate','DepPort','ArrPort'].forEach(k => {
@@ -2593,6 +2571,45 @@ a { text-decoration: none; color: inherit; }
   function addItinRow() { addItinCard(); }
   function removeItinRow(btn) { removeItinCard(btn); }
 
+  // ── 소개 이미지 ──
+  function addIntroImg(url='') {
+    const wrap = document.getElementById('prIntroImages');
+    const idx = wrap.querySelectorAll('.pr-intro-row').length + 1;
+    const div = document.createElement('div');
+    div.className = 'pr-intro-row';
+    div.style.cssText = 'display:flex;gap:8px;align-items:center';
+    div.innerHTML = `<span style="font-size:11px;color:#888;white-space:nowrap;min-width:40px">${idx}번</span>
+      <input type="url" class="pr-intro-url" value="${esc(url)}" placeholder="이미지 URL (https://...jpg)" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateIntroPreview()">
+      <button onclick="moveIntroImg(this,-1)" style="padding:6px 10px;background:#f0f0f0;border:none;border-radius:6px;cursor:pointer;font-size:12px">▲</button>
+      <button onclick="moveIntroImg(this,1)" style="padding:6px 10px;background:#f0f0f0;border:none;border-radius:6px;cursor:pointer;font-size:12px">▼</button>
+      <button onclick="removeIntroImg(this)" style="padding:6px 10px;background:#fbe9e7;color:#e53935;border:none;border-radius:6px;cursor:pointer;font-size:12px">✕</button>`;
+    wrap.appendChild(div);
+    updateIntroPreview();
+  }
+  function removeIntroImg(btn) { btn.closest('.pr-intro-row').remove(); reIndexIntro(); updateIntroPreview(); }
+  function moveIntroImg(btn, dir) {
+    const row = btn.closest('.pr-intro-row');
+    const wrap = document.getElementById('prIntroImages');
+    const rows = [...wrap.querySelectorAll('.pr-intro-row')];
+    const i = rows.indexOf(row);
+    const j = i + dir;
+    if (j < 0 || j >= rows.length) return;
+    if (dir < 0) wrap.insertBefore(row, rows[j]);
+    else wrap.insertBefore(rows[j], row);
+    reIndexIntro(); updateIntroPreview();
+  }
+  function reIndexIntro() {
+    document.querySelectorAll('#prIntroImages .pr-intro-row').forEach((r,i) => {
+      const lbl = r.querySelector('span'); if(lbl) lbl.textContent = (i+1)+'번';
+    });
+  }
+  function updateIntroPreview() {
+    const urls = [...document.querySelectorAll('#prIntroImages .pr-intro-url')].map(i=>i.value.trim()).filter(Boolean);
+    document.getElementById('prIntroPreview').innerHTML = urls.map(u =>
+      `<img src="${proxyImgUrl(esc(u))}" style="height:60px;border-radius:6px;border:1px solid #ddd;object-fit:cover" onerror="this.style.opacity=.2">`
+    ).join('');
+  }
+
   function addImgRow() {
     const rows = document.querySelectorAll('#prImageRows .pr-img-row');
     if (rows.length >= 5) { showToast('이미지는 최대 5장입니다'); return; }
@@ -2647,6 +2664,7 @@ a { text-decoration: none; color: inherit; }
     const title = document.getElementById('prTitle').value.trim();
     if (!title) { showToast('상품명을 입력하세요'); return; }
     const images = [...document.querySelectorAll('.pr-img-input')].map(i => i.value.trim()).filter(Boolean);
+    const introImages = [...document.querySelectorAll('#prIntroImages .pr-intro-url')].map(i => i.value.trim()).filter(Boolean);
     const departures = [...document.querySelectorAll('#prDepartures span')].map(s => s.dataset.date).filter(Boolean);
     const fares = [...document.querySelectorAll('#prFareBody .pr-fare-row')].map(row => ({
       type: row.querySelector('.pr-fare-type').value.trim(),
@@ -2688,7 +2706,7 @@ a { text-decoration: none; color: inherit; }
       category: document.getElementById('prCategory').value,
       nights: parseInt(document.getElementById('prNights').value) || 0,
       desc: document.getElementById('prDesc').value.trim(),
-      images, departures, fares, itinerary, flightOut, flightIn,
+      images, introImages, departures, fares, itinerary, flightOut, flightIn,
       included: document.getElementById('prIncluded').value.split('\n').map(s=>s.trim()).filter(Boolean),
       excluded: document.getElementById('prExcluded').value.split('\n').map(s=>s.trim()).filter(Boolean),
       updatedAt: new Date().toISOString()
