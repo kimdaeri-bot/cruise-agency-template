@@ -1802,6 +1802,17 @@ ${remarksHtml}
         updateImgPreview();
       }
 
+      // ── 소개 이미지 (bodyImages → introImages 자동 채우기) ──
+      // bodyImages: ckeditor 상품 소개 이미지 (실제 여행사가 업로드한 디자인 이미지)
+      const introImgUrls = (data.bodyImages || []).filter(u =>
+        u.includes('/upload/') && !u.includes('/tourinfo/') && !u.includes('/goods/main/')
+      ).slice(0, 20);
+      if (introImgUrls.length) {
+        document.getElementById('prIntroImages').innerHTML = '';
+        document.getElementById('prIntroPreview').innerHTML = '';
+        introImgUrls.forEach(u => addIntroImg(u));
+      }
+
       // ── 출발일 ──
       document.getElementById('prDepartures').innerHTML = '';
       (data.departures||[]).forEach(d => {
