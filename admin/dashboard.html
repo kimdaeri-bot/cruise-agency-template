@@ -1909,21 +1909,28 @@ ${remarksHtml}
 
     // 일정표
     const itinTable = (p.itinerary||[]).length
-      ? p.itinerary.map((it,i) => {
-          const imgs = (it.images||[]).map(img => `<img src="${esc(img)}" style="width:120px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
-          const desc = (it.description||it.note||'').replace(/\n/g,'<br>');
-          return `<div style="border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;margin-bottom:8px">
-            <div style="background:#1a237e;padding:10px 14px;display:flex;align-items:center;gap:10px">
-              <span style="background:#fff;color:#1a237e;font-weight:900;font-size:13px;padding:3px 10px;border-radius:20px">${esc(it.day||String(i+1))}일차</span>
-              ${it.date?`<span style="color:rgba(255,255,255,.7);font-size:12px">${esc(it.date)}</span>`:''}
-              <span style="color:#fff;font-weight:700;font-size:14px">${esc(it.city||it.port||'')}</span>
-            </div>
-            <div style="padding:12px 14px;background:#fff">
-              ${desc?`<div style="font-size:13px;color:#444;line-height:1.8;margin-bottom:${imgs?'10px':'0'}">${desc}</div>`:''}
-              ${imgs?`<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">${imgs}</div>`:''}
-            </div>
-          </div>`;
-        }).join('')
+      ? `<div style="position:relative;padding-left:30px">
+          <div style="position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:linear-gradient(to bottom,#1a237e,#90caf9)"></div>
+          ${p.itinerary.map((it,i) => {
+            const imgs = (it.images||[]).map(img => `<img src="${esc(img)}" style="width:110px;height:78px;object-fit:cover;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
+            const desc = (it.description||it.note||'').replace(/\n/g,'<br>');
+            const dotColor = i===0?'#e53935':i===(p.itinerary.length-1)?'#2e7d32':'#1a237e';
+            return `<div style="position:relative;margin-bottom:16px">
+              <div style="position:absolute;left:-22px;top:14px;width:12px;height:12px;border-radius:50%;background:${dotColor};border:2px solid #fff;box-shadow:0 0 0 2px ${dotColor}"></div>
+              <div style="border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.06)">
+                <div style="background:linear-gradient(135deg,#1a237e,#283593);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                  <span style="background:#fff;color:#1a237e;font-weight:900;font-size:12px;padding:2px 10px;border-radius:20px">Day ${esc(it.day||String(i+1))}</span>
+                  ${it.date?`<span style="color:rgba(255,255,255,.7);font-size:11px">${esc(it.date)}</span>`:''}
+                  <span style="color:#fff;font-weight:700;font-size:14px">${esc(it.city||it.port||'')}</span>
+                </div>
+                <div style="padding:12px 14px;background:#fff">
+                  ${desc?`<div style="font-size:13px;color:#444;line-height:1.8;margin-bottom:${imgs?'10px':'0'}">${desc}</div>`:''}
+                  ${imgs?`<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">${imgs}</div>`:''}
+                </div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>`
       : '<p style="color:#aaa;font-size:13px;padding:8px 0">일정 정보 없음</p>';
 
     // 포함/불포함
@@ -2174,21 +2181,23 @@ ${remarksHtml}
     const introHtml = introImgs.map(img => `<img src="${img}" alt="" style="max-width:100%;display:block;margin:0 auto 4px">`).join('');
 
     // 일정 Day 카드
-    const itinCardsHtml = itinerary.map((it, i) => {
+    const itinCardsHtml = `<div class="czn-itin-timeline">${itinerary.map((it, i) => {
       const imgs = (it.images||[]).map(img => `<img src="${img}" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
       const desc = (it.description||'').replace(/\n/g,'<br>');
       return `<div class="czn-day-card">
-        <div class="czn-day-header">
-          <div class="czn-day-badge">Day ${it.day||i+1}</div>
-          ${it.date?`<span class="czn-day-date">${it.date}</span>`:''}
-          <span class="czn-day-city">${it.city||''}</span>
-        </div>
-        <div class="czn-day-body">
-          ${desc?`<div class="czn-day-desc">${desc}</div>`:''}
-          ${imgs?`<div class="czn-day-imgs">${imgs}</div>`:''}
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day ${it.day||i+1}</div>
+            ${it.date?`<span class="czn-day-date">${it.date}</span>`:''}
+            <span class="czn-day-city">${it.city||''}</span>
+          </div>
+          <div class="czn-day-body">
+            ${desc?`<div class="czn-day-desc">${desc}</div>`:''}
+            ${imgs?`<div class="czn-day-imgs">${imgs}</div>`:''}
+          </div>
         </div>
       </div>`;
-    }).join('');
+    }).join('')}</div>`;
 
     return `<!DOCTYPE html>
 <html lang="ko">
@@ -2234,8 +2243,14 @@ a{text-decoration:none;color:inherit}
 /* 포함불포함 */
 .czn-list-item{padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:14px;line-height:1.7}
 .czn-list-item:last-child{border:none}
-/* Day 카드 */
-.czn-day-card{border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;margin-bottom:12px}
+/* Day 카드 — 타임라인 */
+.czn-itin-timeline{position:relative;padding-left:32px}
+.czn-itin-timeline::before{content:'';position:absolute;left:11px;top:10px;bottom:10px;width:2px;background:linear-gradient(to bottom,#1a237e,#90caf9)}
+.czn-day-card{position:relative;margin-bottom:20px}
+.czn-day-card::before{content:'';position:absolute;left:-22px;top:18px;width:14px;height:14px;border-radius:50%;background:#1a237e;border:3px solid #fff;box-shadow:0 0 0 2px #1a237e;z-index:1}
+.czn-day-card:first-child::before{background:#e53935;box-shadow:0 0 0 2px #e53935}
+.czn-day-card:last-child::before{background:#2e7d32;box-shadow:0 0 0 2px #2e7d32}
+.czn-day-inner{border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .czn-day-header{background:linear-gradient(135deg,#1a237e,#283593);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .czn-day-badge{background:#fff;color:#1a237e;font-weight:900;font-size:13px;padding:3px 12px;border-radius:20px;white-space:nowrap}
 .czn-day-date{color:rgba(255,255,255,.75);font-size:12px}
