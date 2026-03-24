@@ -1766,42 +1766,88 @@ ${remarksHtml}
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || '파싱 실패');
 
-      // 폼에 자동 채우기
-      if (data.title) document.getElementById('prTitle').value = data.title;
-      if (data.cruiseline) document.getElementById('prCruiseline').value = data.cruiseline;
-      if (data.ship) document.getElementById('prShip').value = data.ship;
+      // ── 기본 정보 ──
+      if (data.title)     document.getElementById('prTitle').value = data.title;
+      if (data.cruiseline) {
+        const sel = document.getElementById('prCruiseline');
+        // 드롭다운에 없는 선사면 직접 입력 가능하도록 옵션 추가
+        if (![...sel.options].some(o => o.value === data.cruiseline)) {
+          const opt = document.createElement('option'); opt.value = opt.text = data.cruiseline; sel.appendChild(opt);
+        }
+        sel.value = data.cruiseline;
+      }
+      if (data.ship)     document.getElementById('prShip').value = data.ship;
       if (data.category) document.getElementById('prCategory').value = data.category;
-      if (data.nights) document.getElementById('prNights').value = data.nights;
-      if (data.desc) document.getElementById('prDesc').value = data.desc;
+      if (data.nights)   document.getElementById('prNights').value = data.nights;
+      if (data.desc)     document.getElementById('prDesc').value = data.desc;
       if (data.included) document.getElementById('prIncluded').value = (data.included||[]).join('\n');
       if (data.excluded) document.getElementById('prExcluded').value = (data.excluded||[]).join('\n');
 
-      // 이미지
-      if (data.images && data.images.length) {
+      // ── 이미지 (thumbImages 우선, 없으면 images) ──
+      const imgs = data.thumbImages || data.images || [];
+      if (imgs.length) {
         const wrap = document.getElementById('prImageRows');
-        wrap.innerHTML = data.images.map((u, i) => `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
+        wrap.innerHTML = imgs.slice(0,5).map((u, i) => `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
           <input type="url" class="pr-img-input" value="${esc(u)}" placeholder="이미지 URL ${i+1}" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateImgPreview()">
           ${i===0?`<button onclick="addImgRow()" style="padding:8px 14px;background:#e8eaf6;border:none;border-radius:6px;cursor:pointer;font-size:16px;color:#1a237e">＋</button>`:`<button onclick="removeImgRow(this)" style="padding:8px 14px;background:#fbe9e7;border:none;border-radius:6px;cursor:pointer;font-size:14px;color:#e53935">✕</button>`}
         </div>`).join('');
         updateImgPreview();
       }
 
-      // 출발일
+      // ── 출발일 ──
       document.getElementById('prDepartures').innerHTML = '';
-      (data.departures||[]).forEach(d => addDepartureTag(d));
+      (data.departures||[]).forEach(d => {
+        const dateStr = d.date || d;
+        if (dateStr) addDepartureTag(dateStr);
+      });
 
-      // 요금표
+      // ── 요금표 ──
       if (data.fares && data.fares.length) {
         document.getElementById('prFareBody').innerHTML = data.fares.map(f =>
-          makeFareRow(f.type, f.priceKRW || f.price || 0, f.note||'')
+          makeFareRow(f.type||'', f.priceKRW || f.price || 0, f.note||'')
         ).join('');
+      } else if (data.departures && data.departures[0] && data.departures[0].priceAdult) {
+        // departures에서 객실/가격 추출
+        const dep = data.departures[0];
+        document.getElementById('prFareBody').innerHTML =
+          makeFareRow(dep.cabin||'성인', dep.priceAdult||0, '원화 기준') +
+          (dep.priceChild ? makeFareRow('아동', dep.priceChild, '원화 기준') : '');
       }
 
-      // 일정표
+      // ── 항공 일정 ──
+      const fo = data.flightOut || {};
+      const fi = data.flightIn  || {};
+      if (fo.airline || fo.flightNo) {
+        document.getElementById('flOutAirline').value = fo.airline   || '';
+        document.getElementById('flOutNo').value      = fo.flightNo  || '';
+        document.getElementById('flOutDepTime').value = fo.depTime   || '';
+        document.getElementById('flOutArrTime').value = fo.arrTime   || '';
+        document.getElementById('flOutDepDate').value = fo.depDate   || '';
+        document.getElementById('flOutArrDate').value = fo.arrDate   || '';
+        document.getElementById('flOutDepPort').value = fo.depPort   || '';
+        document.getElementById('flOutArrPort').value = fo.arrPort   || '';
+      }
+      if (fi.airline || fi.flightNo) {
+        document.getElementById('flInAirline').value  = fi.airline   || '';
+        document.getElementById('flInNo').value       = fi.flightNo  || '';
+        document.getElementById('flInDepTime').value  = fi.depTime   || '';
+        document.getElementById('flInArrTime').value  = fi.arrTime   || '';
+        document.getElementById('flInDepDate').value  = fi.depDate   || '';
+        document.getElementById('flInArrDate').value  = fi.arrDate   || '';
+        document.getElementById('flInDepPort').value  = fi.depPort   || '';
+        document.getElementById('flInArrPort').value  = fi.arrPort   || '';
+      }
+
+      // ── 일정표 (신버전 카드 방식) ──
       if (data.itinerary && data.itinerary.length) {
-        document.getElementById('prItineraryBody').innerHTML = data.itinerary.map(it =>
-          makeItinRow(it.day, it.port, it.arrive||'', it.depart||'', it.note||'')
-        ).join('');
+        document.getElementById('prItineraryBody').innerHTML =
+          data.itinerary.map(it => makeItinCard({
+            day: it.day || '',
+            date: it.date || '',
+            city: it.city || it.port || '',
+            description: it.description || it.note || '',
+            images: it.images || []
+          })).join('');
       }
 
       status.textContent = '✅ 자동 입력 완료! 내용을 확인하고 저장하세요.';
