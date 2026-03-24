@@ -17,8 +17,10 @@ a{text-decoration:none;color:inherit}
 .czn-nav a{padding:14px 22px;font-size:14px;font-weight:700;color:#888;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .15s}
 .czn-nav a.on,.czn-nav a:hover{color:#1a237e;border-bottom-color:#1a237e}
 /* Layout */
-.czn-wrap{max-width:1080px;margin:0 auto;padding:24px 16px;display:grid;grid-template-columns:1fr 320px;gap:24px}
-@media(max-width:768px){.czn-wrap{grid-template-columns:1fr}.czn-side{order:-1}}
+.czn-gallery-wrap{max-width:1080px;margin:0 auto;padding:20px 16px 0}
+.czn-title-wrap{max-width:1080px;margin:0 auto;padding:14px 16px 0}
+.czn-wrap{max-width:1080px;margin:0 auto;padding:16px 16px;display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+@media(max-width:768px){.czn-wrap{grid-template-columns:1fr}.czn-side{order:unset}}
 /* Slider */
 .czn-sl-wrap{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0a1628}
 .czn-slide{display:none;width:100%;height:100%}
@@ -100,32 +102,72 @@ a{text-decoration:none;color:inherit}
 <!-- 스티키 탭 네비게이션 -->
 <nav class="czn-nav" id="cznNav">
   <a class="on" onclick="scrollTo('sec-intro')">상품소개</a>
+  <a onclick="scrollTo('sec-flight')">항공일정</a>
   <a onclick="scrollTo('sec-itin')">여행일정</a>
   <a onclick="scrollTo('sec-inc')">포함사항</a>
   <a onclick="scrollTo('sec-exc')">불포함사항</a>
   
 </nav>
 
+<!-- 갤러리 풀폭 -->
+<div class="czn-gallery-wrap">
+  <!-- 갤러리: 좌측 큰 이미지 + 우측 2×2 그리드 -->
+    <div style="height:300px;background:#0a1628;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:60px">🚢</div>
+</div>
+
+<!-- 상품 제목 -->
+<div class="czn-title-wrap">
+  
+  <h1 style="font-size:24px;font-weight:900;color:#111;line-height:1.3;margin-bottom:4px">싱가포르 디즈니 크루즈 6일</h1>
+  <div style="font-size:14px;color:#555;margin-top:6px">🚢 디즈니 크루즈 · 디즈니 어드벤쳐호 </div>
+</div>
+
 <div class="czn-wrap">
   <!-- ===== 메인 ===== -->
   <div class="czn-main">
-
-    <!-- 슬라이더 -->
-    <div class="czn-sl-wrap" id="cznSlider">
-      <div class="czn-slide active" style="display:flex;align-items:center;justify-content:center;font-size:60px;height:100%">🚢</div>
-      <div class="czn-sl-nav">
-        <button class="czn-sl-btn" onclick="slideStep(-1)">‹</button>
-        <button class="czn-sl-btn" onclick="slideStep(1)">›</button>
-      </div>
-      <div class="czn-sl-dots" id="cznDots"></div>
-      <div class="czn-sl-cnt" id="cznCount"></div>
-    </div>
-    <div class="czn-thumbs"></div>
 
     <!-- 상품 소개 -->
     <div class="czn-sec" id="sec-intro">
       <div class="czn-sec-title">🎯 상품 소개</div>
       <div class="czn-intro"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_596eb19d7f5746d5a2460f77f668f1cb.jpg" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_82b688f837fd4e4a9ff50fda8b2dfc96.jpg" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_7a92496a2185434eba9b8b898308f17b.jpg" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_3f7b5259eecd46f48a8dd5c14cd8ba91.png" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_37a878bf546445f2ab69966e18aefaaa.jpg" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_1feae9fd65544321aca9a6a3f408e2a9.jpg" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_e0aa9fa7c92641788b80298dd065c766.png" alt="" style="max-width:100%;display:block;margin:0 auto 4px"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202603/cruznara_7dca6fbacfac498f934752fe19efe19e.jpg" alt="" style="max-width:100%;display:block;margin:0 auto 4px"></div>
+    </div>
+
+    <!-- 항공 일정 (메인) -->
+    
+    <div class="czn-sec" id="sec-flight">
+      <div class="czn-sec-title">✈️ 항공 일정</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#1a6fd4;border-radius:14px;overflow:hidden">
+          <div style="padding:12px 16px;text-align:center;font-size:14px;font-weight:700;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)">출발</div>
+          <div style="padding:18px 16px">
+            <div style="text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-bottom:2px">✈ 아시아나항공</div>
+            <div style="text-align:center;color:#a8d8ff;font-size:13px;font-weight:700;margin-bottom:16px">OZ751</div>
+            <div style="position:relative;height:2px;background:rgba(255,255,255,.25);margin:0 6px 16px">
+              <span style="position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+              <span style="position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">16:10</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026.06.21</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">인천ICN</div></div>
+              <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">21:30</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026.06.21</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">싱가폴SIN</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#e53935;border-radius:14px;overflow:hidden">
+          <div style="padding:12px 16px;text-align:center;font-size:14px;font-weight:700;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)">귀국</div>
+          <div style="padding:18px 16px">
+            <div style="text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-bottom:2px">✈ 아시아나항공</div>
+            <div style="text-align:center;color:#ffcdd2;font-size:13px;font-weight:700;margin-bottom:16px">OZ752</div>
+            <div style="position:relative;height:2px;background:rgba(255,255,255,.25);margin:0 6px 16px">
+              <span style="position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+              <span style="position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">22:50</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026.06.26</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">싱가폴SIN</div></div>
+              <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">06:40</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026.06.26</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">인천ICN</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- 여행 일정 -->
@@ -222,20 +264,6 @@ a{text-decoration:none;color:inherit}
 
   <!-- ===== 사이드바 ===== -->
   <div class="czn-side">
-    <!-- 상단 정보 카드 -->
-    <div class="czn-card" style="margin-bottom:10px">
-      <div class="czn-card-hd">싱가포르 디즈니 크루즈 6일</div>
-      <div class="czn-card-bd" style="padding:14px 16px">
-        
-        <div style="font-size:13px;color:#444;margin-bottom:6px">🚢 디즈니 크루즈 · 디즈니 어드벤쳐호</div>
-        
-      <div class="czn-flight-box">
-        <div class="czn-flight-row"><span class="czn-fl-label">출발</span><span class="czn-fl-al">아시아나항공 OZ751</span><span class="czn-fl-t">16:10</span><span class="czn-fl-p">인천ICN</span><span class="czn-fl-arr">→</span><span class="czn-fl-t">21:30</span><span class="czn-fl-p">싱가폴SIN</span></div>
-        <div class="czn-flight-row"><span class="czn-fl-label czn-fl-ret">귀국</span><span class="czn-fl-al">아시아나항공 OZ752</span><span class="czn-fl-t">22:50</span><span class="czn-fl-p">싱가폴SIN</span><span class="czn-fl-arr">→</span><span class="czn-fl-t">06:40</span><span class="czn-fl-p">인천ICN</span></div>
-      </div>
-      </div>
-    </div>
-
     <!-- 객실 선택 카드 -->
     <div class="czn-card" style="margin-bottom:10px">
       <div class="czn-card-bd" style="padding:14px 16px">
@@ -330,10 +358,25 @@ a{text-decoration:none;color:inherit}
 <footer class="czn-ft">크루즈나라 | 📞 1577-3227 | 아남항공 주식회사</footer>
 
 <script>
-  // 슬라이더
+  // 갤러리
+  const czImgs = [];
+  let czGalIdx = 0;
+  function selectGallery(i) { czGalIdx=i; document.getElementById('czn-main-img').src=czImgs[i]||czImgs[0]; }
+  function openGallery(i) { czGalIdx=i; modalGoto(i); document.getElementById('czn-gallery-modal').style.display='flex'; }
+  function closeGallery() { document.getElementById('czn-gallery-modal').style.display='none'; }
+  function modalNav(d) { modalGoto((czGalIdx+d+czImgs.length)%czImgs.length); }
+  function modalGoto(i) {
+    czGalIdx=i;
+    document.getElementById('czn-modal-img').src=czImgs[i]||'';
+    document.getElementById('czn-modal-cnt').textContent=(i+1)+' / '+czImgs.length;
+    document.querySelectorAll('[id^=mthumb]').forEach((t,j)=>t.style.borderColor=j===i?'#fff':'transparent');
+    const t=document.getElementById('mthumb'+i); if(t) t.scrollIntoView({inline:'center',behavior:'smooth'});
+  }
+  document.addEventListener('keydown',e=>{if(document.getElementById('czn-gallery-modal').style.display==='flex'){if(e.key==='ArrowLeft')modalNav(-1);if(e.key==='ArrowRight')modalNav(1);if(e.key==='Escape')closeGallery();}});
+  // 슬라이더 (compat)
   let czn_idx=0; const czn_total=0;
-  function gotoSlide(i){czn_idx=(i+czn_total)%czn_total;document.querySelectorAll('.czn-slide').forEach((s,j)=>s.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-dot').forEach((d,j)=>d.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-thumb').forEach((t,j)=>t.classList.toggle('active',j===czn_idx));const c=document.getElementById('cznCount');if(c)c.textContent=(czn_idx+1)+' / '+czn_total;}
-  function slideStep(d){gotoSlide(czn_idx+d);}
+  function gotoSlide(i){czn_idx=i; selectGallery(i);}
+  function slideStep(d){gotoSlide((czn_idx+d+czn_total)%czn_total);}
   function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-(56+42));}
   // 스크롤 시 네비 활성화
   window.addEventListener('scroll',()=>{const secs=['sec-intro','sec-itin','sec-inc','sec-exc','sec-notice'];const links=document.querySelectorAll('.czn-nav a');let cur=0;secs.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});links.forEach((l,i)=>l.classList.toggle('on',i===cur));});
