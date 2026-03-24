@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[6월2일 출발, 발코니] ALL-INCLUSIVE 이탈리아/프랑스/스페인 3개국 크루즈 11일 — 크루즈나라</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f5f6fa;color:#222}
+a{text-decoration:none;color:inherit}
+/* Header */
+.czn-hd{background:#1a237e;padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.czn-hd-logo{color:#fff;font-size:17px;font-weight:900}
+.czn-hd-phone{color:#ffeb3b;font-size:13px;font-weight:700}
+/* Sticky nav tabs */
+.czn-nav{position:sticky;top:56px;z-index:150;background:#fff;border-bottom:2px solid #e0e6ff;display:flex;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.czn-nav a{padding:14px 22px;font-size:14px;font-weight:700;color:#888;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .15s}
+.czn-nav a.on,.czn-nav a:hover{color:#1a237e;border-bottom-color:#1a237e}
+/* Layout */
+.czn-gallery-wrap{max-width:1080px;margin:0 auto;padding:20px 16px 0}
+.czn-title-wrap{max-width:1080px;margin:0 auto;padding:14px 16px 0}
+.czn-wrap{max-width:1080px;margin:0 auto;padding:16px 16px;display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+@media(max-width:768px){.czn-wrap{grid-template-columns:1fr}.czn-side{order:unset}}
+/* Slider */
+.czn-sl-wrap{border-radius:12px;overflow:hidden;position:relative;aspect-ratio:16/9;background:#0a1628}
+.czn-slide{display:none;width:100%;height:100%}
+.czn-slide.active{display:block}
+.czn-slide img{width:100%;height:100%;object-fit:cover}
+.czn-sl-nav{position:absolute;top:50%;transform:translateY(-50%);display:flex;justify-content:space-between;width:100%;padding:0 12px;pointer-events:none}
+.czn-sl-btn{pointer-events:all;background:rgba(0,0,0,.5);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.czn-sl-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.czn-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:background .2s}
+.czn-dot.active{background:#fff}
+.czn-sl-cnt{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px}
+.czn-thumbs{display:flex;gap:6px;margin-top:8px;overflow-x:auto;padding-bottom:4px}
+.czn-thumb{width:72px;height:54px;border-radius:6px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid transparent;transition:border-color .2s}
+.czn-thumb.active{border-color:#1a237e}
+.czn-thumb img{width:100%;height:100%;object-fit:cover}
+/* Section */
+.czn-sec{background:#fff;border-radius:12px;padding:24px;margin-top:16px}
+.czn-sec-title{font-size:16px;font-weight:900;color:#1a237e;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #e8eaf6;display:flex;align-items:center;gap:8px}
+/* 상품소개 이미지 */
+.czn-intro img{max-width:100%;display:block;margin:0 auto 4px}
+/* 포함불포함 */
+.czn-list-item{padding:9px 0;border-bottom:1px solid #f0f0f0;font-size:14px;line-height:1.7}
+.czn-list-item:last-child{border:none}
+/* Day 카드 — 타임라인 */
+.czn-itin-timeline{position:relative;padding-left:32px}
+.czn-itin-timeline::before{content:'';position:absolute;left:11px;top:10px;bottom:10px;width:2px;background:linear-gradient(to bottom,#1a237e,#90caf9)}
+.czn-day-card{position:relative;margin-bottom:20px}
+.czn-day-card::before{content:'';position:absolute;left:-22px;top:18px;width:14px;height:14px;border-radius:50%;background:#1a237e;border:3px solid #fff;box-shadow:0 0 0 2px #1a237e;z-index:1}
+.czn-day-card:first-child::before{background:#e53935;box-shadow:0 0 0 2px #e53935}
+.czn-day-card:last-child::before{background:#2e7d32;box-shadow:0 0 0 2px #2e7d32}
+.czn-day-inner{border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.czn-day-header{background:linear-gradient(135deg,#1a237e,#283593);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.czn-day-badge{background:#fff;color:#1a237e;font-weight:900;font-size:13px;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.czn-day-date{color:rgba(255,255,255,.75);font-size:12px}
+.czn-day-city{color:#fff;font-weight:700;font-size:15px}
+.czn-day-body{padding:14px 16px;background:#fff}
+.czn-day-desc{font-size:13px;color:#444;line-height:1.85;margin-bottom:10px}
+.czn-day-imgs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+/* 사이드바 */
+.czn-side{position:sticky;top:112px;align-self:start}
+.czn-card{background:#fff;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.1);overflow:hidden;margin-bottom:14px}
+.czn-card-hd{background:#1a237e;color:#fff;padding:14px 18px;font-size:14px;font-weight:700;line-height:1.4}
+.czn-card-bd{padding:18px}
+.czn-info-row{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;font-size:13px}
+.czn-info-lbl{color:#888;white-space:nowrap;min-width:58px}
+.czn-info-val{font-weight:700;color:#222}
+.czn-price-box{background:#fff8f0;border:1px solid #ffe0b2;border-radius:8px;padding:14px;margin-bottom:14px;text-align:center}
+.czn-price-cabin{font-size:12px;color:#e65100;font-weight:700;margin-bottom:4px}
+.czn-price-amount{font-size:28px;font-weight:900;color:#e65100}
+.czn-price-unit{font-size:11px;color:#888;margin-top:2px}
+.czn-btn-tel{display:block;width:100%;padding:14px;background:#1a237e;color:#fff;text-align:center;border-radius:8px;font-size:14px;font-weight:700;margin-bottom:8px;cursor:pointer;border:none;font-family:inherit}
+.czn-btn-kko{display:block;width:100%;padding:13px;background:#FEE500;color:#191919;text-align:center;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:inherit}
+.czn-dep-tab{border:1.5px solid #e0e0e0;border-radius:8px;padding:10px 12px;cursor:pointer;transition:all .15s;margin-bottom:8px}
+.czn-dep-tab.active{border-color:#1a237e;background:#e8eaf6}
+.czn-dep-date{font-size:13px;font-weight:700;color:#1a237e}
+.czn-dep-cabin{font-size:11px;color:#666;margin-top:2px}
+.czn-dep-price{font-size:15px;font-weight:900;color:#e65100;margin-top:2px}
+/* 항공 */
+.czn-fl-box{background:#f0f4ff;border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px}
+.czn-flight-row{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.czn-flight-row:last-child{margin:0}
+.czn-fl-label{background:#1a237e;color:#fff;padding:2px 7px;border-radius:4px;font-weight:700;font-size:10px}
+.czn-fl-ret{background:#e53935}
+.czn-fl-al{font-weight:700}
+.czn-fl-t{font-weight:700;color:#1a237e}
+.czn-fl-p{color:#555}
+.czn-fl-arr{color:#aaa}
+/* Footer */
+.czn-ft{background:#1a237e;color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:12px;margin-top:40px}
+.czn-src{font-size:11px;color:#aaa;text-align:right;margin-top:8px}
+</style>
+</head>
+<body>
+<header class="czn-hd">
+  <div class="czn-hd-logo">🚢 크루즈나라</div>
+  <a href="tel:1577-3227" class="czn-hd-phone">📞 1577-3227</a>
+</header>
+
+<!-- 스티키 탭 네비게이션 -->
+<nav class="czn-nav" id="cznNav">
+  <a class="on" onclick="scrollTo('sec-intro')">상품소개</a>
+  <a onclick="scrollTo('sec-flight')">항공일정</a>
+  <a onclick="scrollTo('sec-itin')">여행일정</a>
+  <a onclick="scrollTo('sec-inc')">포함사항</a>
+  <a onclick="scrollTo('sec-exc')">불포함사항</a>
+  <a onclick="scrollTo('sec-notice')">유의사항</a>
+</nav>
+
+<!-- 갤러리 풀폭 -->
+<div class="czn-gallery-wrap">
+  <!-- 갤러리: 좌측 큰 이미지 + 우측 2×2 그리드 -->
+    
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:4px;border-radius:14px;overflow:hidden;background:#000;cursor:pointer" onclick="openGallery(0)" id="czn-gallery">
+      <!-- 메인 이미지 -->
+      <div style="position:relative;aspect-ratio:4/3;overflow:hidden">
+        <img id="czn-main-img" src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000385.jpg" style="width:100%;height:100%;object-fit:cover;transition:opacity .3s">
+      </div>
+      <!-- 우측 2×2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px">
+        
+        <div style="position:relative;overflow:hidden;cursor:pointer" onclick="event.stopPropagation();selectGallery(1)">
+          <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000386.jpg" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1;transition:opacity .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+          
+        </div>
+        <div style="position:relative;overflow:hidden;cursor:pointer" onclick="event.stopPropagation();selectGallery(2)">
+          <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000387.jpg" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1;transition:opacity .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+          
+        </div>
+        <div style="position:relative;overflow:hidden;cursor:pointer" onclick="event.stopPropagation();selectGallery(3)">
+          <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000388.jpg" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1;transition:opacity .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+          
+        </div>
+        <div style="position:relative;overflow:hidden;cursor:pointer" onclick="event.stopPropagation();selectGallery(4)">
+          <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000389.jpg" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1;transition:opacity .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+          <div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:900">+3</div>
+        </div>
+        
+        
+        
+        
+      </div>
+    </div>
+    <!-- 갤러리 전체보기 모달 -->
+    <div id="czn-gallery-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center">
+      <button onclick="closeGallery()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer">✕</button>
+      <div style="position:relative;max-width:90vw;max-height:80vh">
+        <img id="czn-modal-img" src="" style="max-width:90vw;max-height:80vh;object-fit:contain;border-radius:8px">
+        <button onclick="modalNav(-1)" style="position:absolute;left:-50px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer">‹</button>
+        <button onclick="modalNav(1)" style="position:absolute;right:-50px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer">›</button>
+      </div>
+      <div id="czn-modal-thumbs" style="display:flex;gap:8px;margin-top:14px;overflow-x:auto;max-width:90vw;padding:4px">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000385.jpg" onclick="modalGoto(0)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000386.jpg" onclick="modalGoto(1)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb1"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000387.jpg" onclick="modalGoto(2)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb2"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000388.jpg" onclick="modalGoto(3)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb3"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000389.jpg" onclick="modalGoto(4)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb4"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202511/cruznara_3fcffd23bee140c5b2422d8f624217e4.jpg" onclick="modalGoto(5)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb5"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202511/cruznara_42d92a8353164d449d7670550028b4a0.jpg" onclick="modalGoto(6)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb6"><img src="https://www.cruznara.com/upload/cruznara/ckeditor/202511/cruznara_1f788ece240649d1822b699a046aa482.jpg" onclick="modalGoto(7)" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb7">
+      </div>
+      <div style="color:rgba(255,255,255,.6);font-size:13px;margin-top:8px" id="czn-modal-cnt"></div>
+    </div>
+    
+</div>
+
+<!-- 상품 제목 -->
+<div class="czn-title-wrap">
+  <div style="font-size:12px;color:#888;margin-bottom:6px">상품번호 P-E-QR-4</div>
+  <h1 style="font-size:24px;font-weight:900;color:#111;line-height:1.3;margin-bottom:4px">[6월2일 출발, 발코니] ALL-INCLUSIVE 이탈리아/프랑스/스페인 3개국 크루즈 11일</h1>
+  
+</div>
+
+<div class="czn-wrap">
+  <!-- ===== 메인 ===== -->
+  <div class="czn-main">
+
+    <!-- 상품 소개 -->
+    <div class="czn-sec" id="sec-intro">
+      <div class="czn-sec-title">🎯 상품 소개</div>
+      <div class="czn-intro"><p style="color:#aaa;text-align:center;padding:30px">소개 이미지가 없습니다.</p></div>
+    </div>
+
+    <!-- 항공 일정 (메인) -->
+    
+    <div class="czn-sec" id="sec-flight">
+      <div class="czn-sec-title">✈️ 항공 일정</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:#1a6fd4;border-radius:14px;overflow:hidden">
+          <div style="padding:12px 16px;text-align:center;font-size:14px;font-weight:700;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)">출발</div>
+          <div style="padding:18px 16px">
+            <div style="text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-bottom:2px">✈ 에메레이트항공</div>
+            <div style="text-align:center;color:#a8d8ff;font-size:13px;font-weight:700;margin-bottom:16px">EK323</div>
+            <div style="position:relative;height:2px;background:rgba(255,255,255,.25);margin:0 6px 16px">
+              <span style="position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+              <span style="position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">23:55</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026-06-02</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">인천ICN</div></div>
+              <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">13:25</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026-06-02</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">로마ROM</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:#e53935;border-radius:14px;overflow:hidden">
+          <div style="padding:12px 16px;text-align:center;font-size:14px;font-weight:700;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)">귀국</div>
+          <div style="padding:18px 16px">
+            <div style="text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-bottom:2px">✈ 에메레이트항공</div>
+            <div style="text-align:center;color:#ffcdd2;font-size:13px;font-weight:700;margin-bottom:16px">EK098</div>
+            <div style="position:relative;height:2px;background:rgba(255,255,255,.25);margin:0 6px 16px">
+              <span style="position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+              <span style="position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">15:40</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026-06-12</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">로마ROM</div></div>
+              <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">17:00</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">2026-06-12</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">인천ICN</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 여행 일정 -->
+    <div class="czn-sec" id="sec-itin">
+      <div class="czn-sec-title">🗺️ 여행 일정</div>
+      <div class="czn-itin-timeline"><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 1</div>
+            <span class="czn-day-date">20260602</span>
+            <span class="czn-day-city">인천</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">미팅시간 : 20시 30분<br><br>미팅장소 : 인천국제공항 1터미널 출국장 3층 출국장<br><br>인솔자 미팅 후 항공기 탑승 및 출국 수속<br><br>[23:55] 인천국제공항 출발(EK323편) 약 10시간 15분 소요</div>
+            
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 2</div>
+            <span class="czn-day-date">20260603</span>
+            <span class="czn-day-city">로마</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[04:25] 두바이 국제공항 도착, 로마행 연결편 환승<br><br>[09:10] 두바이 국제공항 출발 (EK097편) // 약 6시간 45분 소요<br><br>[13:25] 로마 국제공항 도착<br><br>[14:00] 가이드 미팅 후 로마 시내로 이동<br><br>[ 로마 시내 관광 ]<br><br>▣ 나보나 광장 관광 및 자유시간<br><br>[19:30] 저녁 식사 후 호텔로 이동, 체크인 후 휴식</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000246.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000247.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000432.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 3</div>
+            <span class="czn-day-date">20260604</span>
+            <span class="czn-day-city">로마</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[08:00] 호텔 조식 후 가이드 미팅<br>[ 로마 관광 ] &ndash; 상품가에 포함<br><br>▣ 로마 벤츠 투어(스페인광장, 트레비분수, 콜로세움 외관, 판테온 등)<br><br>▣ 스페인광장 자유시간<br>[13:30] 치비타베키아 항구로 이동<br><br>크루즈 터미널 도착, 크루즈 승선 수속<br><br>SHIP TOUR (선내 주요시설 위치 안내)<br><br>[19:00] 로마 출항</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000248.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000249.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000433.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000250.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000251.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000434.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 4</div>
+            <span class="czn-day-date">20260605</span>
+            <span class="czn-day-city">제노아(이탈리아)</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[08:30] 사보나 입항<br><br>[09:00] 콜럼버스의 고향 제노아로 이동<br>[제노아 기항지 선택관광 또는 자유관광]<br><br>- 유명 휴양지, 포르토피노<br><br>- 제노아 구항구, 페라리 광장, 로얄 팰리스 외관<br><br>- 유네스코 세계유산으로 등재된 제노바 역사지구, 산로렌초 성당<br>항구로 귀환 후 크루즈 재승선<br><br>[18:00] 제노아 출항</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/GOA/cruznara_ti0120_30000435.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/GOA/cruznara_ti0120_30000436.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/GOA/cruznara_ti0120_30000437.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/GOA/cruznara_ti0120_30000252.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/GOA/cruznara_ti0120_30000253.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/GOA/cruznara_ti0120_30000254.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 5</div>
+            <span class="czn-day-date">20260606</span>
+            <span class="czn-day-city">마르세이유</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[09:00] 마르세이유 입항<br><br>[10:00] 하선 후 가이드 미팅<br>[마르세이유 기항지 선택관광 또는 자유관광]<br><br>▣ 엑상 프로방스 (생 소뵈르 성당, 미라보 거리, 재래시장 등)<br><br>▣ 마르세이유 구 시가지 및 항구(포트 생장 및 Mucem 외부)<br><br>▣ 사진촬영의 명소 롱샹궁전 등<br>[17:00]  항구로 귀환 후 크루즈 재승선<br><br>[18:00]  마르세이유 출항</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/FR/MRS/cruznara_ti0120_30000442.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/FR/MRS/cruznara_ti0120_30000443.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/FR/MRS/cruznara_ti0120_30000444.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/FR/MRS/cruznara_ti0120_30000445.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/FR/MRS/cruznara_ti0120_30000438.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/FR/MRS/cruznara_ti0120_30000439.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 6</div>
+            <span class="czn-day-date">20260607</span>
+            <span class="czn-day-city">바르셀로나</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[08:00] 스페인 제2의 도시 바르셀로나 입항<br>[ 바르셀로나 기항지 선택관광 또는 자유관광]<br><br>▣ 가우디 건축의 진수를 볼 수 있는 구엘공원<br><br>▣ 가우디의 역작인 사그라다 파밀리아 성당<br><br>▣ 람블라스 거리 자유시간<br>항구로 귀환 후 크루즈 재승선<br><br>[18:00] 바르셀로나 출항</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/ES/BCN/cruznara_ti0120_30000447.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/ES/BCN/cruznara_ti0120_30000448.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/ES/BCN/cruznara_ti0120_30000449.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/ES/BCN/cruznara_ti0120_30000423.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/ES/BCN/cruznara_ti0120_30000424.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/ES/BCN/cruznara_ti0120_30000425.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 7</div>
+            <span class="czn-day-date">20260608</span>
+            <span class="czn-day-city">전일항해</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">선내 시설 및 프로그램 이용 (자유시간)<br><br>- 사우나, SPA, 자쿠지, 실내외 수영장, 헬스클럽<br><br>- 각종 선내 프로그램, 스포츠 댄스 강습, 요가 강습 참여 등</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/TW/TPE/cruznara_ti0120_30000471.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/TW/TPE/cruznara_ti0120_30000473.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/TW/TPE/cruznara_ti0120_30000474.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 8</div>
+            <span class="czn-day-date">20260609</span>
+            <span class="czn-day-city">칼리아리 사르데냐섬</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[07:00] 사르데냐섬 칼리아리 기항<br><br> <br>[ 칼리아리 기항지 선택 관광 ]<br><br>- 칼리아리 시가지 전체를 조망할 수 있는 몬테우르피누 공원<br><br>- 칼리아리 구 시가지 등<br>항구로 귀환 후 크루즈 재승선<br><br>[16:00] 칼리아리 출항</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/CAG/cruznara_ti0120_30000454.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/CAG/cruznara_ti0120_30000455.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/CAG/cruznara_ti0120_30000456.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/CAG/cruznara_ti0120_30000457.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/CAG/cruznara_ti0120_30000458.png" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/CAG/cruznara_ti0120_30000459.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 9</div>
+            <span class="czn-day-date">20260610</span>
+            <span class="czn-day-city">나폴리 폼페이</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[09:00] 세계 3대 미항 나폴리 기항, 폼페이로 이동<br><br> <br>[ 나폴리 기항지 선택 관광 ]<br><br>- 폼페이 유적지 관광 (내부)<br><br>나폴리 움베르토 갤러리, 산 카를로 극장, 누오보 성(외관) 등 자유관광<br>항구로 귀환 후 크루즈 재승선<br><br>[19:00] 나폴리 출항</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/NAP/cruznara_ti0120_30000392.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/NAP/cruznara_ti0120_30000394.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/NAP/cruznara_ti0120_30000393.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/NAP/cruznara_ti0120_30000461.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/NAP/cruznara_ti0120_30000462.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/NAP/cruznara_ti0120_30000463.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 10</div>
+            <span class="czn-day-date">20260611</span>
+            <span class="czn-day-city">로마</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[08:00] 치비타베키아 항구 기항<br><br>[10:00] 크루즈 최종 하선 후 가이드 미팅<br>[ 치비타베키아 관광] &ndash; 상품가에 포함<br><br>- 미켈란젤로 요새 (외부), 항구 인근의 공원에서 자유시간<br><br>** 현지 사정에 따라 공항으로 바로 이동하실 수도 있습니다.<br>[11:30] 공항으로 이동<br><br>[12:30] 로마 국제공항 도착, 출국 수속<br><br>[15:40] 로마 국제공항 출발 (EK098편) 약 5시간 40분<br><br>[23:20] 두바이 국제공항 도착, 인천행 연결편 환승</div>
+            <div class="czn-day-imgs"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000464.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000465.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"><img src="https://www.cruznara.com/upload/cruznara/image/tourinfo/IT/ROM/cruznara_ti0120_30000466.jpg" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'"></div>
+          </div>
+        </div>
+      </div><div class="czn-day-card">
+        <div class="czn-day-inner">
+          <div class="czn-day-header">
+            <div class="czn-day-badge">Day 11</div>
+            <span class="czn-day-date">20260612</span>
+            <span class="czn-day-city">인천</span>
+          </div>
+          <div class="czn-day-body">
+            <div class="czn-day-desc">[03:40] 두바이 국제공항 출발 (EK322편) &ndash; 약 8시간 20분 소요<br><br>[17:00] 인천국제공항 도착</div>
+            
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="czn-sec" id="sec-inc">
+      <div class="czn-sec-title">✅ 포함 사항</div>
+      <div class="czn-list-item">크루즈 객실 (발코니 객실, 항만세 포함)</div><div class="czn-list-item">항공권 (일반석, 인천↔로마, 에미레이트항공 경유)</div><div class="czn-list-item">로마 호텔 1박 & 승선 전/후 관광</div><div class="czn-list-item">전기항지 관광 (제노아,마르세이유,바르셀로나,칼리아리,나폴리)</div><div class="czn-list-item">1억원 여행자보험</div>
+    </div>
+
+    <div class="czn-sec" id="sec-exc">
+      <div class="czn-sec-title">❌ 불포함 사항</div>
+      <div class="czn-list-item">선상팁: 77 유로/인 (국제적 관례에 따른 선내팁으로 1인1박당 11유로 - 선내 결제)</div>
+    </div>
+
+    <div class="czn-sec" id="sec-notice">
+      <div class="czn-sec-title">📌 유의 사항</div>
+      <div class="czn-list-item">크루즈여행에 필요한 서류 및 준비물 등에 대해서는 출발 1개월전에 책자로 별도 안내를 드리겠습니다.</div><div class="czn-list-item">크루즈 객실 및 항공좌석 업그레이드 필요 시 별도 문의바랍니다. (좌석상황, 예약 가능여부, 추가요금 등 안내)</div><div class="czn-list-item">크루즈 여행계약서 상의 취소료 규정을 반드시 확인하여 주시기 바랍니다.</div><div class="czn-list-item">출발 인원 최소 16명 미만 시, 전기항지 관광 일정은 선내 프로그램으로 진행됩니다.</div>
+    </div>
+
+  </div>
+
+  <!-- ===== 사이드바 ===== -->
+  <div class="czn-side">
+    <!-- 객실 선택 카드 -->
+    <div class="czn-card" style="margin-bottom:10px">
+      <div class="czn-card-bd" style="padding:14px 16px">
+        
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px;border:1.5px solid #1a6fd4;border-radius:10px;cursor:pointer;margin-bottom:8px;transition:border-color .15s" onclick="selectCabin(0,this)">
+          <span style="width:18px;height:18px;border-radius:50%;border:2px solid #1a6fd4;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;background:#1a6fd4">
+            <span style="width:8px;height:8px;background:#fff;border-radius:50%;display:block"></span>
+          </span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#222;margin-bottom:3px">발코니 (2인 1실, 1인 요금)</div>
+            <div style="font-size:16px;font-weight:900;color:#1a6fd4">성인 5,890,000원~</div>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- 인원 선택 + 총금액 카드 -->
+    <div class="czn-card" style="margin-bottom:10px">
+      <div class="czn-card-bd" style="padding:16px">
+        <!-- 성인 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#222">성인<span style="font-size:11px;font-weight:400;color:#888;margin-left:4px">(만 12세이상)</span></div>
+            <div style="font-size:18px;font-weight:900;color:#1a6fd4" id="cz-adult-price">0원</div>
+            <div style="font-size:11px;color:#999">유류할증료 0원 포함</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:8px;overflow:hidden">
+            <button onclick="czAdj('adult',-1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">−</button>
+            <span id="cz-adult-cnt" style="width:36px;text-align:center;font-size:15px;font-weight:700">1</span>
+            <button onclick="czAdj('adult',1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">+</button>
+          </div>
+        </div>
+        <!-- 아동 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#222">아동<span style="font-size:11px;font-weight:400;color:#888;margin-left:4px">(만 12세미만)</span></div>
+            <div style="font-size:18px;font-weight:900;color:#1a6fd4" id="cz-child-price">0원</div>
+            <div style="font-size:11px;color:#999">유류할증료 0원 포함</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:8px;overflow:hidden">
+            <button onclick="czAdj('child',-1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">−</button>
+            <span id="cz-child-cnt" style="width:36px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button onclick="czAdj('child',1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">+</button>
+          </div>
+        </div>
+        <!-- 유아 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#222">유아<span style="font-size:11px;font-weight:400;color:#888;margin-left:4px">(만 24개월미만)</span></div>
+            <div style="font-size:18px;font-weight:900;color:#1a6fd4" id="cz-infant-price">0원</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:8px;overflow:hidden">
+            <button onclick="czAdj('infant',-1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">−</button>
+            <span id="cz-infant-cnt" style="width:36px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button onclick="czAdj('infant',1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">+</button>
+          </div>
+        </div>
+        <!-- 총금액 -->
+        <div style="border-top:1px solid #f0f0f0;padding-top:12px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span style="font-size:14px;color:#555">총금액</span>
+            <span id="cz-total" style="font-size:22px;font-weight:900;color:#222">0원</span>
+          </div>
+          <div style="text-align:right;font-size:11px;color:#999;margin-top:2px">유류할증료 &amp; 제세공과금 포함</div>
+        </div>
+        <!-- 예약하기 -->
+        <button onclick="window.open('https://pf.kakao.com/_vSamC/chat','_blank')" style="display:block;width:100%;padding:15px;background:#1a6fd4;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.5px">예약하기</button>
+        <div style="text-align:right;font-size:11px;color:#aaa;margin-top:6px">문의 1577-3227</div>
+      </div>
+    </div>
+
+    <!-- 하단 액션바 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border:1.5px solid #e0e0e0;border-radius:10px;overflow:hidden;background:#fff">
+      <button onclick="window.open('https://pf.kakao.com/_vSamC/chat','_blank')" style="padding:12px 0;border:none;border-right:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">💬 1:1문의</button>
+      <button onclick="window.print()" style="padding:12px 0;border:none;border-right:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">🖨 인쇄</button>
+      <button onclick="alert('준비 중')" style="padding:12px 0;border:none;border-right:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">♡ 찜</button>
+      <button onclick="navigator.share?navigator.share({title:document.title,url:location.href}):navigator.clipboard.writeText(location.href).then(()=>alert('링크 복사됨'))" style="padding:12px 0;border:none;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">공유</button>
+    </div>
+    <div style="margin-top:8px;text-align:right"><div class="czn-src">원본: <a href="https://www.cruznara.com/goods/goods_view?goodSeq=30000081&eventSeq=30000158" target="_blank" style="color:#1a6fd4">출처보기</a></div></div>
+  </div>
+</div>
+
+<footer class="czn-ft">크루즈나라 | 📞 1577-3227 | 아남항공 주식회사</footer>
+
+<script>
+  // 갤러리
+  const czImgs = ["https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000385.jpg","https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000386.jpg","https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000387.jpg","https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000388.jpg","https://www.cruznara.com/upload/cruznara/image/goods/main/30000081/cruznara_cm9900_30000389.jpg","https://www.cruznara.com/upload/cruznara/ckeditor/202511/cruznara_3fcffd23bee140c5b2422d8f624217e4.jpg","https://www.cruznara.com/upload/cruznara/ckeditor/202511/cruznara_42d92a8353164d449d7670550028b4a0.jpg","https://www.cruznara.com/upload/cruznara/ckeditor/202511/cruznara_1f788ece240649d1822b699a046aa482.jpg"];
+  let czGalIdx = 0;
+  function selectGallery(i) { czGalIdx=i; document.getElementById('czn-main-img').src=czImgs[i]||czImgs[0]; }
+  function openGallery(i) { czGalIdx=i; modalGoto(i); document.getElementById('czn-gallery-modal').style.display='flex'; }
+  function closeGallery() { document.getElementById('czn-gallery-modal').style.display='none'; }
+  function modalNav(d) { modalGoto((czGalIdx+d+czImgs.length)%czImgs.length); }
+  function modalGoto(i) {
+    czGalIdx=i;
+    document.getElementById('czn-modal-img').src=czImgs[i]||'';
+    document.getElementById('czn-modal-cnt').textContent=(i+1)+' / '+czImgs.length;
+    document.querySelectorAll('[id^=mthumb]').forEach((t,j)=>t.style.borderColor=j===i?'#fff':'transparent');
+    const t=document.getElementById('mthumb'+i); if(t) t.scrollIntoView({inline:'center',behavior:'smooth'});
+  }
+  document.addEventListener('keydown',e=>{if(document.getElementById('czn-gallery-modal').style.display==='flex'){if(e.key==='ArrowLeft')modalNav(-1);if(e.key==='ArrowRight')modalNav(1);if(e.key==='Escape')closeGallery();}});
+  // 슬라이더 (compat)
+  let czn_idx=0; const czn_total=8;
+  function gotoSlide(i){czn_idx=i; selectGallery(i);}
+  function slideStep(d){gotoSlide((czn_idx+d+czn_total)%czn_total);}
+  function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-(56+42));}
+  // 스크롤 시 네비 활성화
+  window.addEventListener('scroll',()=>{const secs=['sec-intro','sec-itin','sec-inc','sec-exc','sec-notice'];const links=document.querySelectorAll('.czn-nav a');let cur=0;secs.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});links.forEach((l,i)=>l.classList.toggle('on',i===cur));});
+
+  // 객실 선택 + 인원 카운터
+  const czFares = [{"type":"발코니","adult":5890000,"child":0,"infant":0}];
+  let czSel = 0, czCnt = {adult:1, child:0, infant:0};
+  function selectCabin(i, el) {
+    czSel = i;
+    document.querySelectorAll('.czn-card label').forEach((l,j) => {
+      const dot = l.querySelector('span>span');
+      const outer = l.querySelector('span');
+      const active = j===i;
+      l.style.borderColor = active ? '#1a6fd4' : '#e0e0e0';
+      if(outer){ outer.style.background = active?'#1a6fd4':'transparent'; outer.style.borderColor = active?'#1a6fd4':'#ccc'; }
+      if(dot) dot.style.display = active?'block':'none';
+    });
+    czCalc();
+  }
+  function czAdj(type, dir) {
+    czCnt[type] = Math.max(0, czCnt[type] + dir);
+    if(type==='adult' && czCnt.adult < 1) czCnt.adult = 1;
+    document.getElementById('cz-'+type+'-cnt').textContent = czCnt[type];
+    czCalc();
+  }
+  function czCalc() {
+    const f = czFares[czSel] || {adult:0,child:0,infant:0};
+    const total = f.adult*czCnt.adult + f.child*czCnt.child + f.infant*czCnt.infant;
+    document.getElementById('cz-adult-price').textContent = f.adult ? f.adult.toLocaleString()+'원' : '0원';
+    document.getElementById('cz-child-price').textContent = f.child ? f.child.toLocaleString()+'원' : '0원';
+    document.getElementById('cz-infant-price').textContent = f.infant ? f.infant.toLocaleString()+'원' : '0원';
+    document.getElementById('cz-total').textContent = total.toLocaleString()+'원';
+  }
+  czCalc();
+</script>
+</body>
+</html>
