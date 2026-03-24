@@ -903,6 +903,93 @@
         <button onclick="addFareRow()" style="padding:7px 16px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">＋ 객실 추가</button>
       </div>
 
+      <!-- 항공 일정 -->
+      <div class="detail-section">
+        <h4>✈️ 항공 일정</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <!-- 출발 -->
+          <div style="border:2px solid #1a6fd4;border-radius:10px;overflow:hidden">
+            <div style="background:#1a6fd4;padding:8px 14px;text-align:center;font-size:13px;font-weight:700;color:#fff">✈️ 출발</div>
+            <div style="padding:12px;display:flex;flex-direction:column;gap:8px">
+              <div class="fare-input-group">
+                <label>항공사</label>
+                <input type="text" id="flOutAirline" placeholder="에메레이트항공" style="width:100%">
+              </div>
+              <div class="fare-input-group">
+                <label>편명</label>
+                <input type="text" id="flOutNo" placeholder="AM091" style="width:100%">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div class="fare-input-group">
+                  <label>출발 시간</label>
+                  <input type="text" id="flOutDepTime" placeholder="11:30">
+                </div>
+                <div class="fare-input-group">
+                  <label>도착 시간</label>
+                  <input type="text" id="flOutArrTime" placeholder="23:50">
+                </div>
+                <div class="fare-input-group">
+                  <label>출발 날짜</label>
+                  <input type="text" id="flOutDepDate" placeholder="12.09 (수)">
+                </div>
+                <div class="fare-input-group">
+                  <label>도착 날짜</label>
+                  <input type="text" id="flOutArrDate" placeholder="12.09 (수)">
+                </div>
+              </div>
+              <div class="fare-input-group">
+                <label>출발 공항</label>
+                <input type="text" id="flOutDepPort" placeholder="인천ICN 출발">
+              </div>
+              <div class="fare-input-group">
+                <label>도착 공항</label>
+                <input type="text" id="flOutArrPort" placeholder="도착">
+              </div>
+            </div>
+          </div>
+          <!-- 귀국 -->
+          <div style="border:2px solid #e53935;border-radius:10px;overflow:hidden">
+            <div style="background:#e53935;padding:8px 14px;text-align:center;font-size:13px;font-weight:700;color:#fff">✈️ 귀국</div>
+            <div style="padding:12px;display:flex;flex-direction:column;gap:8px">
+              <div class="fare-input-group">
+                <label>항공사</label>
+                <input type="text" id="flInAirline" placeholder="에메레이트항공" style="width:100%">
+              </div>
+              <div class="fare-input-group">
+                <label>편명</label>
+                <input type="text" id="flInNo" placeholder="LA3339" style="width:100%">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <div class="fare-input-group">
+                  <label>출발 시간</label>
+                  <input type="text" id="flInDepTime" placeholder="05:15">
+                </div>
+                <div class="fare-input-group">
+                  <label>도착 시간</label>
+                  <input type="text" id="flInArrTime" placeholder="06:00">
+                </div>
+                <div class="fare-input-group">
+                  <label>출발 날짜</label>
+                  <input type="text" id="flInDepDate" placeholder="01.08 (금)">
+                </div>
+                <div class="fare-input-group">
+                  <label>도착 날짜</label>
+                  <input type="text" id="flInArrDate" placeholder="01.08 (금)">
+                </div>
+              </div>
+              <div class="fare-input-group">
+                <label>출발 공항</label>
+                <input type="text" id="flInDepPort" placeholder="리우 데 자네이루RIO 출발">
+              </div>
+              <div class="fare-input-group">
+                <label>도착 공항</label>
+                <input type="text" id="flInArrPort" placeholder="인천ICN 도착">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 일정표 -->
       <div class="detail-section">
         <h4>일정표</h4>
@@ -1815,6 +1902,41 @@ ${remarksHtml}
         </div>
         ${p.desc ? `<p style="font-size:.9rem;color:#555;line-height:1.7;margin-bottom:16px;padding:12px 16px;background:#f8fafd;border-radius:8px;border-left:3px solid #1a237e">${esc(p.desc)}</p>` : ''}
         ${departureTags ? `<div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:8px">📅 출발 날짜</div>${departureTags}</div>` : ''}
+        ${(p.flightOut?.airline || p.flightIn?.airline) ? `<div style="margin-bottom:20px">
+          <div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:10px">✈️ 항공 일정</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            ${p.flightOut?.airline ? `<div style="border:2px solid #1a6fd4;border-radius:10px;overflow:hidden">
+              <div style="background:#1a6fd4;padding:7px;text-align:center;font-size:12px;font-weight:700;color:#fff">출발</div>
+              <div style="padding:12px;background:#fff">
+                <div style="text-align:center;font-size:12px;color:#888;margin-bottom:2px">🛫 ${esc(p.flightOut.airline||'')}</div>
+                <div style="text-align:center;font-size:11px;color:#1a6fd4;font-weight:700;margin-bottom:8px">${esc(p.flightOut.flightNo||'')}</div>
+                <div style="position:relative;height:2px;background:#e0e0e0;margin:0 8px 12px">
+                  <span style="position:absolute;left:0;top:-4px;width:10px;height:10px;border-radius:50%;background:#1a6fd4"></span>
+                  <span style="position:absolute;right:0;top:-4px;width:10px;height:10px;border-radius:50%;background:#1a6fd4"></span>
+                </div>
+                <div style="display:flex;justify-content:space-between">
+                  <div><div style="font-size:22px;font-weight:900">${esc(p.flightOut.depTime||'')}</div><div style="font-size:11px;color:#888">${esc(p.flightOut.depDate||'')}</div><div style="font-size:11px;color:#555;font-weight:600">${esc(p.flightOut.depPort||'')}</div></div>
+                  <div style="text-align:right"><div style="font-size:22px;font-weight:900">${esc(p.flightOut.arrTime||'')}</div><div style="font-size:11px;color:#888">${esc(p.flightOut.arrDate||'')}</div><div style="font-size:11px;color:#555;font-weight:600">${esc(p.flightOut.arrPort||'')}</div></div>
+                </div>
+              </div>
+            </div>` : ''}
+            ${p.flightIn?.airline ? `<div style="border:2px solid #e53935;border-radius:10px;overflow:hidden">
+              <div style="background:#e53935;padding:7px;text-align:center;font-size:12px;font-weight:700;color:#fff">귀국</div>
+              <div style="padding:12px;background:#fff">
+                <div style="text-align:center;font-size:12px;color:#888;margin-bottom:2px">🛬 ${esc(p.flightIn.airline||'')}</div>
+                <div style="text-align:center;font-size:11px;color:#e53935;font-weight:700;margin-bottom:8px">${esc(p.flightIn.flightNo||'')}</div>
+                <div style="position:relative;height:2px;background:#e0e0e0;margin:0 8px 12px">
+                  <span style="position:absolute;left:0;top:-4px;width:10px;height:10px;border-radius:50%;background:#e53935"></span>
+                  <span style="position:absolute;right:0;top:-4px;width:10px;height:10px;border-radius:50%;background:#e53935"></span>
+                </div>
+                <div style="display:flex;justify-content:space-between">
+                  <div><div style="font-size:22px;font-weight:900">${esc(p.flightIn.depTime||'')}</div><div style="font-size:11px;color:#888">${esc(p.flightIn.depDate||'')}</div><div style="font-size:11px;color:#555;font-weight:600">${esc(p.flightIn.depPort||'')}</div></div>
+                  <div style="text-align:right"><div style="font-size:22px;font-weight:900">${esc(p.flightIn.arrTime||'')}</div><div style="font-size:11px;color:#888">${esc(p.flightIn.arrDate||'')}</div><div style="font-size:11px;color:#555;font-weight:600">${esc(p.flightIn.arrPort||'')}</div></div>
+                </div>
+              </div>
+            </div>` : ''}
+          </div>
+        </div>` : ''}
         <div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:4px">💰 요금표</div>${fareTable}</div>
         <div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:4px">🗺️ 항구 일정</div>${itinTable}</div>
         ${incExc ? `<div style="margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:4px">📋 포함/불포함</div>${incExc}</div>` : ''}
@@ -2297,6 +2419,11 @@ a { text-decoration: none; color: inherit; }
     document.getElementById('prDesc').value = '';
     document.getElementById('prIncluded').value = '';
     document.getElementById('prExcluded').value = '';
+    // 항공 초기화
+    ['flOutAirline','flOutNo','flOutDepTime','flOutArrTime','flOutDepDate','flOutArrDate','flOutDepPort','flOutArrPort',
+     'flInAirline','flInNo','flInDepTime','flInArrTime','flInDepDate','flInArrDate','flInDepPort','flInArrPort'].forEach(id => {
+       const el = document.getElementById(id); if(el) el.value = '';
+    });
     // 이미지 초기화
     document.getElementById('prImageRows').innerHTML = `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
       <input type="url" class="pr-img-input" placeholder="이미지 URL 1 (메인)" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateImgPreview()">
@@ -2338,6 +2465,14 @@ a { text-decoration: none; color: inherit; }
       if (p.fares && p.fares.length) {
         document.getElementById('prFareBody').innerHTML = p.fares.map(f => makeFareRow(f.type,f.price,f.note)).join('');
       }
+      // 항공
+      const fo = p.flightOut || {}; const fi = p.flightIn || {};
+      ['Airline','No','DepTime','ArrTime','DepDate','ArrDate','DepPort','ArrPort'].forEach(k => {
+        const ok = document.getElementById('flOut'+k); if(ok) ok.value = fo[k.charAt(0).toLowerCase()+k.slice(1)] || fo['flight'+k] || '';
+        const ik = document.getElementById('flIn'+k);  if(ik) ik.value = fi[k.charAt(0).toLowerCase()+k.slice(1)] || fi['flight'+k] || '';
+      });
+      if(fo.flightNo) document.getElementById('flOutNo').value = fo.flightNo;
+      if(fi.flightNo) document.getElementById('flInNo').value = fi.flightNo;
       // 일정
       if (p.itinerary && p.itinerary.length) {
         document.getElementById('prItineraryBody').innerHTML = p.itinerary.map(it => makeItinCard(it)).join('');
@@ -2467,6 +2602,26 @@ a { text-decoration: none; color: inherit; }
       description: card.querySelector('.pr-itin-desc').value.trim(),
       images: card.querySelector('.pr-itin-images').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,5)
     })).filter(it => it.city || it.description);
+    const flightOut = {
+      airline: document.getElementById('flOutAirline').value.trim(),
+      flightNo: document.getElementById('flOutNo').value.trim(),
+      depTime: document.getElementById('flOutDepTime').value.trim(),
+      arrTime: document.getElementById('flOutArrTime').value.trim(),
+      depDate: document.getElementById('flOutDepDate').value.trim(),
+      arrDate: document.getElementById('flOutArrDate').value.trim(),
+      depPort: document.getElementById('flOutDepPort').value.trim(),
+      arrPort: document.getElementById('flOutArrPort').value.trim(),
+    };
+    const flightIn = {
+      airline: document.getElementById('flInAirline').value.trim(),
+      flightNo: document.getElementById('flInNo').value.trim(),
+      depTime: document.getElementById('flInDepTime').value.trim(),
+      arrTime: document.getElementById('flInArrTime').value.trim(),
+      depDate: document.getElementById('flInDepDate').value.trim(),
+      arrDate: document.getElementById('flInArrDate').value.trim(),
+      depPort: document.getElementById('flInDepPort').value.trim(),
+      arrPort: document.getElementById('flInArrPort').value.trim(),
+    };
     const product = {
       id: Date.now().toString(),
       title,
@@ -2475,7 +2630,7 @@ a { text-decoration: none; color: inherit; }
       category: document.getElementById('prCategory').value,
       nights: parseInt(document.getElementById('prNights').value) || 0,
       desc: document.getElementById('prDesc').value.trim(),
-      images, departures, fares, itinerary,
+      images, departures, fares, itinerary, flightOut, flightIn,
       included: document.getElementById('prIncluded').value.split('\n').map(s=>s.trim()).filter(Boolean),
       excluded: document.getElementById('prExcluded').value.split('\n').map(s=>s.trim()).filter(Boolean),
       updatedAt: new Date().toISOString()
