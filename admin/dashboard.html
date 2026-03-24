@@ -905,30 +905,9 @@
 
       <!-- 일정표 -->
       <div class="detail-section">
-        <h4>항구 일정표</h4>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px">
-          <thead>
-            <tr style="background:#e8eaf6">
-              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9;width:60px">Day</th>
-              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">항구 / 도시</th>
-              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9;width:90px">입항</th>
-              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9;width:90px">출항</th>
-              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">비고</th>
-              <th style="width:40px;border-bottom:2px solid #c5cae9"></th>
-            </tr>
-          </thead>
-          <tbody id="prItineraryBody">
-            <tr class="pr-itin-row">
-              <td style="padding:6px 4px"><input type="text" class="pr-itin-day" placeholder="1" style="width:50px;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px;text-align:center"></td>
-              <td style="padding:6px 4px"><input type="text" class="pr-itin-port" placeholder="바르셀로나 (승선)" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-              <td style="padding:6px 4px"><input type="time" class="pr-itin-arrive" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-              <td style="padding:6px 4px"><input type="time" class="pr-itin-depart" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-              <td style="padding:6px 4px"><input type="text" class="pr-itin-note" placeholder="" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-              <td style="padding:6px 4px;text-align:center"><button onclick="removeItinRow(this)" style="background:none;border:none;color:#e53935;font-size:16px;cursor:pointer">✕</button></td>
-            </tr>
-          </tbody>
-        </table>
-        <button onclick="addItinRow()" style="padding:7px 16px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">＋ 행 추가</button>
+        <h4>일정표</h4>
+        <div id="prItineraryBody" style="display:flex;flex-direction:column;gap:12px;margin-bottom:12px"></div>
+        <button onclick="addItinCard()" style="padding:9px 20px;background:#e8eaf6;color:#1a237e;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">＋ 일차 추가</button>
       </div>
 
       <!-- 포함/불포함 -->
@@ -1789,22 +1768,21 @@ ${remarksHtml}
 
     // 일정표
     const itinTable = (p.itinerary||[]).length
-      ? `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
-          <thead><tr style="background:#e8eaf6">
-            <th style="padding:8px 10px;text-align:center;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9;width:50px">Day</th>
-            <th style="padding:8px 10px;text-align:left;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">항구 / 도시</th>
-            <th style="padding:8px 10px;text-align:center;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9;width:70px">입항</th>
-            <th style="padding:8px 10px;text-align:center;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9;width:70px">출항</th>
-            <th style="padding:8px 10px;text-align:left;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">비고</th>
-          </tr></thead>
-          <tbody>${p.itinerary.map((it,i) => `<tr style="background:${i%2?'#f5f7ff':'#fff'}">
-            <td style="padding:8px 10px;text-align:center;font-weight:700;color:#1a237e">${esc(it.day||'')}</td>
-            <td style="padding:8px 10px;font-weight:600">${esc(it.port||'')}</td>
-            <td style="padding:8px 10px;text-align:center;color:#555">${it.arrive||'—'}</td>
-            <td style="padding:8px 10px;text-align:center;color:#555">${it.depart||'—'}</td>
-            <td style="padding:8px 10px;color:#888;font-size:12px">${esc(it.note||'')}</td>
-          </tr>`).join('')}</tbody>
-        </table>`
+      ? p.itinerary.map((it,i) => {
+          const imgs = (it.images||[]).map(img => `<img src="${esc(img)}" style="width:120px;height:80px;object-fit:cover;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
+          const desc = (it.description||it.note||'').replace(/\n/g,'<br>');
+          return `<div style="border:1px solid #e8eaf6;border-radius:10px;overflow:hidden;margin-bottom:8px">
+            <div style="background:#1a237e;padding:10px 14px;display:flex;align-items:center;gap:10px">
+              <span style="background:#fff;color:#1a237e;font-weight:900;font-size:13px;padding:3px 10px;border-radius:20px">${esc(it.day||String(i+1))}일차</span>
+              ${it.date?`<span style="color:rgba(255,255,255,.7);font-size:12px">${esc(it.date)}</span>`:''}
+              <span style="color:#fff;font-weight:700;font-size:14px">${esc(it.city||it.port||'')}</span>
+            </div>
+            <div style="padding:12px 14px;background:#fff">
+              ${desc?`<div style="font-size:13px;color:#444;line-height:1.8;margin-bottom:${imgs?'10px':'0'}">${desc}</div>`:''}
+              ${imgs?`<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">${imgs}</div>`:''}
+            </div>
+          </div>`;
+        }).join('')
       : '<p style="color:#aaa;font-size:13px;padding:8px 0">일정 정보 없음</p>';
 
     // 포함/불포함
@@ -2330,7 +2308,7 @@ a { text-decoration: none; color: inherit; }
     // 요금 초기화
     document.getElementById('prFareBody').innerHTML = makeFareRow();
     // 일정 초기화
-    document.getElementById('prItineraryBody').innerHTML = makeItinRow();
+    document.getElementById('prItineraryBody').innerHTML = makeItinCard({day:'1'});
 
     if (idx !== null && currentProducts[idx]) {
       const p = currentProducts[idx];
@@ -2362,7 +2340,7 @@ a { text-decoration: none; color: inherit; }
       }
       // 일정
       if (p.itinerary && p.itinerary.length) {
-        document.getElementById('prItineraryBody').innerHTML = p.itinerary.map(it => makeItinRow(it.day,it.port,it.arrive,it.depart,it.note)).join('');
+        document.getElementById('prItineraryBody').innerHTML = p.itinerary.map(it => makeItinCard(it)).join('');
       }
     } else {
       title.textContent = '🛳️ 상품 등록';
@@ -2383,21 +2361,56 @@ a { text-decoration: none; color: inherit; }
     </tr>`;
   }
 
-  function makeItinRow(day='', port='', arrive='', depart='', note='') {
-    return `<tr class="pr-itin-row">
-      <td style="padding:6px 4px"><input type="text" class="pr-itin-day" value="${esc(day)}" placeholder="1" style="width:50px;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px;text-align:center"></td>
-      <td style="padding:6px 4px"><input type="text" class="pr-itin-port" value="${esc(port)}" placeholder="바르셀로나 (승선)" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-      <td style="padding:6px 4px"><input type="time" class="pr-itin-arrive" value="${arrive}" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-      <td style="padding:6px 4px"><input type="time" class="pr-itin-depart" value="${depart}" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-      <td style="padding:6px 4px"><input type="text" class="pr-itin-note" value="${esc(note)}" placeholder="" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
-      <td style="padding:6px 4px;text-align:center"><button onclick="removeItinRow(this)" style="background:none;border:none;color:#e53935;font-size:16px;cursor:pointer">✕</button></td>
-    </tr>`;
+  function makeItinCard(it={}) {
+    const day = it.day||'';
+    const date = it.date||'';
+    const city = it.city||it.port||'';
+    const description = it.description||it.note||'';
+    const images = (it.images||[]).join('\n');
+    const id = 'itin_' + Date.now() + '_' + Math.random().toString(36).slice(2,6);
+    return `<div class="pr-itin-card" style="border:1.5px solid #e0e4f0;border-radius:10px;overflow:hidden">
+      <div style="background:#1a237e;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="text" class="pr-itin-day" value="${esc(day)}" placeholder="1" style="width:44px;padding:5px 8px;border:1.5px solid rgba(255,255,255,.4);border-radius:6px;font-size:14px;font-weight:700;text-align:center;background:rgba(255,255,255,.15);color:#fff">
+          <span style="color:rgba(255,255,255,.6);font-size:12px">일차</span>
+          <input type="text" class="pr-itin-date" value="${esc(date)}" placeholder="12/11(금)" style="width:90px;padding:5px 8px;border:1.5px solid rgba(255,255,255,.4);border-radius:6px;font-size:12px;background:rgba(255,255,255,.15);color:#fff">
+          <input type="text" class="pr-itin-city" value="${esc(city)}" placeholder="도시명 / 항구명" style="flex:1;min-width:120px;padding:5px 8px;border:1.5px solid rgba(255,255,255,.4);border-radius:6px;font-size:13px;font-weight:600;background:rgba(255,255,255,.15);color:#fff">
+        </div>
+        <button onclick="removeItinCard(this)" style="background:rgba(255,255,255,.2);border:none;color:#fff;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px">✕</button>
+      </div>
+      <div style="padding:12px 14px;background:#fff;display:flex;flex-direction:column;gap:10px">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#1a237e;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">📝 일정 내용 (줄바꿈으로 항목 구분)</label>
+          <textarea class="pr-itin-desc" rows="4" placeholder="호텔 조식 후 가이드 미팅&#10;★ 이과수 폭포 관광 - 아르헨티나 쪽 ★&#10;- 세계 3대 폭포 중 하나...&#10;★ 이과수 폭포 보트 투어 (Grand Aventura) ★&#10;호텔 투숙 및 휴식" style="width:100%;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px;line-height:1.6;resize:vertical;font-family:inherit">${esc(description)}</textarea>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#1a237e;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">🖼️ 이미지 URL (줄바꿈으로 구분, 최대 5개)</label>
+          <textarea class="pr-itin-images" rows="3" placeholder="https://...jpg&#10;https://...jpg&#10;https://...jpg" style="width:100%;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:12px;resize:vertical;font-family:monospace">${esc(images)}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function addItinCard() {
+    const wrap = document.getElementById('prItineraryBody');
+    const cards = wrap.querySelectorAll('.pr-itin-card');
+    const lastDay = cards.length > 0 ? parseInt(cards[cards.length-1].querySelector('.pr-itin-day').value)||0 : 0;
+    const newIt = { day: String(lastDay+1) };
+    const tmp = document.createElement('div');
+    tmp.innerHTML = makeItinCard(newIt);
+    wrap.appendChild(tmp.firstElementChild);
+  }
+
+  function removeItinCard(btn) {
+    const wrap = document.getElementById('prItineraryBody');
+    if (wrap.querySelectorAll('.pr-itin-card').length > 1) btn.closest('.pr-itin-card').remove();
   }
 
   function addFareRow() { document.getElementById('prFareBody').insertAdjacentHTML('beforeend', makeFareRow()); }
   function removeFareRow(btn) { const row = btn.closest('tr'); if (document.querySelectorAll('#prFareBody .pr-fare-row').length > 1) row.remove(); }
-  function addItinRow() { document.getElementById('prItineraryBody').insertAdjacentHTML('beforeend', makeItinRow()); }
-  function removeItinRow(btn) { const row = btn.closest('tr'); if (document.querySelectorAll('#prItineraryBody .pr-itin-row').length > 1) row.remove(); }
+  // legacy — kept for compat
+  function addItinRow() { addItinCard(); }
+  function removeItinRow(btn) { removeItinCard(btn); }
 
   function addImgRow() {
     const rows = document.querySelectorAll('#prImageRows .pr-img-row');
@@ -2447,13 +2460,13 @@ a { text-decoration: none; color: inherit; }
       price: parseFloat(row.querySelector('.pr-fare-price').value) || 0,
       note: row.querySelector('.pr-fare-note').value.trim()
     })).filter(f => f.type || f.price);
-    const itinerary = [...document.querySelectorAll('#prItineraryBody .pr-itin-row')].map(row => ({
-      day: row.querySelector('.pr-itin-day').value.trim(),
-      port: row.querySelector('.pr-itin-port').value.trim(),
-      arrive: row.querySelector('.pr-itin-arrive').value,
-      depart: row.querySelector('.pr-itin-depart').value,
-      note: row.querySelector('.pr-itin-note').value.trim()
-    })).filter(it => it.port);
+    const itinerary = [...document.querySelectorAll('#prItineraryBody .pr-itin-card')].map(card => ({
+      day: card.querySelector('.pr-itin-day').value.trim(),
+      date: card.querySelector('.pr-itin-date').value.trim(),
+      city: card.querySelector('.pr-itin-city').value.trim(),
+      description: card.querySelector('.pr-itin-desc').value.trim(),
+      images: card.querySelector('.pr-itin-images').value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,5)
+    })).filter(it => it.city || it.description);
     const product = {
       id: Date.now().toString(),
       title,
