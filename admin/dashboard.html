@@ -1894,11 +1894,16 @@ ${remarksHtml}
       const filePath = `goods/${slug}/index.html`;
       await createGitHubFile(filePath, html, `feat: 상품 페이지 - ${p.title||slug}`);
       const liveUrl = `https://kimdaeri-bot.github.io/cruise-agency-template/${filePath}`;
-      // 목록에도 기록
+      // 상품에 slug 저장 → 다음부터 "페이지 보기" 버튼으로 변경
+      p.pageSlug = slug;
+      currentProducts[idx] = p;
+      await saveToGitHub('admin/products.json', currentProducts);
+      // 페이지 목록에도 기록
       const existing = generatedPages.findIndex(g => g.slug === slug);
       const entry = { slug, title: p.title||'', url: p.sourceUrl||'', createdAt: new Date().toISOString(), filePath };
       if (existing >= 0) generatedPages[existing] = entry; else generatedPages.unshift(entry);
       await saveToGitHub('admin/generated-pages.json', generatedPages);
+      renderProducts();
       showToast('✅ 생성 완료! 잠시 후 페이지 열림 (GitHub Pages 반영 약 1분)');
       setTimeout(() => window.open(liveUrl, '_blank'), 1500);
     } catch(e) {
@@ -2220,12 +2225,50 @@ ${remarksHtml}
         <div class="czn-dep-price">${dep.priceAdult?(dep.priceAdult).toLocaleString()+'원':'문의'}</div>
       </div>`).join('') : '';
 
-    // 항공 정보 (사이드바용)
+    // 항공 — 사이드바 컴팩트
     const flightHtml = (flightOut.airline || flightIn.airline) ? `
-      <div class="czn-flight-box">
-        <div class="czn-flight-row"><span class="czn-fl-label">출발</span><span class="czn-fl-al">${flightOut.airline||''} ${flightOut.flightNo||''}</span><span class="czn-fl-t">${flightOut.depTime||''}</span><span class="czn-fl-p">${flightOut.depPort||''}</span><span class="czn-fl-arr">→</span><span class="czn-fl-t">${flightOut.arrTime||''}</span><span class="czn-fl-p">${flightOut.arrPort||''}</span></div>
-        <div class="czn-flight-row"><span class="czn-fl-label czn-fl-ret">귀국</span><span class="czn-fl-al">${flightIn.airline||''} ${flightIn.flightNo||''}</span><span class="czn-fl-t">${flightIn.depTime||''}</span><span class="czn-fl-p">${flightIn.depPort||''}</span><span class="czn-fl-arr">→</span><span class="czn-fl-t">${flightIn.arrTime||''}</span><span class="czn-fl-p">${flightIn.arrPort||''}</span></div>
+      <div style="background:#f0f4ff;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px">
+        ${flightOut.airline?`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="background:#1a6fd4;color:#fff;padding:2px 7px;border-radius:4px;font-weight:700;font-size:10px">출발</span><span style="font-weight:700">${flightOut.airline} ${flightOut.flightNo||''}</span><span style="color:#1a6fd4;font-weight:700;margin-left:auto">${flightOut.depTime||''}</span></div><div style="color:#666;padding-left:42px;margin-bottom:6px">${flightOut.depPort||''} → ${flightOut.arrTime||''} ${flightOut.arrPort||''}</div>`:''}
+        ${flightIn.airline?`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="background:#e53935;color:#fff;padding:2px 7px;border-radius:4px;font-weight:700;font-size:10px">귀국</span><span style="font-weight:700">${flightIn.airline} ${flightIn.flightNo||''}</span><span style="color:#e53935;font-weight:700;margin-left:auto">${flightIn.depTime||''}</span></div><div style="color:#666;padding-left:42px">${flightIn.depPort||''} → ${flightIn.arrTime||''} ${flightIn.arrPort||''}</div>`:''}
       </div>` : '';
+
+    // 항공 — 메인 섹션 큰 카드 (3번 이미지 스타일)
+    const flightMainHtml = (flightOut.airline || flightIn.airline) ? `
+    <div class="czn-sec" id="sec-flight">
+      <div class="czn-sec-title">✈️ 항공 일정</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        ${flightOut.airline?`<div style="background:#1a6fd4;border-radius:14px;overflow:hidden">
+          <div style="padding:12px 16px;text-align:center;font-size:14px;font-weight:700;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)">출발</div>
+          <div style="padding:18px 16px">
+            <div style="text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-bottom:2px">✈ ${flightOut.airline}</div>
+            <div style="text-align:center;color:#a8d8ff;font-size:13px;font-weight:700;margin-bottom:16px">${flightOut.flightNo||''}</div>
+            <div style="position:relative;height:2px;background:rgba(255,255,255,.25);margin:0 6px 16px">
+              <span style="position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+              <span style="position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">${flightOut.depTime||''}</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">${flightOut.depDate||''}</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">${flightOut.depPort||''}</div></div>
+              <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">${flightOut.arrTime||''}</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">${flightOut.arrDate||''}</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">${flightOut.arrPort||''}</div></div>
+            </div>
+          </div>
+        </div>`:''}
+        ${flightIn.airline?`<div style="background:#e53935;border-radius:14px;overflow:hidden">
+          <div style="padding:12px 16px;text-align:center;font-size:14px;font-weight:700;color:#fff;border-bottom:1px solid rgba(255,255,255,.2)">귀국</div>
+          <div style="padding:18px 16px">
+            <div style="text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-bottom:2px">✈ ${flightIn.airline}</div>
+            <div style="text-align:center;color:#ffcdd2;font-size:13px;font-weight:700;margin-bottom:16px">${flightIn.flightNo||''}</div>
+            <div style="position:relative;height:2px;background:rgba(255,255,255,.25);margin:0 6px 16px">
+              <span style="position:absolute;left:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+              <span style="position:absolute;right:-5px;top:-5px;width:12px;height:12px;border-radius:50%;background:#fff"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+              <div><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">${flightIn.depTime||''}</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">${flightIn.depDate||''}</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">${flightIn.depPort||''}</div></div>
+              <div style="text-align:right"><div style="font-size:30px;font-weight:900;color:#fff;line-height:1">${flightIn.arrTime||''}</div><div style="font-size:11px;color:rgba(255,255,255,.7);margin-top:4px">${flightIn.arrDate||''}</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:2px">${flightIn.arrPort||''}</div></div>
+            </div>
+          </div>
+        </div>`:''}
+      </div>
+    </div>` : '';
 
     // 소개 이미지 HTML
     const introHtml = introImgs.map(img => `<img src="${img}" alt="" style="max-width:100%;display:block;margin:0 auto 4px">`).join('');
@@ -2351,6 +2394,7 @@ a{text-decoration:none;color:inherit}
 <!-- 스티키 탭 네비게이션 -->
 <nav class="czn-nav" id="cznNav">
   <a class="on" onclick="scrollTo('sec-intro')">상품소개</a>
+  ${(flightOut.airline||flightIn.airline)?'<a onclick="scrollTo(\'sec-flight\')">항공일정</a>':''}
   <a onclick="scrollTo('sec-itin')">여행일정</a>
   ${included.length?'<a onclick="scrollTo(\'sec-inc\')">포함사항</a>':''}
   ${excluded.length?'<a onclick="scrollTo(\'sec-exc\')">불포함사항</a>':''}
@@ -2378,6 +2422,9 @@ a{text-decoration:none;color:inherit}
       <div class="czn-sec-title">🎯 상품 소개</div>
       <div class="czn-intro">${introHtml || '<p style="color:#aaa;text-align:center;padding:30px">소개 이미지가 없습니다.</p>'}</div>
     </div>
+
+    <!-- 항공 일정 (메인) -->
+    ${flightMainHtml}
 
     <!-- 여행 일정 -->
     <div class="czn-sec" id="sec-itin">
@@ -2591,8 +2638,11 @@ a{text-decoration:none;color:inherit}
           <div style="font-size:.78rem;color:#888">${departures ? '출발: ' + departures : '출발일 미정'}${(p.departures||[]).length > 3 ? ' 외 '+(p.departures.length-3)+'개' : ''}</div>
         </div>
         <div style="padding:10px 14px;border-top:1px solid #f0f0f0;display:flex;gap:8px;flex-wrap:wrap">
-          <button onclick="previewProduct(${i})" style="flex:1;min-width:80px;padding:7px;background:#f0f4ff;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">👁 미리보기</button>
-          <button onclick="generatePageFromProduct(${i})" style="flex:1;min-width:80px;padding:7px;background:#1a237e;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">🌐 페이지 생성</button>
+          <button onclick="previewProduct(${i})" style="flex:1;min-width:70px;padding:7px;background:#f0f4ff;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">👁 미리보기</button>
+          ${p.pageSlug
+            ? `<button onclick="window.open('https://kimdaeri-bot.github.io/cruise-agency-template/goods/${p.pageSlug}/index.html','_blank')" style="flex:1;min-width:70px;padding:7px;background:#1a237e;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">🌐 페이지 보기</button>`
+            : `<button onclick="generatePageFromProduct(${i})" style="flex:1;min-width:70px;padding:7px;background:#1a237e;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">🌐 페이지 생성</button>`
+          }
           <button onclick="openProductForm(${i})" style="padding:7px 12px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">✏️</button>
           <button onclick="deleteProduct(${i})" style="padding:7px 12px;background:#fbe9e7;color:#e53935;border:none;border-radius:6px;font-size:13px;cursor:pointer">🗑</button>
         </div>
