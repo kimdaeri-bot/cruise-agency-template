@@ -2405,17 +2405,40 @@ a{text-decoration:none;color:inherit}
   <!-- ===== 메인 ===== -->
   <div class="czn-main">
 
-    <!-- 슬라이더 -->
-    <div class="czn-sl-wrap" id="cznSlider">
-      ${sliderSlides || '<div class="czn-slide active" style="display:flex;align-items:center;justify-content:center;font-size:60px;height:100%">🚢</div>'}
-      <div class="czn-sl-nav">
-        <button class="czn-sl-btn" onclick="slideStep(-1)">‹</button>
-        <button class="czn-sl-btn" onclick="slideStep(1)">›</button>
+    <!-- 갤러리: 좌측 큰 이미지 + 우측 2×2 그리드 -->
+    ${thumbs.length > 0 ? `
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:4px;border-radius:14px;overflow:hidden;background:#000;cursor:pointer" onclick="openGallery(0)" id="czn-gallery">
+      <!-- 메인 이미지 -->
+      <div style="position:relative;aspect-ratio:4/3;overflow:hidden">
+        <img id="czn-main-img" src="${thumbs[0]}" style="width:100%;height:100%;object-fit:cover;transition:opacity .3s">
       </div>
-      <div class="czn-sl-dots" id="cznDots">${thumbs.map((_,i)=>`<span class="czn-dot ${i===0?'active':''}" onclick="gotoSlide(${i})"></span>`).join('')}</div>
-      <div class="czn-sl-cnt" id="cznCount">${thumbs.length>1?'1 / '+thumbs.length:''}</div>
+      <!-- 우측 2×2 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px">
+        ${thumbs.slice(1,5).map((img,i) => `
+        <div style="position:relative;overflow:hidden;cursor:pointer" onclick="event.stopPropagation();selectGallery(${i+1})">
+          <img src="${img}" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1;transition:opacity .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+          ${i===3 && thumbs.length>5 ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:900">+${thumbs.length-5}</div>` : ''}
+        </div>`).join('')}
+        ${thumbs.length < 2 ? `<div style="background:#222"></div><div style="background:#222"></div><div style="background:#222"></div>` : ''}
+        ${thumbs.length === 2 ? `<div style="background:#222"></div><div style="background:#222"></div><div style="background:#222"></div>` : ''}
+        ${thumbs.length === 3 ? `<div style="background:#222"></div><div style="background:#222"></div>` : ''}
+        ${thumbs.length === 4 ? `<div style="background:#222"></div>` : ''}
+      </div>
     </div>
-    <div class="czn-thumbs">${thumbs.map((img,i)=>`<div class="czn-thumb ${i===0?'active':''}" onclick="gotoSlide(${i})"><img src="${img}"></div>`).join('')}</div>
+    <!-- 갤러리 전체보기 모달 -->
+    <div id="czn-gallery-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center">
+      <button onclick="closeGallery()" style="position:absolute;top:16px;right:20px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer">✕</button>
+      <div style="position:relative;max-width:90vw;max-height:80vh">
+        <img id="czn-modal-img" src="" style="max-width:90vw;max-height:80vh;object-fit:contain;border-radius:8px">
+        <button onclick="modalNav(-1)" style="position:absolute;left:-50px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer">‹</button>
+        <button onclick="modalNav(1)" style="position:absolute;right:-50px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer">›</button>
+      </div>
+      <div id="czn-modal-thumbs" style="display:flex;gap:8px;margin-top:14px;overflow-x:auto;max-width:90vw;padding:4px">
+        ${thumbs.map((img,i)=>`<img src="${img}" onclick="modalGoto(${i})" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb${i}">`).join('')}
+      </div>
+      <div style="color:rgba(255,255,255,.6);font-size:13px;margin-top:8px" id="czn-modal-cnt"></div>
+    </div>
+    ` : '<div style="height:300px;background:#0a1628;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:60px">🚢</div>'}
 
     <!-- 상품 소개 -->
     <div class="czn-sec" id="sec-intro">
@@ -2555,10 +2578,25 @@ a{text-decoration:none;color:inherit}
 <footer class="czn-ft">크루즈나라 | 📞 1577-3227 | 아남항공 주식회사</footer>
 
 <scr` + `ipt>
-  // 슬라이더
+  // 갤러리
+  const czImgs = ${JSON.stringify(thumbs)};
+  let czGalIdx = 0;
+  function selectGallery(i) { czGalIdx=i; document.getElementById('czn-main-img').src=czImgs[i]||czImgs[0]; }
+  function openGallery(i) { czGalIdx=i; modalGoto(i); document.getElementById('czn-gallery-modal').style.display='flex'; }
+  function closeGallery() { document.getElementById('czn-gallery-modal').style.display='none'; }
+  function modalNav(d) { modalGoto((czGalIdx+d+czImgs.length)%czImgs.length); }
+  function modalGoto(i) {
+    czGalIdx=i;
+    document.getElementById('czn-modal-img').src=czImgs[i]||'';
+    document.getElementById('czn-modal-cnt').textContent=(i+1)+' / '+czImgs.length;
+    document.querySelectorAll('[id^=mthumb]').forEach((t,j)=>t.style.borderColor=j===i?'#fff':'transparent');
+    const t=document.getElementById('mthumb'+i); if(t) t.scrollIntoView({inline:'center',behavior:'smooth'});
+  }
+  document.addEventListener('keydown',e=>{if(document.getElementById('czn-gallery-modal').style.display==='flex'){if(e.key==='ArrowLeft')modalNav(-1);if(e.key==='ArrowRight')modalNav(1);if(e.key==='Escape')closeGallery();}});
+  // 슬라이더 (compat)
   let czn_idx=0; const czn_total=${thumbs.length};
-  function gotoSlide(i){czn_idx=(i+czn_total)%czn_total;document.querySelectorAll('.czn-slide').forEach((s,j)=>s.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-dot').forEach((d,j)=>d.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-thumb').forEach((t,j)=>t.classList.toggle('active',j===czn_idx));const c=document.getElementById('cznCount');if(c)c.textContent=(czn_idx+1)+' / '+czn_total;}
-  function slideStep(d){gotoSlide(czn_idx+d);}
+  function gotoSlide(i){czn_idx=i; selectGallery(i);}
+  function slideStep(d){gotoSlide((czn_idx+d+czn_total)%czn_total);}
   function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-(56+42));}
   // 스크롤 시 네비 활성화
   window.addEventListener('scroll',()=>{const secs=['sec-intro','sec-itin','sec-inc','sec-exc','sec-notice'];const links=document.querySelectorAll('.czn-nav a');let cur=0;secs.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});links.forEach((l,i)=>l.classList.toggle('on',i===cur));});
