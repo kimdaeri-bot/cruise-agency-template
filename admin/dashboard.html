@@ -2209,8 +2209,19 @@ ${remarksHtml}
     const excluded = d.excluded || [];
     const notice = d.notice || [];
 
+    // 이미지 프록시 (cruznara 등 핫링크 차단 도메인)
+    const PROXY = 'https://enttix-omega.vercel.app/api/img-proxy?url=';
+    const BLOCKED = ['cruznara.com','hanatour.com','modetour.com','lottetravel.com','verygoodtour.com'];
+    function px(u) {
+      if (!u) return u;
+      try { const h = new URL(u).hostname; if (BLOCKED.some(d=>h.endsWith(d))) return PROXY+encodeURIComponent(u); } catch {}
+      return u;
+    }
+    // 프록시 적용된 썸네일 배열
+    const pxThumbs = thumbs.map(px);
+
     // 슬라이더
-    const sliderSlides = thumbs.map((img, i) => `<div class="czn-slide ${i===0?'active':''}" onclick="gotoSlide(${i})"><img src="${img}" alt="이미지 ${i+1}"></div>`).join('');
+    const sliderSlides = pxThumbs.map((img, i) => `<div class="czn-slide ${i===0?'active':''}" onclick="gotoSlide(${i})"><img src="${img}" alt="이미지 ${i+1}"></div>`).join('');
 
     // 첫 출발일 기준 가격
     const firstDep = departures[0] || {};
@@ -2270,12 +2281,12 @@ ${remarksHtml}
       </div>
     </div>` : '';
 
-    // 소개 이미지 HTML
-    const introHtml = introImgs.map(img => `<img src="${img}" alt="" style="max-width:100%;display:block;margin:0 auto 4px">`).join('');
+    // 소개 이미지 HTML (프록시 적용)
+    const introHtml = introImgs.map(img => `<img src="${px(img)}" alt="" style="max-width:100%;display:block;margin:0 auto 4px">`).join('');
 
     // 일정 Day 카드
     const itinCardsHtml = `<div class="czn-itin-timeline">${itinerary.map((it, i) => {
-      const imgs = (it.images||[]).map(img => `<img src="${img}" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
+      const imgs = (it.images||[]).map(img => `<img src="${px(img)}" style="width:110px;height:78px;object-fit:cover;border-radius:8px;flex-shrink:0" onerror="this.style.display='none'">`).join('');
       const desc = (it.description||'').replace(/\n/g,'<br>');
       return `<div class="czn-day-card">
         <div class="czn-day-inner">
@@ -2407,21 +2418,21 @@ a{text-decoration:none;color:inherit}
 <!-- 갤러리 (czn-wrap과 동일 너비) -->
 <div class="czn-gallery-wrap">
   <!-- 갤러리: 좌측 큰 이미지 + 우측 2×2 정사각형 -->
-    ${thumbs.length > 0 ? `
+    ${pxThumbs.length > 0 ? `
     <div id="czn-gallery" style="display:grid;grid-template-columns:3fr 2fr;gap:4px;border-radius:14px;overflow:hidden;height:420px">
       <!-- 좌: 메인 큰 이미지 -->
       <div style="position:relative;overflow:hidden;cursor:pointer" onclick="openGallery(0)">
-        <img id="czn-main-img" src="${thumbs[0]}" style="width:100%;height:100%;object-fit:cover;transition:opacity .2s" onmouseover="this.style.opacity=.85" onmouseout="this.style.opacity=1">
+        <img id="czn-main-img" src="${pxThumbs[0]}" style="width:100%;height:100%;object-fit:cover;transition:opacity .2s" onmouseover="this.style.opacity=.85" onmouseout="this.style.opacity=1">
       </div>
       <!-- 우: 2×2 정사각형 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px">
         ${[0,1,2,3].map(i => {
-          const img = thumbs[i+1];
-          const isLast = i===3 && thumbs.length>5;
+          const img = pxThumbs[i+1];
+          const isLast = i===3 && pxThumbs.length>5;
           return img
             ? `<div style="position:relative;overflow:hidden;cursor:pointer" onclick="event.stopPropagation();openGallery(${i+1})">
                 <img src="${img}" style="width:100%;height:100%;object-fit:cover;transition:opacity .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
-                ${isLast ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff">+${thumbs.length-5}</div>` : ''}
+                ${isLast ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff">+${pxThumbs.length-5}</div>` : ''}
               </div>`
             : `<div style="background:#1a1a2e"></div>`;
         }).join('')}
@@ -2436,7 +2447,7 @@ a{text-decoration:none;color:inherit}
         <button onclick="modalNav(1)" style="position:absolute;right:-50px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.2);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:22px;cursor:pointer">›</button>
       </div>
       <div id="czn-modal-thumbs" style="display:flex;gap:8px;margin-top:14px;overflow-x:auto;max-width:90vw;padding:4px">
-        ${thumbs.map((img,i)=>`<img src="${img}" onclick="modalGoto(${i})" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb${i}">`).join('')}
+        ${pxThumbs.map((img,i)=>`<img src="${img}" onclick="modalGoto(${i})" style="width:60px;height:45px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0" id="mthumb${i}">`).join('')}
       </div>
       <div style="color:rgba(255,255,255,.6);font-size:13px;margin-top:8px" id="czn-modal-cnt"></div>
     </div>
@@ -2583,7 +2594,7 @@ a{text-decoration:none;color:inherit}
 
 <scr` + `ipt>
   // 갤러리
-  const czImgs = ${JSON.stringify(thumbs)};
+  const czImgs = ${JSON.stringify(thumbs.map(u => { try { const h=new URL(u).hostname; const bl=['cruznara.com','hanatour.com','modetour.com','lottetravel.com','verygoodtour.com']; if(bl.some(d=>h.endsWith(d))) return 'https://enttix-omega.vercel.app/api/img-proxy?url='+encodeURIComponent(u); } catch{} return u; }))};
   let czGalIdx = 0;
   function selectGallery(i) { czGalIdx=i; document.getElementById('czn-main-img').src=czImgs[i]||czImgs[0]; }
   function openGallery(i) { czGalIdx=i; modalGoto(i); document.getElementById('czn-gallery-modal').style.display='flex'; }
