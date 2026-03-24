@@ -770,6 +770,16 @@
     </div>
     <div class="detail-body" style="padding:24px">
 
+      <!-- URL 자동 가져오기 -->
+      <div class="detail-section" style="background:#f0f4ff;border-radius:10px;padding:16px;margin-bottom:0">
+        <h4 style="border-bottom-color:#c5cae9;color:#1a237e">🔗 URL에서 자동으로 가져오기</h4>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <input type="url" id="prAutoUrl" placeholder="https://www.cruznara.com/goods/goods_view?goodSeq=..." style="flex:1;padding:9px 12px;border:1.5px solid #c5cae9;border-radius:8px;font-size:13px;outline:none">
+          <button onclick="autoFetchProduct()" id="prAutoBtn" style="padding:9px 20px;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">🚀 가져오기</button>
+        </div>
+        <div id="prAutoStatus" style="font-size:12px;color:#888;margin-top:6px"></div>
+      </div>
+
       <!-- 기본 정보 -->
       <div class="detail-section">
         <h4>기본 정보</h4>
@@ -1646,6 +1656,75 @@ ${remarksHtml}
   // =============================================
   let currentProducts = [];
   let editingProductId = null;
+
+  async function autoFetchProduct() {
+    const url = document.getElementById('prAutoUrl').value.trim();
+    if (!url) { showToast('URL을 입력하세요'); return; }
+    const btn = document.getElementById('prAutoBtn');
+    const status = document.getElementById('prAutoStatus');
+    btn.disabled = true;
+    btn.textContent = '⏳ 분석 중...';
+    status.textContent = '페이지를 분석하고 있습니다...';
+    status.style.color = '#1a237e';
+    try {
+      const res = await fetch('https://enttix-omega.vercel.app/api/scrape-cruise', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) throw new Error(data.error || '파싱 실패');
+
+      // 폼에 자동 채우기
+      if (data.title) document.getElementById('prTitle').value = data.title;
+      if (data.cruiseline) document.getElementById('prCruiseline').value = data.cruiseline;
+      if (data.ship) document.getElementById('prShip').value = data.ship;
+      if (data.category) document.getElementById('prCategory').value = data.category;
+      if (data.nights) document.getElementById('prNights').value = data.nights;
+      if (data.desc) document.getElementById('prDesc').value = data.desc;
+      if (data.included) document.getElementById('prIncluded').value = (data.included||[]).join('\n');
+      if (data.excluded) document.getElementById('prExcluded').value = (data.excluded||[]).join('\n');
+
+      // 이미지
+      if (data.images && data.images.length) {
+        const wrap = document.getElementById('prImageRows');
+        wrap.innerHTML = data.images.map((u, i) => `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
+          <input type="url" class="pr-img-input" value="${esc(u)}" placeholder="이미지 URL ${i+1}" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateImgPreview()">
+          ${i===0?`<button onclick="addImgRow()" style="padding:8px 14px;background:#e8eaf6;border:none;border-radius:6px;cursor:pointer;font-size:16px;color:#1a237e">＋</button>`:`<button onclick="removeImgRow(this)" style="padding:8px 14px;background:#fbe9e7;border:none;border-radius:6px;cursor:pointer;font-size:14px;color:#e53935">✕</button>`}
+        </div>`).join('');
+        updateImgPreview();
+      }
+
+      // 출발일
+      document.getElementById('prDepartures').innerHTML = '';
+      (data.departures||[]).forEach(d => addDepartureTag(d));
+
+      // 요금표
+      if (data.fares && data.fares.length) {
+        document.getElementById('prFareBody').innerHTML = data.fares.map(f =>
+          makeFareRow(f.type, f.priceKRW || f.price || 0, f.note||'')
+        ).join('');
+      }
+
+      // 일정표
+      if (data.itinerary && data.itinerary.length) {
+        document.getElementById('prItineraryBody').innerHTML = data.itinerary.map(it =>
+          makeItinRow(it.day, it.port, it.arrive||'', it.depart||'', it.note||'')
+        ).join('');
+      }
+
+      status.textContent = '✅ 자동 입력 완료! 내용을 확인하고 저장하세요.';
+      status.style.color = '#2e7d32';
+      showToast('✅ 데이터 자동 입력 완료!');
+    } catch(e) {
+      status.textContent = '❌ 오류: ' + e.message;
+      status.style.color = '#e53935';
+      showToast('❌ 가져오기 실패: ' + e.message, 4000);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🚀 가져오기';
+    }
+  }
 
   function previewProduct(idx) {
     const p = currentProducts[idx];
