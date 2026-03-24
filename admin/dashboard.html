@@ -2605,11 +2605,23 @@ a { text-decoration: none; color: inherit; }
     );
   }
   function removeImgRow(btn) { btn.closest('.pr-img-row').remove(); updateImgPreview(); }
+  function proxyImgUrl(u) {
+    // cruznara 등 핫링크 차단 도메인은 Enttix 프록시 경유
+    const blocked = ['cruznara.com','hanatour.com','modetour.com','lottetravel.com','verygoodtour.com'];
+    try {
+      const host = new URL(u).hostname;
+      if (blocked.some(d => host.endsWith(d))) {
+        return 'https://enttix-omega.vercel.app/api/img-proxy?url=' + encodeURIComponent(u);
+      }
+    } catch {}
+    return u;
+  }
+
   function updateImgPreview() {
     const urls = [...document.querySelectorAll('.pr-img-input')].map(i => i.value.trim()).filter(Boolean);
     document.getElementById('prImgPreview').innerHTML = urls.map((u,i) =>
       `<div style="position:relative">
-        <img src="${esc(u)}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;border:2px solid ${i===0?'#1a237e':'#ddd'}" onerror="this.style.opacity=.3">
+        <img src="${proxyImgUrl(esc(u))}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;border:2px solid ${i===0?'#1a237e':'#ddd'}" onerror="this.style.opacity=.3">
         ${i===0?'<span style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:#1a237e;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px">메인</span>':''}
       </div>`
     ).join('');
