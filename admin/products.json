@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "id": "sample001",
+    "title": "지중해 이탈리아·그리스·크로아티아 9박 크루즈",
+    "cruiseline": "MSC Cruises",
+    "ship": "MSC Bellissima",
+    "category": "지중해",
+    "nights": 9,
+    "desc": "바르셀로나 출발! 이탈리아 로마·나폴리, 그리스 산토리니·피레우스, 크로아티아 두브로브니크를 한 번에. MSC 얼리버드 특가 적용.",
+    "images": [
+      "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80",
+      "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"
+    ],
+    "departures": ["2026-06-14", "2026-07-12", "2026-08-09", "2026-09-06"],
+    "fares": [
+      { "type": "인사이드", "price": 1299, "note": "세금·항만세 별도" },
+      { "type": "오션뷰", "price": 1599, "note": "세금·항만세 별도" },
+      { "type": "발코니", "price": 1999, "note": "세금·항만세 별도" },
+      { "type": "스위트", "price": 3499, "note": "세금·항만세 별도" }
+    ],
+    "itinerary": [
+      { "day": "1", "port": "바르셀로나 (승선)", "arrive": "", "depart": "18:00", "note": "출발항" },
+      { "day": "2", "port": "마르세유, 프랑스", "arrive": "08:00", "depart": "18:00", "note": "" },
+      { "day": "3", "port": "제노바, 이탈리아", "arrive": "08:00", "depart": "19:00", "note": "" },
+      { "day": "4", "port": "나폴리, 이탈리아", "arrive": "08:00", "depart": "19:00", "note": "폼페이 투어 가능" },
+      { "day": "5", "port": "종일 항해", "arrive": "", "depart": "", "note": "선내 엔터테인먼트" },
+      { "day": "6", "port": "산토리니, 그리스", "arrive": "08:00", "depart": "20:00", "note": "" },
+      { "day": "7", "port": "피레우스 (아테네), 그리스", "arrive": "07:00", "depart": "19:00", "note": "아크로폴리스 투어" },
+      { "day": "8", "port": "두브로브니크, 크로아티아", "arrive": "08:00", "depart": "18:00", "note": "" },
+      { "day": "9", "port": "종일 항해", "arrive": "", "depart": "", "note": "" },
+      { "day": "10", "port": "바르셀로나 (하선)", "arrive": "07:00", "depart": "", "note": "도착항" }
+    ],
+    "included": ["크루즈 9박 숙박", "선내 뷔페·메인 레스토랑 식사", "선내 공연·엔터테인먼트", "기항지 정박"],
+    "excluded": ["항공권", "선택 기항지 투어", "스페셜티 레스토랑", "음료·주류", "여행자 보험", "비자비용"],
+    "updatedAt": "2026-03-24T07:00:00.000Z"
+  },
+  {
+    "id": "sample002",
+    "title": "NCL 알래스카 빙하 7박 크루즈",
+    "cruiseline": "Norwegian Cruise Line",
+    "ship": "Norwegian Jade",
+    "category": "알래스카",
+    "nights": 7,
+    "desc": "시애틀 출발! 주노·케치칸·스캐그웨이 기항. 허버드 빙하 크루징 포함. 하루 $93~부터.",
+    "images": [
+      "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=800&q=80",
+      "https://images.unsplash.com/photo-1531761535209-83234c0e2b1d?w=800&q=80"
+    ],
+    "departures": ["2026-05-18", "2026-06-01", "2026-06-15", "2026-09-14"],
+    "fares": [
+      { "type": "인사이드", "price": 699, "note": "세금 별도" },
+      { "type": "오션뷰", "price": 899, "note": "세금 별도" },
+      { "type": "발코니", "price": 1199, "note": "세금 별도" }
+    ],
+    "itinerary": [
+      { "day": "1", "port": "시애틀, WA (승선)", "arrive": "", "depart": "16:00", "note": "" },
+      { "day": "2", "port": "종일 항해", "arrive": "", "depart": "", "note": "" },
+      { "day": "3", "port": "주노, AK", "arrive": "13:00", "depart": "22:00", "note": "멘덴홀 빙하" },
+      { "day": "4", "port": "스캐그웨이, AK", "arrive": "07:00", "depart": "20:00", "note": "화이트패스 철도" },
+      { "day": "5", "port": "허버드 빙하 크루징", "arrive": "", "depart": "", "note": "경관 항해" },
+      { "day": "6", "port": "케치칸, AK", "arrive": "07:00", "depart": "16:00", "note": "연어 낚시 투어" },
+      { "day": "7", "port": "종일 항해", "arrive": "", "depart": "", "note": "" },
+      { "day": "8", "port": "시애틀, WA (하선)", "arrive": "07:00", "depart": "", "note": "" }
+    ],
+    "included": ["크루즈 7박 숙박", "선내 식사", "허버드 빙하 경관 항해"],
+    "excluded": ["항공권", "기항지 투어", "음료·주류", "여행자 보험"],
+    "updatedAt": "2026-03-24T07:00:00.000Z"
+  }
+]
