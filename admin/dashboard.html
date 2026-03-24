@@ -1033,9 +1033,10 @@
 </div>
 
 <!-- PRODUCT PREVIEW OVERLAY -->
-<div class="overlay" id="productPreviewOverlay" style="align-items:flex-start;padding:20px">
-  <div class="detail-card" style="max-width:1200px;width:100%;border-radius:16px;overflow:hidden;margin:0 auto">
-    <div id="productPreviewContent"></div>
+<div class="overlay" id="productPreviewOverlay" style="padding:0;align-items:stretch">
+  <div style="width:100%;height:100%;display:flex;flex-direction:column;position:relative">
+    <button onclick="document.getElementById('productPreviewOverlay').classList.remove('show')" style="position:fixed;top:16px;right:20px;z-index:9999;background:#1a237e;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)">✕</button>
+    <iframe id="productPreviewFrame" style="width:100%;flex:1;border:none;height:100vh"></iframe>
   </div>
 </div>
 
@@ -1916,6 +1917,21 @@ ${remarksHtml}
   function previewProduct(idx) {
     const p = currentProducts[idx];
     if (!p) return;
+    // buildCruiseDetailPage로 실제 페이지 HTML 생성 → iframe에 렌더링
+    const slug = 'preview-' + Date.now();
+    const html = buildCruiseDetailPage(p, p.sourceUrl || '', slug);
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const frame = document.getElementById('productPreviewFrame');
+    if (frame._prevUrl) URL.revokeObjectURL(frame._prevUrl);
+    frame._prevUrl = url;
+    frame.src = url;
+    document.getElementById('productPreviewOverlay').classList.add('show');
+  }
+
+  function _previewProduct_OLD(idx) {
+    const p = currentProducts[idx];
+    if (!p) return;
     const imgs = p.images || [];
     const minPrice = (p.fares||[]).reduce((m,f) => f.price && f.price < m ? f.price : m, Infinity);
     const priceStr = minPrice < Infinity ? `$${minPrice.toLocaleString()}~` : '가격 문의';
@@ -2146,6 +2162,7 @@ ${remarksHtml}
     window._pvTotal = imgs.length;
     document.getElementById('productPreviewOverlay').classList.add('show');
   }
+  // _previewProduct_OLD END
 
   function pvSlide(dir) {
     window._pvIdx = (window._pvIdx + dir + window._pvTotal) % window._pvTotal;
