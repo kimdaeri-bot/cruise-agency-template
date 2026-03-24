@@ -627,6 +627,9 @@
     <div class="menu-item" id="menuPartner" onclick="showPanel('partner')">
       <span>🔗</span> 파트너 링크
     </div>
+    <div class="menu-item" id="menuProduct" onclick="showPanel('product')">
+      <span>🛳️</span> 상품 관리
+    </div>
     <div class="menu-item" id="menuChat" onclick="showPanel('chat')">
       <span>💬</span> 김대리 채팅
     </div>
@@ -743,7 +746,182 @@
     </div>
   </div>
 
+  <!-- PANEL 4: 상품 관리 -->
+  <div class="panel" id="panelProduct">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <h2 class="panel-title" style="margin:0">🛳️ 상품 관리</h2>
+      <button onclick="openProductForm(null)" style="padding:9px 20px;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">➕ 신규 상품</button>
+    </div>
+
+    <!-- 상품 목록 -->
+    <div id="productGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
+      <div style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1">로딩 중...</div>
+    </div>
+  </div>
+
 </main>
+
+<!-- PRODUCT FORM OVERLAY -->
+<div class="overlay" id="productOverlay">
+  <div class="detail-card" style="max-width:860px">
+    <div class="detail-header" style="background:#1a237e">
+      <h3 id="productFormTitle">🛳️ 상품 등록</h3>
+      <button class="btn-close-detail" onclick="closeProductForm()">✕</button>
+    </div>
+    <div class="detail-body" style="padding:24px">
+
+      <!-- 기본 정보 -->
+      <div class="detail-section">
+        <h4>기본 정보</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="fare-input-group" style="grid-column:1/-1">
+            <label>상품명 *</label>
+            <input type="text" id="prTitle" placeholder="예: 지중해 이탈리아·그리스 9박 크루즈">
+          </div>
+          <div class="fare-input-group">
+            <label>선사</label>
+            <select id="prCruiseline">
+              <option value="">선택</option>
+              <option>MSC Cruises</option>
+              <option>Norwegian Cruise Line</option>
+              <option>Royal Caribbean</option>
+              <option>Celebrity Cruises</option>
+              <option>Carnival Cruise Line</option>
+              <option>Princess Cruises</option>
+              <option>Explora Journeys</option>
+              <option>Disney Cruise Line</option>
+              <option>Cunard</option>
+              <option>Oceania Cruises</option>
+              <option>Regent Seven Seas</option>
+            </select>
+          </div>
+          <div class="fare-input-group">
+            <label>선박명</label>
+            <input type="text" id="prShip" placeholder="예: MSC Bellissima">
+          </div>
+          <div class="fare-input-group">
+            <label>카테고리</label>
+            <select id="prCategory">
+              <option value="지중해">지중해</option>
+              <option value="알래스카">알래스카</option>
+              <option value="카리브해">카리브해</option>
+              <option value="한국일본">한국일본</option>
+              <option value="북유럽">북유럽</option>
+              <option value="아시아중동">아시아중동</option>
+              <option value="기타">기타</option>
+            </select>
+          </div>
+          <div class="fare-input-group">
+            <label>박수 (박)</label>
+            <input type="number" id="prNights" min="1" placeholder="7">
+          </div>
+          <div class="fare-input-group" style="grid-column:1/-1">
+            <label>상품 설명</label>
+            <textarea id="prDesc" rows="3" placeholder="상품 소개 문구를 입력하세요" style="resize:vertical;min-height:64px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 이미지 -->
+      <div class="detail-section">
+        <h4>이미지 (최대 5장)</h4>
+        <div id="prImageRows">
+          <div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
+            <input type="url" class="pr-img-input" placeholder="이미지 URL 1 (메인)" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px">
+            <button onclick="addImgRow()" style="padding:8px 14px;background:#e8eaf6;border:none;border-radius:6px;cursor:pointer;font-size:16px;color:#1a237e">＋</button>
+          </div>
+        </div>
+        <div id="prImgPreview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"></div>
+      </div>
+
+      <!-- 출발 일정 -->
+      <div class="detail-section">
+        <h4>출발 날짜</h4>
+        <div id="prDepartures" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px"></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="date" id="prDepDateInput" style="padding:7px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px">
+          <button onclick="addDeparture()" style="padding:7px 16px;background:#1a237e;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer">추가</button>
+        </div>
+      </div>
+
+      <!-- 요금표 -->
+      <div class="detail-section">
+        <h4>요금표</h4>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px">
+          <thead>
+            <tr style="background:#e8eaf6">
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">객실 타입</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">요금 (USD/1인)</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">참고</th>
+              <th style="width:40px;border-bottom:2px solid #c5cae9"></th>
+            </tr>
+          </thead>
+          <tbody id="prFareBody">
+            <tr class="pr-fare-row">
+              <td style="padding:6px 4px"><input type="text" class="pr-fare-type" placeholder="인사이드" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px"><input type="number" class="pr-fare-price" placeholder="0" min="0" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px"><input type="text" class="pr-fare-note" placeholder="세금 별도" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px;text-align:center"><button onclick="removeFareRow(this)" style="background:none;border:none;color:#e53935;font-size:16px;cursor:pointer">✕</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button onclick="addFareRow()" style="padding:7px 16px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">＋ 객실 추가</button>
+      </div>
+
+      <!-- 일정표 -->
+      <div class="detail-section">
+        <h4>항구 일정표</h4>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px">
+          <thead>
+            <tr style="background:#e8eaf6">
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9;width:60px">Day</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">항구 / 도시</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9;width:90px">입항</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9;width:90px">출항</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:700;color:#1a237e;border-bottom:2px solid #c5cae9">비고</th>
+              <th style="width:40px;border-bottom:2px solid #c5cae9"></th>
+            </tr>
+          </thead>
+          <tbody id="prItineraryBody">
+            <tr class="pr-itin-row">
+              <td style="padding:6px 4px"><input type="text" class="pr-itin-day" placeholder="1" style="width:50px;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px;text-align:center"></td>
+              <td style="padding:6px 4px"><input type="text" class="pr-itin-port" placeholder="바르셀로나 (승선)" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px"><input type="time" class="pr-itin-arrive" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px"><input type="time" class="pr-itin-depart" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px"><input type="text" class="pr-itin-note" placeholder="" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+              <td style="padding:6px 4px;text-align:center"><button onclick="removeItinRow(this)" style="background:none;border:none;color:#e53935;font-size:16px;cursor:pointer">✕</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <button onclick="addItinRow()" style="padding:7px 16px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">＋ 행 추가</button>
+      </div>
+
+      <!-- 포함/불포함 -->
+      <div class="detail-section">
+        <h4>포함/불포함 사항</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="fare-input-group">
+            <label>✅ 포함 사항 (줄바꿈으로 구분)</label>
+            <textarea id="prIncluded" rows="4" placeholder="크루즈 숙박&#10;선내 식사&#10;기항지 정박" style="resize:vertical;min-height:80px"></textarea>
+          </div>
+          <div class="fare-input-group">
+            <label>❌ 불포함 사항 (줄바꿈으로 구분)</label>
+            <textarea id="prExcluded" rows="4" placeholder="항공권&#10;비자비용&#10;여행자 보험" style="resize:vertical;min-height:80px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- 숨김 필드: 편집 중인 id -->
+      <input type="hidden" id="prEditId">
+
+      <!-- 저장 버튼 -->
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+        <button onclick="closeProductForm()" style="padding:10px 24px;background:#f0f0f0;border:none;border-radius:8px;font-size:14px;cursor:pointer">취소</button>
+        <button onclick="saveProduct()" style="padding:10px 28px;background:#1a237e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">💾 저장</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- INQUIRY DETAIL OVERLAY -->
 <div class="overlay" id="inquiryOverlay">
@@ -1457,10 +1635,254 @@ ${remarksHtml}
   });
 
   // =============================================
+  // PANEL 4: 상품 관리
+  // =============================================
+  let currentProducts = [];
+  let editingProductId = null;
+
+  async function loadProducts() {
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1">로딩 중...</div>';
+    try {
+      const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/admin/products.json`, {
+        headers: { Authorization: `Bearer ${GH_TOKEN}`, Accept: "application/vnd.github.v3+json" }
+      });
+      if (res.status === 404) { currentProducts = []; renderProducts(); return; }
+      const file = await res.json();
+      const b64 = file.content.replace(/\n/g, "");
+      const bytes = new Uint8Array(atob(b64).split('').map(c => c.charCodeAt(0)));
+      currentProducts = JSON.parse(new TextDecoder('utf-8').decode(bytes));
+      renderProducts();
+    } catch(e) {
+      grid.innerHTML = `<div style="text-align:center;padding:40px;color:#e53935;grid-column:1/-1">오류: ${e.message}</div>`;
+    }
+  }
+
+  function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    if (!currentProducts.length) {
+      grid.innerHTML = '<div style="text-align:center;padding:60px;color:#aaa;grid-column:1/-1">등록된 상품이 없습니다.<br>신규 상품 버튼을 눌러 추가하세요.</div>';
+      return;
+    }
+    grid.innerHTML = currentProducts.map((p, i) => {
+      const img = (p.images || [])[0] || '';
+      const departures = (p.departures || []).slice(0,3).join(', ');
+      const minPrice = (p.fares || []).reduce((m, f) => f.price && f.price < m ? f.price : m, Infinity);
+      const priceStr = minPrice < Infinity ? `$${minPrice.toLocaleString()}~` : '가격 문의';
+      return `<div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.09);border:1px solid #e8ecf0;display:flex;flex-direction:column">
+        <div style="height:150px;background:#e8eaf6 url('${esc(img)}') center/cover no-repeat;position:relative">
+          <span style="position:absolute;top:8px;left:8px;background:#1a237e;color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px">${esc(p.category||'기타')}</span>
+        </div>
+        <div style="padding:14px;flex:1">
+          <div style="font-size:.75rem;color:#888;margin-bottom:4px">${esc(p.cruiseline||'')} · ${p.nights||0}박</div>
+          <div style="font-weight:700;color:#0a1628;font-size:.95rem;margin-bottom:6px;line-height:1.4">${esc(p.title||'')}</div>
+          <div style="font-size:.82rem;color:#1a237e;font-weight:700;margin-bottom:4px">${priceStr} /1인</div>
+          <div style="font-size:.78rem;color:#888">${departures ? '출발: ' + departures : '출발일 미정'}${(p.departures||[]).length > 3 ? ' 외 '+(p.departures.length-3)+'개' : ''}</div>
+        </div>
+        <div style="padding:10px 14px;border-top:1px solid #f0f0f0;display:flex;gap:8px">
+          <button onclick="openProductForm(${i})" style="flex:1;padding:7px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">✏️ 수정</button>
+          <button onclick="deleteProduct(${i})" style="padding:7px 12px;background:#fbe9e7;color:#e53935;border:none;border-radius:6px;font-size:13px;cursor:pointer">🗑</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function openProductForm(idx) {
+    const overlay = document.getElementById('productOverlay');
+    const title = document.getElementById('productFormTitle');
+    // 폼 초기화
+    document.getElementById('prEditId').value = '';
+    document.getElementById('prTitle').value = '';
+    document.getElementById('prCruiseline').value = '';
+    document.getElementById('prShip').value = '';
+    document.getElementById('prCategory').value = '지중해';
+    document.getElementById('prNights').value = '';
+    document.getElementById('prDesc').value = '';
+    document.getElementById('prIncluded').value = '';
+    document.getElementById('prExcluded').value = '';
+    // 이미지 초기화
+    document.getElementById('prImageRows').innerHTML = `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
+      <input type="url" class="pr-img-input" placeholder="이미지 URL 1 (메인)" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateImgPreview()">
+      <button onclick="addImgRow()" style="padding:8px 14px;background:#e8eaf6;border:none;border-radius:6px;cursor:pointer;font-size:16px;color:#1a237e">＋</button>
+    </div>`;
+    document.getElementById('prImgPreview').innerHTML = '';
+    // 출발일 초기화
+    document.getElementById('prDepartures').innerHTML = '';
+    // 요금 초기화
+    document.getElementById('prFareBody').innerHTML = makeFareRow();
+    // 일정 초기화
+    document.getElementById('prItineraryBody').innerHTML = makeItinRow();
+
+    if (idx !== null && currentProducts[idx]) {
+      const p = currentProducts[idx];
+      title.textContent = '✏️ 상품 수정';
+      document.getElementById('prEditId').value = idx;
+      document.getElementById('prTitle').value = p.title||'';
+      document.getElementById('prCruiseline').value = p.cruiseline||'';
+      document.getElementById('prShip').value = p.ship||'';
+      document.getElementById('prCategory').value = p.category||'지중해';
+      document.getElementById('prNights').value = p.nights||'';
+      document.getElementById('prDesc').value = p.desc||'';
+      document.getElementById('prIncluded').value = (p.included||[]).join('\n');
+      document.getElementById('prExcluded').value = (p.excluded||[]).join('\n');
+      // 이미지
+      const imgs = p.images || [];
+      if (imgs.length) {
+        const wrap = document.getElementById('prImageRows');
+        wrap.innerHTML = imgs.map((url, i) => `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
+          <input type="url" class="pr-img-input" value="${esc(url)}" placeholder="이미지 URL ${i+1}" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateImgPreview()">
+          ${i===0?`<button onclick="addImgRow()" style="padding:8px 14px;background:#e8eaf6;border:none;border-radius:6px;cursor:pointer;font-size:16px;color:#1a237e">＋</button>`:`<button onclick="removeImgRow(this)" style="padding:8px 14px;background:#fbe9e7;border:none;border-radius:6px;cursor:pointer;font-size:14px;color:#e53935">✕</button>`}
+        </div>`).join('');
+        updateImgPreview();
+      }
+      // 출발일
+      (p.departures||[]).forEach(d => addDepartureTag(d));
+      // 요금
+      if (p.fares && p.fares.length) {
+        document.getElementById('prFareBody').innerHTML = p.fares.map(f => makeFareRow(f.type,f.price,f.note)).join('');
+      }
+      // 일정
+      if (p.itinerary && p.itinerary.length) {
+        document.getElementById('prItineraryBody').innerHTML = p.itinerary.map(it => makeItinRow(it.day,it.port,it.arrive,it.depart,it.note)).join('');
+      }
+    } else {
+      title.textContent = '🛳️ 상품 등록';
+    }
+    overlay.classList.add('show');
+  }
+
+  function closeProductForm() {
+    document.getElementById('productOverlay').classList.remove('show');
+  }
+
+  function makeFareRow(type='', price='', note='') {
+    return `<tr class="pr-fare-row">
+      <td style="padding:6px 4px"><input type="text" class="pr-fare-type" value="${esc(type)}" placeholder="인사이드" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px"><input type="number" class="pr-fare-price" value="${price}" placeholder="0" min="0" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px"><input type="text" class="pr-fare-note" value="${esc(note)}" placeholder="세금 별도" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px;text-align:center"><button onclick="removeFareRow(this)" style="background:none;border:none;color:#e53935;font-size:16px;cursor:pointer">✕</button></td>
+    </tr>`;
+  }
+
+  function makeItinRow(day='', port='', arrive='', depart='', note='') {
+    return `<tr class="pr-itin-row">
+      <td style="padding:6px 4px"><input type="text" class="pr-itin-day" value="${esc(day)}" placeholder="1" style="width:50px;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px;text-align:center"></td>
+      <td style="padding:6px 4px"><input type="text" class="pr-itin-port" value="${esc(port)}" placeholder="바르셀로나 (승선)" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px"><input type="time" class="pr-itin-arrive" value="${arrive}" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px"><input type="time" class="pr-itin-depart" value="${depart}" style="padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px"><input type="text" class="pr-itin-note" value="${esc(note)}" placeholder="" style="width:100%;padding:6px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px"></td>
+      <td style="padding:6px 4px;text-align:center"><button onclick="removeItinRow(this)" style="background:none;border:none;color:#e53935;font-size:16px;cursor:pointer">✕</button></td>
+    </tr>`;
+  }
+
+  function addFareRow() { document.getElementById('prFareBody').insertAdjacentHTML('beforeend', makeFareRow()); }
+  function removeFareRow(btn) { const row = btn.closest('tr'); if (document.querySelectorAll('#prFareBody .pr-fare-row').length > 1) row.remove(); }
+  function addItinRow() { document.getElementById('prItineraryBody').insertAdjacentHTML('beforeend', makeItinRow()); }
+  function removeItinRow(btn) { const row = btn.closest('tr'); if (document.querySelectorAll('#prItineraryBody .pr-itin-row').length > 1) row.remove(); }
+
+  function addImgRow() {
+    const rows = document.querySelectorAll('#prImageRows .pr-img-row');
+    if (rows.length >= 5) { showToast('이미지는 최대 5장입니다'); return; }
+    const n = rows.length + 1;
+    document.getElementById('prImageRows').insertAdjacentHTML('beforeend',
+      `<div class="pr-img-row" style="display:flex;gap:8px;margin-bottom:8px">
+        <input type="url" class="pr-img-input" placeholder="이미지 URL ${n}" style="flex:1;padding:8px 10px;border:1.5px solid #ddd;border-radius:6px;font-size:13px" oninput="updateImgPreview()">
+        <button onclick="removeImgRow(this)" style="padding:8px 14px;background:#fbe9e7;border:none;border-radius:6px;cursor:pointer;font-size:14px;color:#e53935">✕</button>
+      </div>`
+    );
+  }
+  function removeImgRow(btn) { btn.closest('.pr-img-row').remove(); updateImgPreview(); }
+  function updateImgPreview() {
+    const urls = [...document.querySelectorAll('.pr-img-input')].map(i => i.value.trim()).filter(Boolean);
+    document.getElementById('prImgPreview').innerHTML = urls.map((u,i) =>
+      `<div style="position:relative">
+        <img src="${esc(u)}" style="width:80px;height:60px;object-fit:cover;border-radius:6px;border:2px solid ${i===0?'#1a237e':'#ddd'}" onerror="this.style.opacity=.3">
+        ${i===0?'<span style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:#1a237e;color:#fff;font-size:9px;padding:1px 5px;border-radius:3px">메인</span>':''}
+      </div>`
+    ).join('');
+  }
+
+  function addDeparture() {
+    const input = document.getElementById('prDepDateInput');
+    const val = input.value;
+    if (!val) return;
+    addDepartureTag(val);
+    input.value = '';
+  }
+  function addDepartureTag(dateStr) {
+    const wrap = document.getElementById('prDepartures');
+    const tag = document.createElement('span');
+    tag.dataset.date = dateStr;
+    tag.style.cssText = 'display:inline-flex;align-items:center;gap:6px;background:#e8eaf6;color:#1a237e;font-size:13px;font-weight:600;padding:5px 12px;border-radius:20px';
+    tag.innerHTML = `${dateStr} <button onclick="this.closest('span').remove()" style="background:none;border:none;color:#e53935;cursor:pointer;font-size:15px;line-height:1;padding:0">✕</button>`;
+    wrap.appendChild(tag);
+  }
+
+  async function saveProduct() {
+    const title = document.getElementById('prTitle').value.trim();
+    if (!title) { showToast('상품명을 입력하세요'); return; }
+    const images = [...document.querySelectorAll('.pr-img-input')].map(i => i.value.trim()).filter(Boolean);
+    const departures = [...document.querySelectorAll('#prDepartures span')].map(s => s.dataset.date).filter(Boolean);
+    const fares = [...document.querySelectorAll('#prFareBody .pr-fare-row')].map(row => ({
+      type: row.querySelector('.pr-fare-type').value.trim(),
+      price: parseFloat(row.querySelector('.pr-fare-price').value) || 0,
+      note: row.querySelector('.pr-fare-note').value.trim()
+    })).filter(f => f.type || f.price);
+    const itinerary = [...document.querySelectorAll('#prItineraryBody .pr-itin-row')].map(row => ({
+      day: row.querySelector('.pr-itin-day').value.trim(),
+      port: row.querySelector('.pr-itin-port').value.trim(),
+      arrive: row.querySelector('.pr-itin-arrive').value,
+      depart: row.querySelector('.pr-itin-depart').value,
+      note: row.querySelector('.pr-itin-note').value.trim()
+    })).filter(it => it.port);
+    const product = {
+      id: Date.now().toString(),
+      title,
+      cruiseline: document.getElementById('prCruiseline').value,
+      ship: document.getElementById('prShip').value.trim(),
+      category: document.getElementById('prCategory').value,
+      nights: parseInt(document.getElementById('prNights').value) || 0,
+      desc: document.getElementById('prDesc').value.trim(),
+      images, departures, fares, itinerary,
+      included: document.getElementById('prIncluded').value.split('\n').map(s=>s.trim()).filter(Boolean),
+      excluded: document.getElementById('prExcluded').value.split('\n').map(s=>s.trim()).filter(Boolean),
+      updatedAt: new Date().toISOString()
+    };
+    const editId = document.getElementById('prEditId').value;
+    if (editId !== '') {
+      product.id = currentProducts[parseInt(editId)].id || product.id;
+      currentProducts[parseInt(editId)] = product;
+    } else {
+      currentProducts.push(product);
+    }
+    try {
+      await saveToGitHub('admin/products.json', currentProducts);
+      showToast('✅ 저장 완료!');
+      closeProductForm();
+      renderProducts();
+    } catch(e) {
+      showToast('❌ 저장 실패: ' + e.message, 4000);
+    }
+  }
+
+  async function deleteProduct(idx) {
+    if (!confirm(`"${currentProducts[idx].title}" 상품을 삭제하시겠습니까?`)) return;
+    currentProducts.splice(idx, 1);
+    try {
+      await saveToGitHub('admin/products.json', currentProducts);
+      showToast('🗑 삭제 완료');
+      renderProducts();
+    } catch(e) {
+      showToast('❌ 삭제 실패: ' + e.message, 4000);
+    }
+  }
+
+  // =============================================
   // INIT
   // =============================================
   loadInquiries();
   loadPartners();
+  loadProducts();
 </script>
 </body>
 </html>
