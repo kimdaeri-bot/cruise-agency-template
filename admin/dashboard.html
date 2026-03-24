@@ -2063,8 +2063,8 @@ ${remarksHtml}
           ${incExc ? `<div style="margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid #e8eaf6">📋 포함/불포함</div>${incExc}</div>` : ''}
         </div>
 
-        <!-- 요금 데이터 (JSON) -->
-        <script type="application/json" id="pv-fares-data">${JSON.stringify(p.fares||[])}</script>
+        <!-- 요금 데이터 (data 속성으로 전달) -->
+        <div id="pv-fares-data" style="display:none" data-fares="${esc(JSON.stringify(p.fares||[]))}"></div>
         <!-- 우: 요금 선택 박스 (sticky) -->
         <div style="padding:16px;border-left:1px solid #f0f0f0;position:sticky;top:0;background:#fff">
           <!-- 객실 선택 -->
@@ -2113,7 +2113,7 @@ ${remarksHtml}
     };
 
     // 요금 선택
-    const _pvFares = JSON.parse(document.getElementById('pv-fares-data').textContent || '[]');
+    const _pvFares = JSON.parse(document.getElementById('pv-fares-data')?.dataset?.fares || '[]');
     let _pvSelCab = 0, _pvCnts = [1,0,0];
     window.pvSelectCab = function(i) {
       _pvSelCab = i;
