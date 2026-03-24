@@ -923,6 +923,13 @@
   </div>
 </div>
 
+<!-- PRODUCT PREVIEW OVERLAY -->
+<div class="overlay" id="productPreviewOverlay">
+  <div class="detail-card" style="max-width:860px;border-radius:16px;overflow:hidden">
+    <div id="productPreviewContent"></div>
+  </div>
+</div>
+
 <!-- INQUIRY DETAIL OVERLAY -->
 <div class="overlay" id="inquiryOverlay">
   <div class="detail-card">
@@ -1640,6 +1647,113 @@ ${remarksHtml}
   let currentProducts = [];
   let editingProductId = null;
 
+  function previewProduct(idx) {
+    const p = currentProducts[idx];
+    if (!p) return;
+    const imgs = p.images || [];
+    const minPrice = (p.fares||[]).reduce((m,f) => f.price && f.price < m ? f.price : m, Infinity);
+    const priceStr = minPrice < Infinity ? `$${minPrice.toLocaleString()}~` : '가격 문의';
+    const catColors = { '지중해':'#1e6fd4','알래스카':'#0891b2','카리브해':'#0d9488','한국일본':'#7c3aed','북유럽':'#1d4ed8','아시아중동':'#b45309','기타':'#374151' };
+    const catColor = catColors[p.category] || '#1e6fd4';
+
+    // 이미지 슬라이더
+    const imgSlider = imgs.length
+      ? `<div id="pvSlider" style="position:relative;height:320px;background:#0a1628;overflow:hidden">
+          ${imgs.map((u,i) => `<img src="${esc(u)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:${i===0?1:0};transition:opacity .4s" data-pv-slide="${i}">`).join('')}
+          ${imgs.length>1?`<button onclick="pvSlide(-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;z-index:2">‹</button>
+          <button onclick="pvSlide(1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);border:none;color:#fff;width:36px;height:36px;border-radius:50%;font-size:20px;cursor:pointer;z-index:2">›</button>
+          <div style="position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2">${imgs.map((_,i)=>`<span data-pv-dot="${i}" style="width:8px;height:8px;border-radius:50%;background:${i===0?'#fff':'rgba(255,255,255,.4)'};cursor:pointer" onclick="pvGoto(${i})"></span>`).join('')}</div>`:''}
+          <div style="position:absolute;top:14px;left:14px;background:${catColor};color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;z-index:2">${esc(p.category||'')}</div>
+        </div>`
+      : `<div style="height:200px;background:linear-gradient(135deg,#1a237e,#0d47a1);display:flex;align-items:center;justify-content:center;font-size:60px">🚢</div>`;
+
+    // 요금표
+    const fareTable = (p.fares||[]).length
+      ? `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
+          <thead><tr style="background:#e8eaf6">
+            <th style="padding:8px 12px;text-align:left;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">객실 타입</th>
+            <th style="padding:8px 12px;text-align:right;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">1인 요금 (USD)</th>
+            <th style="padding:8px 12px;text-align:left;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">비고</th>
+          </tr></thead>
+          <tbody>${p.fares.map((f,i) => `<tr style="background:${i%2?'#f5f7ff':'#fff'}">
+            <td style="padding:8px 12px;font-weight:600">${esc(f.type||'')}</td>
+            <td style="padding:8px 12px;text-align:right;font-weight:700;color:#e65100">$${(f.price||0).toLocaleString()}</td>
+            <td style="padding:8px 12px;color:#888;font-size:12px">${esc(f.note||'')}</td>
+          </tr>`).join('')}</tbody>
+        </table>`
+      : '<p style="color:#aaa;font-size:13px;padding:8px 0">요금 정보 없음</p>';
+
+    // 일정표
+    const itinTable = (p.itinerary||[]).length
+      ? `<table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px">
+          <thead><tr style="background:#e8eaf6">
+            <th style="padding:8px 10px;text-align:center;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9;width:50px">Day</th>
+            <th style="padding:8px 10px;text-align:left;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">항구 / 도시</th>
+            <th style="padding:8px 10px;text-align:center;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9;width:70px">입항</th>
+            <th style="padding:8px 10px;text-align:center;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9;width:70px">출항</th>
+            <th style="padding:8px 10px;text-align:left;color:#1a237e;font-weight:700;border-bottom:2px solid #c5cae9">비고</th>
+          </tr></thead>
+          <tbody>${p.itinerary.map((it,i) => `<tr style="background:${i%2?'#f5f7ff':'#fff'}">
+            <td style="padding:8px 10px;text-align:center;font-weight:700;color:#1a237e">${esc(it.day||'')}</td>
+            <td style="padding:8px 10px;font-weight:600">${esc(it.port||'')}</td>
+            <td style="padding:8px 10px;text-align:center;color:#555">${it.arrive||'—'}</td>
+            <td style="padding:8px 10px;text-align:center;color:#555">${it.depart||'—'}</td>
+            <td style="padding:8px 10px;color:#888;font-size:12px">${esc(it.note||'')}</td>
+          </tr>`).join('')}</tbody>
+        </table>`
+      : '<p style="color:#aaa;font-size:13px;padding:8px 0">일정 정보 없음</p>';
+
+    // 포함/불포함
+    const incExc = (p.included||[]).length || (p.excluded||[]).length
+      ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px">
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#2e7d32;margin-bottom:8px">✅ 포함 사항</div>
+            ${(p.included||[]).map(s=>`<div style="font-size:13px;color:#444;padding:3px 0;border-bottom:1px solid #f0f0f0">• ${esc(s)}</div>`).join('')||'<span style="color:#aaa;font-size:12px">없음</span>'}
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#c62828;margin-bottom:8px">❌ 불포함 사항</div>
+            ${(p.excluded||[]).map(s=>`<div style="font-size:13px;color:#444;padding:3px 0;border-bottom:1px solid #f0f0f0">• ${esc(s)}</div>`).join('')||'<span style="color:#aaa;font-size:12px">없음</span>'}
+          </div>
+        </div>` : '';
+
+    const departureTags = (p.departures||[]).map(d =>
+      `<span style="display:inline-block;background:#e8eaf6;color:#1a237e;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;margin:3px">${d}</span>`
+    ).join('');
+
+    document.getElementById('productPreviewContent').innerHTML = `
+      ${imgSlider}
+      <div style="padding:24px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+          <div>
+            <div style="font-size:.8rem;color:#888;margin-bottom:4px">${esc(p.cruiseline||'')}${p.ship?' · '+esc(p.ship):''} · ${p.nights||0}박</div>
+            <h2 style="font-size:1.3rem;font-weight:900;color:#0a1628;margin:0 0 6px;line-height:1.3">${esc(p.title||'')}</h2>
+            <div style="font-size:1.1rem;font-weight:700;color:#e65100">${priceStr} /1인</div>
+          </div>
+          <button onclick="document.getElementById('productPreviewOverlay').classList.remove('show')" style="background:#f0f0f0;border:none;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer;white-space:nowrap;margin-left:12px">✕ 닫기</button>
+        </div>
+        ${p.desc ? `<p style="font-size:.9rem;color:#555;line-height:1.7;margin-bottom:16px;padding:12px 16px;background:#f8fafd;border-radius:8px;border-left:3px solid #1a237e">${esc(p.desc)}</p>` : ''}
+        ${departureTags ? `<div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:8px">📅 출발 날짜</div>${departureTags}</div>` : ''}
+        <div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:4px">💰 요금표</div>${fareTable}</div>
+        <div style="margin-bottom:20px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:4px">🗺️ 항구 일정</div>${itinTable}</div>
+        ${incExc ? `<div style="margin-bottom:8px"><div style="font-size:13px;font-weight:700;color:#1a237e;margin-bottom:4px">📋 포함/불포함</div>${incExc}</div>` : ''}
+      </div>`;
+
+    // 슬라이더 상태
+    window._pvIdx = 0;
+    window._pvTotal = imgs.length;
+    document.getElementById('productPreviewOverlay').classList.add('show');
+  }
+
+  function pvSlide(dir) {
+    window._pvIdx = (window._pvIdx + dir + window._pvTotal) % window._pvTotal;
+    pvGoto(window._pvIdx);
+  }
+  function pvGoto(i) {
+    window._pvIdx = i;
+    document.querySelectorAll('[data-pv-slide]').forEach(el => el.style.opacity = el.dataset.pvSlide == i ? 1 : 0);
+    document.querySelectorAll('[data-pv-dot]').forEach(el => el.style.background = el.dataset.pvDot == i ? '#fff' : 'rgba(255,255,255,.4)');
+  }
+
   async function loadProducts() {
     const grid = document.getElementById('productGrid');
     grid.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;grid-column:1/-1">로딩 중...</div>';
@@ -1680,7 +1794,8 @@ ${remarksHtml}
           <div style="font-size:.78rem;color:#888">${departures ? '출발: ' + departures : '출발일 미정'}${(p.departures||[]).length > 3 ? ' 외 '+(p.departures.length-3)+'개' : ''}</div>
         </div>
         <div style="padding:10px 14px;border-top:1px solid #f0f0f0;display:flex;gap:8px">
-          <button onclick="openProductForm(${i})" style="flex:1;padding:7px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">✏️ 수정</button>
+          <button onclick="previewProduct(${i})" style="flex:1;padding:7px;background:#f0f4ff;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">👁 미리보기</button>
+          <button onclick="openProductForm(${i})" style="padding:7px 12px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">✏️</button>
           <button onclick="deleteProduct(${i})" style="padding:7px 12px;background:#fbe9e7;color:#e53935;border:none;border-radius:6px;font-size:13px;cursor:pointer">🗑</button>
         </div>
       </div>`;
