@@ -2404,37 +2404,148 @@ a{text-decoration:none;color:inherit}
 
   <!-- ===== 사이드바 ===== -->
   <div class="czn-side">
-    <div class="czn-card">
+    <!-- 상단 정보 카드 -->
+    <div class="czn-card" style="margin-bottom:10px">
       <div class="czn-card-hd">${title}</div>
-      <div class="czn-card-bd">
-        ${period?`<div class="czn-info-row"><span class="czn-info-lbl">여행기간</span><span class="czn-info-val">${period}</span></div>`:''}
-        ${d.cruiseline?`<div class="czn-info-row"><span class="czn-info-lbl">선사</span><span class="czn-info-val">${d.cruiseline}</span></div>`:''}
-        ${d.ship?`<div class="czn-info-row"><span class="czn-info-lbl">선박</span><span class="czn-info-val">${d.ship}</span></div>`:''}
+      <div class="czn-card-bd" style="padding:14px 16px">
+        ${period?`<div style="font-size:13px;color:#444;margin-bottom:6px">🗓 여행기간&nbsp;&nbsp;<strong>${period}</strong></div>`:''}
+        ${(d.cruiseline||d.ship)?`<div style="font-size:13px;color:#444;margin-bottom:6px">🚢 ${d.cruiseline||''} ${d.ship?'· '+d.ship:''}</div>`:''}
         ${flightHtml}
-        <div class="czn-price-box">
-          ${cabinStr?`<div class="czn-price-cabin">${cabinStr}</div>`:''}
-          <div class="czn-price-amount">성인 ${priceStr}</div>
-          <div class="czn-price-unit">유류할증료·제세공과금 포함</div>
-        </div>
-        ${departures.length>1?`<div style="font-size:12px;font-weight:700;color:#444;margin-bottom:8px">📅 출발일 선택</div><div class="czn-dep-tabs">${depListHtml}</div>`:''}
-        <button class="czn-btn-tel" onclick="window.open('tel:1577-3227')">📞 전화 문의 1577-3227</button>
-        <a href="https://pf.kakao.com/_vSamC/chat" target="_blank" class="czn-btn-kko">💬 카카오 채널 상담</a>
-        <div class="czn-src">원본: <a href="${sourceUrl}" target="_blank" style="color:#1a237e">출처보기</a></div>
       </div>
     </div>
+
+    <!-- 객실 선택 카드 -->
+    <div class="czn-card" style="margin-bottom:10px">
+      <div class="czn-card-bd" style="padding:14px 16px">
+        ${departures.length > 0 ? departures.map((dep,i) => `
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px;border:1.5px solid ${i===0?'#1a6fd4':'#e0e0e0'};border-radius:10px;cursor:pointer;margin-bottom:8px;transition:border-color .15s" onclick="selectCabin(${i},this)">
+          <span style="width:18px;height:18px;border-radius:50%;border:2px solid ${i===0?'#1a6fd4':'#ccc'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;background:${i===0?'#1a6fd4':'transparent'}">
+            ${i===0?'<span style="width:8px;height:8px;background:#fff;border-radius:50%;display:block"></span>':''}
+          </span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#222;margin-bottom:3px">${dep.cabin||`객실 ${i+1}`} (2인 1실, 1인 요금)</div>
+            <div style="font-size:16px;font-weight:900;color:#1a6fd4">성인 ${dep.priceAdult?(dep.priceAdult).toLocaleString()+'원~':'문의'}</div>
+          </div>
+        </label>`).join('') : (d.fares||[]).map((f,i) => `
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px;border:1.5px solid ${i===0?'#1a6fd4':'#e0e0e0'};border-radius:10px;cursor:pointer;margin-bottom:8px" onclick="selectCabin(${i},this)">
+          <span style="width:18px;height:18px;border-radius:50%;border:2px solid ${i===0?'#1a6fd4':'#ccc'};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;background:${i===0?'#1a6fd4':'transparent'}">
+            ${i===0?'<span style="width:8px;height:8px;background:#fff;border-radius:50%;display:block"></span>':''}
+          </span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#222;margin-bottom:3px">${f.type||'객실'} (2인 1실, 1인 요금)</div>
+            <div style="font-size:16px;font-weight:900;color:#1a6fd4">성인 ${f.priceKRW?(f.priceKRW).toLocaleString()+'원~':f.price?'$'+f.price.toLocaleString()+'~':'문의'}</div>
+          </div>
+        </label>`).join('')}
+      </div>
+    </div>
+
+    <!-- 인원 선택 + 총금액 카드 -->
+    <div class="czn-card" style="margin-bottom:10px">
+      <div class="czn-card-bd" style="padding:16px">
+        <!-- 성인 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#222">성인<span style="font-size:11px;font-weight:400;color:#888;margin-left:4px">(만 12세이상)</span></div>
+            <div style="font-size:18px;font-weight:900;color:#1a6fd4" id="cz-adult-price">0원</div>
+            <div style="font-size:11px;color:#999">유류할증료 0원 포함</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:8px;overflow:hidden">
+            <button onclick="czAdj('adult',-1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">−</button>
+            <span id="cz-adult-cnt" style="width:36px;text-align:center;font-size:15px;font-weight:700">1</span>
+            <button onclick="czAdj('adult',1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">+</button>
+          </div>
+        </div>
+        <!-- 아동 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#222">아동<span style="font-size:11px;font-weight:400;color:#888;margin-left:4px">(만 12세미만)</span></div>
+            <div style="font-size:18px;font-weight:900;color:#1a6fd4" id="cz-child-price">0원</div>
+            <div style="font-size:11px;color:#999">유류할증료 0원 포함</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:8px;overflow:hidden">
+            <button onclick="czAdj('child',-1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">−</button>
+            <span id="cz-child-cnt" style="width:36px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button onclick="czAdj('child',1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">+</button>
+          </div>
+        </div>
+        <!-- 유아 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#222">유아<span style="font-size:11px;font-weight:400;color:#888;margin-left:4px">(만 24개월미만)</span></div>
+            <div style="font-size:18px;font-weight:900;color:#1a6fd4" id="cz-infant-price">0원</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:0;border:1.5px solid #ddd;border-radius:8px;overflow:hidden">
+            <button onclick="czAdj('infant',-1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">−</button>
+            <span id="cz-infant-cnt" style="width:36px;text-align:center;font-size:15px;font-weight:700">0</span>
+            <button onclick="czAdj('infant',1)" style="width:36px;height:36px;border:none;background:#f5f5f5;font-size:18px;cursor:pointer;color:#333">+</button>
+          </div>
+        </div>
+        <!-- 총금액 -->
+        <div style="border-top:1px solid #f0f0f0;padding-top:12px;margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span style="font-size:14px;color:#555">총금액</span>
+            <span id="cz-total" style="font-size:22px;font-weight:900;color:#222">0원</span>
+          </div>
+          <div style="text-align:right;font-size:11px;color:#999;margin-top:2px">유류할증료 &amp; 제세공과금 포함</div>
+        </div>
+        <!-- 예약하기 -->
+        <button onclick="window.open('https://pf.kakao.com/_vSamC/chat','_blank')" style="display:block;width:100%;padding:15px;background:#1a6fd4;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.5px">예약하기</button>
+        <div style="text-align:right;font-size:11px;color:#aaa;margin-top:6px">문의 1577-3227</div>
+      </div>
+    </div>
+
+    <!-- 하단 액션바 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border:1.5px solid #e0e0e0;border-radius:10px;overflow:hidden;background:#fff">
+      <button onclick="window.open('https://pf.kakao.com/_vSamC/chat','_blank')" style="padding:12px 0;border:none;border-right:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">💬 1:1문의</button>
+      <button onclick="window.print()" style="padding:12px 0;border:none;border-right:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">🖨 인쇄</button>
+      <button onclick="alert('준비 중')" style="padding:12px 0;border:none;border-right:1px solid #e0e0e0;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">♡ 찜</button>
+      <button onclick="navigator.share?navigator.share({title:document.title,url:location.href}):navigator.clipboard.writeText(location.href).then(()=>alert('링크 복사됨'))" style="padding:12px 0;border:none;background:#fff;cursor:pointer;font-size:12px;color:#555;font-family:inherit">공유</button>
+    </div>
+    <div style="margin-top:8px;text-align:right"><div class="czn-src">원본: <a href="${sourceUrl}" target="_blank" style="color:#1a6fd4">출처보기</a></div></div>
   </div>
 </div>
 
 <footer class="czn-ft">크루즈나라 | 📞 1577-3227 | 아남항공 주식회사</footer>
 
 <scr` + `ipt>
+  // 슬라이더
   let czn_idx=0; const czn_total=${thumbs.length};
   function gotoSlide(i){czn_idx=(i+czn_total)%czn_total;document.querySelectorAll('.czn-slide').forEach((s,j)=>s.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-dot').forEach((d,j)=>d.classList.toggle('active',j===czn_idx));document.querySelectorAll('.czn-thumb').forEach((t,j)=>t.classList.toggle('active',j===czn_idx));const c=document.getElementById('cznCount');if(c)c.textContent=(czn_idx+1)+' / '+czn_total;}
   function slideStep(d){gotoSlide(czn_idx+d);}
-  function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});const hd=56+42;window.scrollBy(0,-hd);}
-  function selectDep(i,el){document.querySelectorAll('.czn-dep-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+  function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});window.scrollBy(0,-(56+42));}
   // 스크롤 시 네비 활성화
   window.addEventListener('scroll',()=>{const secs=['sec-intro','sec-itin','sec-inc','sec-exc','sec-notice'];const links=document.querySelectorAll('.czn-nav a');let cur=0;secs.forEach((id,i)=>{const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<120)cur=i;});links.forEach((l,i)=>l.classList.toggle('on',i===cur));});
+
+  // 객실 선택 + 인원 카운터
+  const czFares = ${JSON.stringify(departures.length > 0 ? departures.map(dep => ({type: dep.cabin||'객실', adult: dep.priceAdult||0, child: dep.priceChild||0, infant: 0})) : (d.fares||[]).map(f => ({type: f.type||'객실', adult: f.priceKRW||f.price||0, child: 0, infant: 0})))};
+  let czSel = 0, czCnt = {adult:1, child:0, infant:0};
+  function selectCabin(i, el) {
+    czSel = i;
+    document.querySelectorAll('.czn-card label').forEach((l,j) => {
+      const dot = l.querySelector('span>span');
+      const outer = l.querySelector('span');
+      const active = j===i;
+      l.style.borderColor = active ? '#1a6fd4' : '#e0e0e0';
+      if(outer){ outer.style.background = active?'#1a6fd4':'transparent'; outer.style.borderColor = active?'#1a6fd4':'#ccc'; }
+      if(dot) dot.style.display = active?'block':'none';
+    });
+    czCalc();
+  }
+  function czAdj(type, dir) {
+    czCnt[type] = Math.max(0, czCnt[type] + dir);
+    if(type==='adult' && czCnt.adult < 1) czCnt.adult = 1;
+    document.getElementById('cz-'+type+'-cnt').textContent = czCnt[type];
+    czCalc();
+  }
+  function czCalc() {
+    const f = czFares[czSel] || {adult:0,child:0,infant:0};
+    const total = f.adult*czCnt.adult + f.child*czCnt.child + f.infant*czCnt.infant;
+    document.getElementById('cz-adult-price').textContent = f.adult ? f.adult.toLocaleString()+'원' : '0원';
+    document.getElementById('cz-child-price').textContent = f.child ? f.child.toLocaleString()+'원' : '0원';
+    document.getElementById('cz-infant-price').textContent = f.infant ? f.infant.toLocaleString()+'원' : '0원';
+    document.getElementById('cz-total').textContent = total.toLocaleString()+'원';
+  }
+  czCalc();
 <\/scr` + `ipt>
 <\/body>
 <\/html>`;
