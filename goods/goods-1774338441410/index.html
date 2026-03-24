@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>남미 7개국 일주 크루즈 31일 — 크루즈나라</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Malgun Gothic','Apple SD Gothic Neo',sans-serif; background:#f5f6fa; color:#222; }
+a { text-decoration: none; color: inherit; }
+
+/* ===== HEADER ===== */
+.czn-header { background:#1a237e; padding:0 20px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+.czn-header-logo { color:#fff; font-size:18px; font-weight:900; }
+.czn-header-phone { color:#fff; font-size:13px; font-weight:600; }
+.czn-header-phone a { color:#ffeb3b; }
+
+/* ===== LAYOUT ===== */
+.czn-wrap { max-width:1080px; margin:0 auto; padding:24px 16px; display:grid; grid-template-columns:1fr 340px; gap:24px; }
+@media(max-width:768px){ .czn-wrap { grid-template-columns:1fr; } .czn-side { order:-1; } }
+
+/* ===== SLIDER ===== */
+.czn-slider-wrap { background:#000; border-radius:12px; overflow:hidden; position:relative; aspect-ratio:16/9; }
+.czn-slide { display:none; width:100%; height:100%; }
+.czn-slide.active { display:block; }
+.czn-slide img { width:100%; height:100%; object-fit:cover; }
+.czn-slider-nav { position:absolute; top:50%; transform:translateY(-50%); display:flex; justify-content:space-between; width:100%; padding:0 12px; pointer-events:none; }
+.czn-slider-btn { pointer-events:all; background:rgba(0,0,0,.5); color:#fff; border:none; border-radius:50%; width:40px; height:40px; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.czn-slider-dots { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:6px; }
+.czn-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.5); cursor:pointer; transition:background .2s; }
+.czn-dot.active { background:#fff; }
+.czn-slider-count { position:absolute; top:12px; right:14px; background:rgba(0,0,0,.55); color:#fff; font-size:12px; padding:3px 10px; border-radius:20px; }
+.czn-thumbs { display:flex; gap:6px; margin-top:8px; overflow-x:auto; padding-bottom:4px; }
+.czn-thumb { width:72px; height:54px; border-radius:6px; overflow:hidden; cursor:pointer; flex-shrink:0; border:2px solid transparent; transition:border-color .2s; }
+.czn-thumb.active { border-color:#1a237e; }
+.czn-thumb img { width:100%; height:100%; object-fit:cover; }
+
+/* ===== STICKY TABS ===== */
+.czn-tabs { display:flex; gap:0; border-bottom:2px solid #e0e0e0; background:#fff; border-radius:10px 10px 0 0; overflow-x:auto; margin-top:20px; }
+.czn-tab { padding:13px 20px; font-size:14px; font-weight:600; color:#888; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .15s; }
+.czn-tab.active { color:#1a237e; border-bottom-color:#1a237e; }
+.czn-tab-panel { background:#fff; border-radius:0 0 10px 10px; padding:24px; display:none; }
+.czn-tab-panel.active { display:block; }
+
+/* ===== 상품소개 ===== */
+.czn-body-images img { max-width:100%; display:block; margin:4px auto; }
+
+/* ===== 포함/불포함/유의 ===== */
+.czn-list-item { padding:8px 0; border-bottom:1px solid #f0f0f0; font-size:14px; line-height:1.7; }
+.czn-list-item:last-child { border:none; }
+
+/* ===== 일정표 ===== */
+.czn-itin-row { display:grid; grid-template-columns:80px 100px 1fr; gap:0; border-bottom:1px solid #e8eaf6; padding:12px 0; }
+.czn-itin-row.even { background:#f5f7ff; }
+.czn-itin-day { text-align:center; }
+.czn-itin-day span { display:block; font-size:18px; font-weight:900; color:#1a237e; }
+.czn-itin-day small { font-size:11px; color:#888; }
+.czn-itin-city { font-weight:700; font-size:14px; color:#333; padding:2px 8px; }
+.czn-itin-desc { font-size:13px; color:#555; line-height:1.7; }
+@media(max-width:600px){ .czn-itin-row { grid-template-columns:60px 80px 1fr; } }
+
+/* ===== 사이드바 ===== */
+.czn-side { position:sticky; top:72px; align-self:start; }
+.czn-side-card { background:#fff; border-radius:12px; box-shadow:0 2px 16px rgba(0,0,0,.1); overflow:hidden; }
+.czn-side-title { background:#1a237e; color:#fff; padding:16px 20px; font-size:15px; font-weight:700; }
+.czn-side-body { padding:20px; }
+.czn-side-info { margin-bottom:16px; }
+.czn-side-label { font-size:12px; color:#888; margin-bottom:3px; }
+.czn-side-value { font-size:14px; font-weight:600; color:#222; }
+.czn-price-box { background:#fff8f0; border-radius:8px; padding:14px 16px; margin-bottom:16px; border:1px solid #ffe0b2; }
+.czn-price-cabin { font-size:12px; color:#e65100; font-weight:700; margin-bottom:4px; }
+.czn-price-amount { font-size:26px; font-weight:900; color:#e65100; }
+.czn-price-unit { font-size:12px; color:#888; margin-top:2px; }
+.czn-btn-inquiry { display:block; width:100%; padding:14px; background:#1a237e; color:#fff; text-align:center; border-radius:8px; font-size:15px; font-weight:700; margin-bottom:8px; cursor:pointer; border:none; font-family:inherit; }
+.czn-btn-kakao { display:block; width:100%; padding:13px; background:#FEE500; color:#191919; text-align:center; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; border:none; font-family:inherit; }
+
+/* ===== 출발일 탭 ===== */
+.czn-dep-tabs { display:flex; flex-direction:column; gap:8px; margin-bottom:16px; }
+.czn-dep-tab { border:1.5px solid #e0e0e0; border-radius:8px; padding:10px 12px; cursor:pointer; transition:all .15s; }
+.czn-dep-tab.active { border-color:#1a237e; background:#e8eaf6; }
+.czn-dep-date { font-size:13px; font-weight:700; color:#1a237e; }
+.czn-dep-cabin { font-size:11px; color:#666; margin-top:2px; }
+.czn-dep-price { font-size:15px; font-weight:900; color:#e65100; margin-top:2px; }
+
+/* ===== 항공 정보 ===== */
+.czn-flight-box { background:#f0f4ff; border-radius:8px; padding:14px; margin-bottom:16px; font-size:12px; }
+.czn-flight-row { display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px; }
+.czn-flight-row:last-child { margin:0; }
+.czn-flight-label { background:#1a237e; color:#fff; padding:2px 8px; border-radius:4px; font-weight:700; font-size:11px; }
+.czn-flight-airline { font-weight:700; }
+.czn-flight-time { font-weight:700; color:#1a237e; }
+.czn-flight-arrow { color:#888; }
+.czn-flight-port { color:#555; }
+
+/* ===== 출처 표시 ===== */
+.czn-source { font-size:11px; color:#aaa; text-align:right; margin-top:8px; }
+
+/* ===== FOOTER ===== */
+.czn-footer-bar { background:#1a237e; color:rgba(255,255,255,.7); text-align:center; padding:16px; font-size:12px; margin-top:40px; }
+</style>
+</head>
+<body>
+<header class="czn-header">
+  <div class="czn-header-logo">🚢 크루즈나라</div>
+  <div class="czn-header-phone">📞 <a href="tel:1577-3227">1577-3227</a></div>
+</header>
+
+<div class="czn-wrap">
+  <!-- ===== 메인 콘텐츠 ===== -->
+  <div class="czn-main">
+
+    <!-- 이미지 슬라이더 -->
+    <div class="czn-slider-wrap" id="czn-slider">
+      
+      <div class="czn-slide active" onclick="gotoSlide(0)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000448.jpg" alt="상품 이미지 1">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(1)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000449.jpg" alt="상품 이미지 2">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(2)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000450.jpg" alt="상품 이미지 3">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(3)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000451.jpg" alt="상품 이미지 4">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(4)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000452.jpg" alt="상품 이미지 5">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(5)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000305.jpg" alt="상품 이미지 6">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(6)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000306.jpg" alt="상품 이미지 7">
+      </div>
+      <div class="czn-slide " onclick="gotoSlide(7)">
+        <img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000307.jpg" alt="상품 이미지 8">
+      </div>
+      <div class="czn-slider-nav">
+        <button class="czn-slider-btn" onclick="slideStep(-1)">‹</button>
+        <button class="czn-slider-btn" onclick="slideStep(1)">›</button>
+      </div>
+      <div class="czn-slider-dots" id="cznDots">
+        <span class="czn-dot active" onclick="gotoSlide(0)"></span><span class="czn-dot " onclick="gotoSlide(1)"></span><span class="czn-dot " onclick="gotoSlide(2)"></span><span class="czn-dot " onclick="gotoSlide(3)"></span><span class="czn-dot " onclick="gotoSlide(4)"></span><span class="czn-dot " onclick="gotoSlide(5)"></span><span class="czn-dot " onclick="gotoSlide(6)"></span><span class="czn-dot " onclick="gotoSlide(7)"></span>
+      </div>
+      <div class="czn-slider-count" id="cznCount">1 / 8</div>
+    </div>
+    <!-- 썸네일 -->
+    <div class="czn-thumbs">
+      <div class="czn-thumb active" onclick="gotoSlide(0)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000448.jpg" alt="썸네일1"></div><div class="czn-thumb " onclick="gotoSlide(1)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000449.jpg" alt="썸네일2"></div><div class="czn-thumb " onclick="gotoSlide(2)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000450.jpg" alt="썸네일3"></div><div class="czn-thumb " onclick="gotoSlide(3)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000451.jpg" alt="썸네일4"></div><div class="czn-thumb " onclick="gotoSlide(4)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000452.jpg" alt="썸네일5"></div><div class="czn-thumb " onclick="gotoSlide(5)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000305.jpg" alt="썸네일6"></div><div class="czn-thumb " onclick="gotoSlide(6)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000306.jpg" alt="썸네일7"></div><div class="czn-thumb " onclick="gotoSlide(7)"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000307.jpg" alt="썸네일8"></div>
+    </div>
+
+    <!-- 탭 -->
+    <div class="czn-tabs">
+      <div class="czn-tab active" onclick="showTab('intro',this)">상품소개</div>
+      <div class="czn-tab" onclick="showTab('include',this)">포함사항</div>
+      <div class="czn-tab" onclick="showTab('exclude',this)">불포함사항</div>
+      
+      <div class="czn-tab" onclick="showTab('notice',this)">유의사항</div>
+    </div>
+    <div class="czn-tab-panel active" id="tab-intro">
+      <div class="czn-body-images"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000448.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000449.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000450.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000451.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000092/cruznara_cm9900_30000452.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000305.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000306.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000307.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/upload/cruznara/image/goods/main/30000065/cruznara_cm9900_30000308.jpg" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/com/com.image.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/view/goods/goods_view.js?v=1.4" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/view/goods/event_calendar_pop.js?v=1" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/{{imagePath}}" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/images/aircode/EK.gif" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/moment.min.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/jquery-3.4.1.min.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/jquery-1.12.4.min.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/jquery-ui.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/swiper.min.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/daterangepicker.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/dynamicListener.min.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/hoverIntent.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/MonthPicker.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/masonry.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/cookie/jquery.cookie.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/mask/jquery.mask.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/lib/ezdz/jquery.ezdz.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/com/com.submit.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/com/com.util.js" alt="" style="max-width:100%;display:block;margin:4px 0"><img src="https://www.cruznara.com/asp/js/com/com.validate.js" alt="" style="max-width:100%;display:block;margin:4px 0"></div>
+    </div>
+    <div class="czn-tab-panel" id="tab-include">
+      <div class="czn-list-item">전 지역 특급 호텔 사용 (단, 리마 체류 호텔은 준특급, 우유니는 소금호텔)</div><div class="czn-list-item">크루즈 요금 (발코니 객실, 식사, 항만세, 선내시설 및 프로그램 이용 포함)</div><div class="czn-list-item">마추픽추 관광 시 페루레일 비스타돔 탑승</div><div class="czn-list-item">남미 특식 이과수 라파인 디너, 슈라스코 제공</div><div class="czn-list-item">우유니 소금사막 관광 일정 포함</div><div class="czn-list-item">선상 생활을 안내드리는 선상신문, 정찬식당 다이닝 메뉴 등은 매일 크루즈 전문인솔자가 한글로 번역하여 제공</div><div class="czn-list-item">일정표 상의 모든 항공 (유류할증료 및 TAX 포함)</div><div class="czn-list-item">크루즈 전 기항지 관광 및 크루즈 승하선 전후의 관광 등 일체의 투어 비용</div><div class="czn-list-item">볼리비아 도착비자 발급비용($120/인)</div><div class="czn-list-item">전 일정 가이드팁/인솔자팁/기사팁/식당팁 및 3억원 여행자보험 등</div>
+    </div>
+    <div class="czn-tab-panel" id="tab-exclude">
+      <div class="czn-list-item">선내팁 : US$ 255 (발코니 객실 기준 1박당 $17, 총 15박)</div><div class="czn-list-item">황열병 예방접종에 대해서는 추후 별도 안내 예정 (황열병 예방접종 가능한 병원 등)</div>
+    </div>
+    <div class="czn-tab-panel" id="tab-itin">
+      <p style="color:#aaa;padding:20px">일정 정보 없음</p>
+    </div>
+    <div class="czn-tab-panel" id="tab-notice">
+      <div class="czn-list-item">예약금은 인당 300만원으로 예약금 입금 시 확약됩니다.</div><div class="czn-list-item">중도금은 잔금의 50%로 출발 3개월 전 결제, 잔금은 출발 1개월 전 완납하셔야 합니다.</div><div class="czn-list-item">볼리비아 도착비자 발급 안내 - 여권 원본(만료 6개월이상, 사증 5면이상 여유), 4cm X 4cm 사진 2매(6개월 이내 촬영한 사진, 배경은 흰색), 황열병 예방접종 확인증 원본, 본인 명의 은행 발행 통장 잔고 내역(영문) – 한달이내 발급, 500불 이상 증빙.</div><div class="czn-list-item">남미 구간은 항공기 운항 스케줄 변동이 잦은 편이며, 사전좌석지정이 불가하여 공항 카운터에서 좌석을 배정하므로 희망하시는 좌석으로의 지정이 어려울 수 있습니다.</div><div class="czn-list-item">환율 변동 사항에 의해 추가요금이 발생할 수도 있습니다.</div><div class="czn-list-item">크루즈와 호텔을 싱글룸으로 이용 시의 추가요금은 1,000만원 입니다.</div>
+    </div>
+  </div>
+
+  <!-- ===== 사이드바 ===== -->
+  <div class="czn-side">
+    <div class="czn-side-card">
+      <div class="czn-side-title">남미 7개국 일주 크루즈 31일</div>
+      <div class="czn-side-body">
+        <div class="czn-side-info"><div class="czn-side-label">여행기간</div><div class="czn-side-value">30박31일, 12.09~01.08</div></div>
+        
+      <div class="czn-flight-box">
+        <div class="czn-flight-row">
+          <span class="czn-flight-label">출발</span>
+          <span class="czn-flight-airline">에메레이트항공 AM091</span>
+          <span class="czn-flight-time">11:30</span>
+          <span class="czn-flight-date">2026.12.09</span>
+          <span class="czn-flight-port">인천ICN 출발</span>
+          <span class="czn-flight-arrow">→</span>
+          <span class="czn-flight-time">23:50</span>
+          <span class="czn-flight-port"> 도착</span>
+        </div>
+        <div class="czn-flight-row">
+          <span class="czn-flight-label">귀국</span>
+          <span class="czn-flight-airline">에메레이트항공 LA3339</span>
+          <span class="czn-flight-time">05:15</span>
+          <span class="czn-flight-date">2027.01.08</span>
+          <span class="czn-flight-port">리우 데 자네이루RIO 출발</span>
+          <span class="czn-flight-arrow">→</span>
+          <span class="czn-flight-time">06:00</span>
+          <span class="czn-flight-port">인천ICN 도착</span>
+        </div>
+      </div>
+        <div class="czn-price-box">
+          <div class="czn-price-cabin">발코니객실</div>
+          <div class="czn-price-amount">성인 33,000,000원~</div>
+          <div class="czn-price-unit">유류할증료·제세공과금 포함</div>
+        </div>
+        
+        <button class="czn-btn-inquiry" onclick="window.open('tel:1577-3227')">📞 전화 문의 1577-3227</button>
+        <a href="https://pf.kakao.com/_vSamC/chat" target="_blank" class="czn-btn-kakao">💬 카카오 채널 상담</a>
+        <div class="czn-source">원본: <a href="https://www.cruznara.com/goods/goods_view?goodSeq=30000092&eventSeq=30000169" target="_blank" style="color:#1a237e">cruznara.com</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="czn-footer-bar">
+  크루즈나라 | 📞 1577-3227 | 아남항공 주식회사
+</footer>
+
+<script>
+  let czn_idx = 0;
+  const czn_total = 8;
+
+  function gotoSlide(i) {
+    czn_idx = (i + czn_total) % czn_total;
+    document.querySelectorAll('.czn-slide').forEach((s,j) => s.classList.toggle('active', j===czn_idx));
+    document.querySelectorAll('.czn-dot').forEach((d,j) => d.classList.toggle('active', j===czn_idx));
+    document.querySelectorAll('.czn-thumb').forEach((t,j) => t.classList.toggle('active', j===czn_idx));
+    const cnt = document.getElementById('cznCount');
+    if(cnt) cnt.textContent = (czn_idx+1) + ' / ' + czn_total;
+  }
+  function slideStep(d){ gotoSlide(czn_idx + d); }
+
+  function showTab(id, el) {
+    document.querySelectorAll('.czn-tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.czn-tab').forEach(t => t.classList.remove('active'));
+    const panel = document.getElementById('tab-' + id);
+    if(panel) panel.classList.add('active');
+    if(el) el.classList.add('active');
+  }
+
+  function selectDep(i, el) {
+    document.querySelectorAll('.czn-dep-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>
