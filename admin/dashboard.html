@@ -1882,6 +1882,32 @@ ${remarksHtml}
     }
   }
 
+  async function generatePageFromProduct(idx) {
+    const p = currentProducts[idx];
+    if (!p) return;
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.disabled = true; btn.textContent = '⏳ 생성 중...';
+    try {
+      const slug = 'goods-' + (p.id || Date.now());
+      const html = buildCruiseDetailPage(p, p.sourceUrl || '', slug);
+      const filePath = `goods/${slug}/index.html`;
+      await createGitHubFile(filePath, html, `feat: 상품 페이지 - ${p.title||slug}`);
+      const liveUrl = `https://kimdaeri-bot.github.io/cruise-agency-template/${filePath}`;
+      // 목록에도 기록
+      const existing = generatedPages.findIndex(g => g.slug === slug);
+      const entry = { slug, title: p.title||'', url: p.sourceUrl||'', createdAt: new Date().toISOString(), filePath };
+      if (existing >= 0) generatedPages[existing] = entry; else generatedPages.unshift(entry);
+      await saveToGitHub('admin/generated-pages.json', generatedPages);
+      showToast('✅ 생성 완료! 잠시 후 페이지 열림 (GitHub Pages 반영 약 1분)');
+      setTimeout(() => window.open(liveUrl, '_blank'), 1500);
+    } catch(e) {
+      showToast('❌ 생성 실패: ' + e.message, 4000);
+    } finally {
+      btn.disabled = false; btn.textContent = orig;
+    }
+  }
+
   function previewProduct(idx) {
     const p = currentProducts[idx];
     if (!p) return;
@@ -2453,8 +2479,9 @@ a{text-decoration:none;color:inherit}
           <div style="font-size:.82rem;color:#1a237e;font-weight:700;margin-bottom:4px">${priceStr} /1인</div>
           <div style="font-size:.78rem;color:#888">${departures ? '출발: ' + departures : '출발일 미정'}${(p.departures||[]).length > 3 ? ' 외 '+(p.departures.length-3)+'개' : ''}</div>
         </div>
-        <div style="padding:10px 14px;border-top:1px solid #f0f0f0;display:flex;gap:8px">
-          <button onclick="previewProduct(${i})" style="flex:1;padding:7px;background:#f0f4ff;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">👁 미리보기</button>
+        <div style="padding:10px 14px;border-top:1px solid #f0f0f0;display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="previewProduct(${i})" style="flex:1;min-width:80px;padding:7px;background:#f0f4ff;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">👁 미리보기</button>
+          <button onclick="generatePageFromProduct(${i})" style="flex:1;min-width:80px;padding:7px;background:#1a237e;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer">🌐 페이지 생성</button>
           <button onclick="openProductForm(${i})" style="padding:7px 12px;background:#e8eaf6;color:#1a237e;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">✏️</button>
           <button onclick="deleteProduct(${i})" style="padding:7px 12px;background:#fbe9e7;color:#e53935;border:none;border-radius:6px;font-size:13px;cursor:pointer">🗑</button>
         </div>
