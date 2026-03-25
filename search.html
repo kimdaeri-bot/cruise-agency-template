@@ -10,7 +10,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>검색 결과 - 크루즈나라</title>
+  <title>검색 결과 - 크루즈 SaaS</title>
   <link rel="stylesheet" href="assets/css/style.css">
   
   
@@ -477,7 +477,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.getElementById('resultArea').style.display = 'block';
       document.getElementById('resultCount').innerHTML = `총 <span>${filteredResults.length}</span>개의 크루즈를 찾았습니다`;
       document.getElementById('searchSummary').textContent = `${results.length}개의 크루즈가 검색되었습니다`;
-      document.title = `검색 결과 (${results.length}건) - 크루즈나라`;
+      document.title = `검색 결과 (${results.length}건) - 크루즈 SaaS`;
 
       renderPage();
       buildSideFilterOptions(allResults);
@@ -537,7 +537,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="modal-body">
         <div class="form-status" id="formStatus"></div>
         <form id="inquiryForm" onsubmit="submitInquiry(event)">
-          <input type="hidden" name="_subject" value="[크루즈나라] 새 문의가 접수되었습니다">
+          <input type="hidden" name="_subject" value="[크루즈 SaaS] 새 문의가 접수되었습니다">
           <input type="hidden" name="_template" value="table">
           <input type="text" name="_honey" style="display:none">
           <div class="form-group"><label>영문 이름 (여권 기재명) <span class="req">*</span></label><input type="text" name="customer_name" required placeholder="HONG GILDONG"></div>
@@ -592,7 +592,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const btn = document.getElementById('submitBtn');
       btn.disabled = true; btn.textContent = '전송 중...';
       const fd = {
-        _subject: `[크루즈나라] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
+        _subject: `[크루즈 SaaS] ${document.getElementById('f_product').value} - ${document.getElementById('f_name').value}님`,
         _template: 'table',
         '크루즈 상품': document.getElementById('f_product').value,
         '선사': document.getElementById('f_cruiseline').value,
