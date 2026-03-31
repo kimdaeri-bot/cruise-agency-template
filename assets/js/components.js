@@ -1,23 +1,54 @@
 // Shared components - Hybrid version
 const Components = {
   // active: 'home'|'dest'|'ships'|'guide' / base: '' (root) or '../../' (2depth subdir)
-  header(active = 'home', base = '') {
+  // lang: 'ko' (default) | 'zh-HK'
+  header(active = 'home', base = '', lang = '') {
+    // 언어 자동 감지 (lang 파라미터 없으면 html[lang] 속성으로 판단)
+    const currentLang = lang || (typeof document !== 'undefined' ? document.documentElement.lang : 'ko') || 'ko';
+    const isHK = currentLang === 'zh-HK';
+
+    // 현재 파일명 기반 언어 전환 링크
+    const koHref  = base + 'index.html';
+    const hkHref  = base + 'index_hk.html';
+
+    const navLinks = isHK ? [
+      { href: koHref,                           label: '首頁',    key: 'home'  },
+      { href: base + 'destinations.html',       label: '目的地',  key: 'dest'  },
+      { href: base + 'ships.html',              label: '郵輪公司',key: 'ships' },
+      { href: base + 'promotions.html',         label: '優惠',    key: 'promo' },
+      { href: base + 'guide/',                  label: '遊輪指南',key: 'guide' },
+      { href: 'https://pf.kakao.com/_xgYbJG', label: '查詢',    key: 'contact', external: true },
+    ] : [
+      { href: koHref,                           label: '홈',       key: 'home'  },
+      { href: base + 'destinations.html',       label: '목적지',   key: 'dest'  },
+      { href: base + 'ships.html',              label: '선사소개', key: 'ships' },
+      { href: base + 'promotions.html',         label: '프로모션', key: 'promo' },
+      { href: base + 'guide/',                  label: '크루즈 가이드', key: 'guide' },
+      { href: 'https://pf.kakao.com/_xgYbJG', label: '문의',     key: 'contact', external: true },
+    ];
+
+    const navHtml = navLinks.map(l =>
+      `<a href="${l.href}"${l.external ? ' target="_blank"' : ''} class="${active === l.key ? 'active' : ''}">${l.label}</a>`
+    ).join('\n          ');
+
     return `
     <header class="header">
       <div class="container">
-        <a href="${base}index.html" class="logo"><img src="${base}assets/images/logo.svg" alt="크루즈 SaaS" style="height:36px"></a>
+        <a href="${base}index.html" class="logo"><img src="${base}assets/images/logo.svg" alt="CruiseLink" style="height:36px"></a>
         <nav class="nav" id="mainNav">
-          <a href="${base}index.html" class="${active === 'home' ? 'active' : ''}">홈</a>
-          <a href="${base}destinations.html" class="${active === 'dest' ? 'active' : ''}">목적지</a>
-          <a href="${base}ships.html" class="${active === 'ships' ? 'active' : ''}">선사소개</a>
-          <a href="${base}promotions.html" class="${active === 'promo' ? 'active' : ''}">프로모션</a>
-          <a href="${base}guide/" class="${active === 'guide' ? 'active' : ''}">크루즈 가이드</a>
-          <a href="https://pf.kakao.com/_xgYbJG" target="_blank" class="${active === 'contact' ? 'active' : ''}">문의</a>
+          ${navHtml}
         </nav>
-        <a href="tel:02-3788-9119" class="header-phone">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-          02-3788-9119
-        </a>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="lang-switcher" style="display:flex;align-items:center;gap:4px;font-size:.8rem;font-weight:700">
+            <a href="${koHref}" style="padding:4px 8px;border-radius:4px;text-decoration:none;color:${isHK ? '#999' : '#1a237e'};background:${isHK ? 'transparent' : '#e8eaf6'}">KO</a>
+            <span style="color:#ccc">|</span>
+            <a href="${hkHref}" style="padding:4px 8px;border-radius:4px;text-decoration:none;color:${isHK ? '#1a237e' : '#999'};background:${isHK ? '#e8eaf6' : 'transparent'}">繁中</a>
+          </div>
+          <a href="tel:02-3788-9119" class="header-phone">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            02-3788-9119
+          </a>
+        </div>
         <button class="mobile-menu-btn" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
       </div>
     </header>`;
